@@ -43,6 +43,11 @@ namespace ArenaSurvival.Core
 
         public void Release(T instance)
         {
+            // Object đã tắt nghĩa là đã nằm trong pool rồi. Bỏ qua để 1 object không bị xếp vào
+            // hàng đợi 2 lần (ví dụ 1 viên đạn chạm 2 quái trong cùng 1 bước vật lý) — nếu không,
+            // 2 lần Get() sau đó sẽ trả về cùng 1 object.
+            if (!instance.gameObject.activeSelf) return;
+
             instance.gameObject.SetActive(false);
             _available.Enqueue(instance);
         }

@@ -16,8 +16,15 @@ namespace ArenaSurvival.Combat
         [Header("Pooling")]
         [SerializeField] private int _poolPrewarmCount = 20;
 
+        // Số collider tối đa đọc được trong 1 lần quét. Nếu số quái trong tầm vượt con số này,
+        // phần dư bị bỏ qua và có thể sót con gần nhất — nên để dư so với mật độ quái thực tế.
+        private const int MaxTargetsPerScan = 64;
+
         private float _fireCooldown;
         private ObjectPool<Projectile> _projectilePool;
+
+        // Cấp phát 1 lần duy nhất rồi dùng lại mỗi frame — đây mới là thứ làm cho "NonAlloc" có ý nghĩa.
+        private readonly Collider2D[] _hitBuffer = new Collider2D[MaxTargetsPerScan];
 
         private void Awake()
         {
@@ -45,20 +52,19 @@ namespace ArenaSurvival.Combat
 
         private Transform FindNearestEnemy()
         {
-            // NonAlloc để không cấp phát mảng mới mỗi frame — quan trọng khi có nhiều quái.
-            Collider2D[] hits = new Collider2D[20];
-            int count = Physics2D.OverlapCircleNonAlloc(transform.position, _weaponData.range, hits, _enemyLayer);
+            // NonAlloc ghi kết quả vào buffer có sẵn thay vì trả về mảng mới mỗi frame — quan trọng khi có nhiều quái.
+            int count = Physics2D.OverlapCircleNonAlloc(transform.position, _weaponData.range, _hitBuffer, _enemyLayer);
 
             Transform nearest = null;
             float nearestDistSqr = float.MaxValue;
 
             for (int i = 0; i < count; i++)
             {
-                float distSqr = (hits[i].transform.position - transform.position).sqrMagnitude;
+                float distSqr = (_hitBuffer[i].transform.position - transform.position).sqrMagnitude;
                 if (distSqr < nearestDistSqr)
                 {
                     nearestDistSqr = distSqr;
-                    nearest = hits[i].transform;
+                    nearest = _hitBuffer[i].transform;
                 }
             }
 

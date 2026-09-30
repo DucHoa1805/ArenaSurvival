@@ -892,11 +892,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.EnemySpawner
   _enemyPrefab: {fileID: 847369890010221830, guid: cdfcd4882cba7de48a2aacbaeadef3e5, type: 3}
-  _enemyData: {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
-  _spawnInterval: 2
+  _enemyTypes:
+  - {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
+  - {fileID: 11400000, guid: 6be0bf6fd78eab3498608794e9172563, type: 2}
+  _spawnInterval: 1.2
   _targetCamera: {fileID: 0}
   _spawnPadding: 2
-  _poolPrewarmCount: 15
+  _poolPrewarmCount: 30
 --- !u!1001 &3625615909647938581
 PrefabInstance:
   m_ObjectHideFlags: 0

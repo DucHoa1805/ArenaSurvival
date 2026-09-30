@@ -31,7 +31,7 @@ namespace ArenaSurvival.Enemies
         }
 
         /// <summary>
-        /// Gọi ngay sau khi lấy Enemy ra khỏi pool, TRƯỚC khi SetActive(true) có hiệu lực đầy đủ,
+        /// Gọi ngay sau khi lấy Enemy ra khỏi pool (lúc này object đã active và OnEnable đã chạy),
         /// để cấu hình đúng loại quái (máu, tốc độ, sprite...) theo EnemyData được truyền vào.
         /// </summary>
         public void Initialize(EnemyData data)

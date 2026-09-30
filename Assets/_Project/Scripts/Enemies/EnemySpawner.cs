@@ -7,7 +7,9 @@ namespace ArenaSurvival.Enemies
     {
         [Header("Prefab")]
         [SerializeField] private Enemy _enemyPrefab;
-        [SerializeField] private EnemyData _enemyData;
+        [Tooltip("Các loại quái spawner này có thể sinh ra. Tất cả dùng chung 1 prefab và 1 pool — " +
+                 "khác biệt giữa các loại nằm hoàn toàn trong EnemyData.")]
+        [SerializeField] private EnemyData[] _enemyTypes;
 
         [Header("Spawn Timing")]
         [SerializeField] private float _spawnInterval = 2f;
@@ -44,10 +46,13 @@ namespace ArenaSurvival.Enemies
 
         private void SpawnEnemy()
         {
+            if (_enemyTypes == null || _enemyTypes.Length == 0) return;
+
             Vector2 spawnPosition = GetRandomPositionOutsideCamera();
+            EnemyData data = _enemyTypes[Random.Range(0, _enemyTypes.Length)];
 
             Enemy enemy = _enemyPool.Get(spawnPosition, Quaternion.identity);
-            enemy.Initialize(_enemyData);
+            enemy.Initialize(data);
             enemy.OnReturnToPool = ReturnEnemyToPool;
         }
 
