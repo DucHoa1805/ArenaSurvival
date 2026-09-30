@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.EnemyData
   displayName: Basic Enemy
   sprite: {fileID: -5291006867049801255, guid: 06911991ba94e4a42b0a59bf8c7edf48, type: 3}
+  scale: 1
   maxHealth: 20
   moveSpeed: 2
   contactDamage: 5

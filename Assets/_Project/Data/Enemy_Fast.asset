@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.EnemyData
   displayName: Fast Enemy
   sprite: {fileID: 5453849175456367835, guid: d4833a99bc02fe445a3bc8839bc87fb4, type: 3}
+  scale: 1
   maxHealth: 10
   moveSpeed: 4
   contactDamage: 3

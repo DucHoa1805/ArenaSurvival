@@ -13,6 +13,9 @@ namespace ArenaSurvival.Enemies
         public string displayName = "Enemy";
         public Sprite sprite;
 
+        [Tooltip("Hệ số phóng to cả hình lẫn collider (1 = kích thước gốc của prefab).")]
+        [Min(0.1f)] public float scale = 1f;
+
         [Header("Stats")]
         public float maxHealth = 20f;
         public float moveSpeed = 2f;

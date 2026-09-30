@@ -40,6 +40,10 @@ namespace ArenaSurvival.Enemies
             _data = data;
             _health.SetMaxHealth(data.maxHealth * healthMultiplier, healToFull: true);
             _spriteRenderer.sprite = data.sprite;
+
+            // Gán lại mỗi lần lấy ra từ pool: object này lần trước có thể là 1 loại quái khác kích thước.
+            // Scale transform thì collider cũng to theo, không cần chỉnh riêng.
+            transform.localScale = Vector3.one * data.scale;
         }
 
         private void OnEnable()

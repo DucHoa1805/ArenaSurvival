@@ -14,7 +14,8 @@ namespace ArenaSurvival.Enemies
         [Min(0.05f)] public float spawnInterval = 1.5f; // cứ bao nhiêu giây sinh 1 quái
 
         [Header("Enemies")]
-        [Tooltip("Các loại quái được phép xuất hiện trong wave này, chọn ngẫu nhiên đều nhau.")]
+        [Tooltip("Các loại quái được phép xuất hiện trong wave này, mỗi phần tử có cơ hội như nhau. " +
+                 "Muốn 1 loại xuất hiện thường hơn thì thêm nó vào danh sách nhiều lần.")]
         public EnemyData[] enemyTypes;
     }
 }
