@@ -84,24 +84,8 @@ namespace ArenaSurvival.Progression
                 return;
             }
 
-            PickRandomOptions();
+            RandomPicker.PickDistinct(_allUpgrades, _choicesPerLevelUp, _currentOptions, _shuffleBuffer, UnityEngine.Random.Range);
             OnOptionsOffered?.Invoke(_currentOptions);
-        }
-
-        private void PickRandomOptions()
-        {
-            _currentOptions.Clear();
-            _shuffleBuffer.Clear();
-            _shuffleBuffer.AddRange(_allUpgrades);
-
-            // Fisher–Yates chỉ trộn đủ số phần tử cần lấy: đảm bảo các lựa chọn không trùng nhau.
-            int count = Mathf.Min(_choicesPerLevelUp, _shuffleBuffer.Count);
-            for (int i = 0; i < count; i++)
-            {
-                int j = UnityEngine.Random.Range(i, _shuffleBuffer.Count);
-                (_shuffleBuffer[i], _shuffleBuffer[j]) = (_shuffleBuffer[j], _shuffleBuffer[i]);
-                _currentOptions.Add(_shuffleBuffer[i]);
-            }
         }
 
         private void Apply(UpgradeData upgrade)
