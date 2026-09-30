@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4470850754257821324, guid: d8441d2502c7a4b42aa0dc7e0c9066e2, type: 3}
+  m_Sprite: {fileID: -5291006867049801255, guid: 06911991ba94e4a42b0a59bf8c7edf48, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -160,13 +160,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.33, y: 0.43}
+    oldSize: {x: 0.35, y: 0.43}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.33, y: 0.43}
   m_EdgeRadius: 0
 --- !u!114 &42723553947789564
 MonoBehaviour:
@@ -193,6 +193,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef5f29fdecf2b249bb3ef0c113619c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.Enemy
-  _moveSpeed: 2
-  _contactDamage: 5
   _damageCooldown: 1

@@ -28,7 +28,10 @@ namespace ArenaSurvival.Combat
 
         private void Awake()
         {
-            _projectilePool = new ObjectPool<Projectile>(_projectilePrefab, _poolPrewarmCount, transform);
+            // Đạn nằm trong 1 container riêng ở gốc scene, KHÔNG làm con của Player: object con luôn
+            // di chuyển/xoay theo cha, nên đạn đang bay sẽ bị quét lệch quỹ đạo mỗi khi Player xoay người.
+            Transform projectileRoot = new GameObject("Projectiles").transform;
+            _projectilePool = new ObjectPool<Projectile>(_projectilePrefab, _poolPrewarmCount, projectileRoot);
         }
 
         private void Update()
