@@ -716,6 +716,7 @@ GameObject:
   - component: {fileID: 1341743432}
   - component: {fileID: 1341743431}
   - component: {fileID: 1341743430}
+  - component: {fileID: 1341743434}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -845,6 +846,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1341743428}
   m_CullTransparentMesh: 1
+--- !u!114 &1341743434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341743428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &1445573822
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,6 +871,7 @@ GameObject:
   - component: {fileID: 1445573826}
   - component: {fileID: 1445573825}
   - component: {fileID: 1445573824}
+  - component: {fileID: 1445573828}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -987,6 +1001,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1445573822}
   m_CullTransparentMesh: 1
+--- !u!114 &1445573828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445573822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &1535558411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,6 +1410,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832884995}
   m_CullTransparentMesh: 1
+--- !u!1001 &1837736203
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4254476225219929291, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1391,3 +1474,4 @@ SceneRoots:
   - {fileID: 806401530}
   - {fileID: 1535558415}
   - {fileID: 291283306}
+  - {fileID: 1837736203}

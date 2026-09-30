@@ -523,6 +523,7 @@ GameObject:
   - component: {fileID: 345800258}
   - component: {fileID: 345800257}
   - component: {fileID: 345800256}
+  - component: {fileID: 345800260}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -652,6 +653,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 345800254}
   m_CullTransparentMesh: 1
+--- !u!114 &345800260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345800254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &427537203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,6 +1739,7 @@ GameObject:
   - component: {fileID: 622028851}
   - component: {fileID: 622028850}
   - component: {fileID: 622028855}
+  - component: {fileID: 622028856}
   m_Layer: 5
   m_Name: Option3
   m_TagString: Untagged
@@ -1896,6 +1910,18 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &622028856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622028848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &669104061
 GameObject:
   m_ObjectHideFlags: 0
@@ -2259,6 +2285,7 @@ GameObject:
   - component: {fileID: 748980705}
   - component: {fileID: 748980704}
   - component: {fileID: 748980703}
+  - component: {fileID: 748980707}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -2388,6 +2415,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 748980701}
   m_CullTransparentMesh: 1
+--- !u!114 &748980707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748980701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!114 &749638466 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4286960921988771090, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
@@ -2412,6 +2451,7 @@ GameObject:
   - component: {fileID: 756843850}
   - component: {fileID: 756843849}
   - component: {fileID: 756843848}
+  - component: {fileID: 756843852}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -2541,6 +2581,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 756843846}
   m_CullTransparentMesh: 1
+--- !u!114 &756843852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756843846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &866698998
 GameObject:
   m_ObjectHideFlags: 0
@@ -3416,6 +3468,7 @@ GameObject:
   - component: {fileID: 1114316591}
   - component: {fileID: 1114316590}
   - component: {fileID: 1114316595}
+  - component: {fileID: 1114316596}
   m_Layer: 5
   m_Name: Option1
   m_TagString: Untagged
@@ -3586,6 +3639,18 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1114316596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114316588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &1206338040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3992,6 +4057,7 @@ GameObject:
   - component: {fileID: 1403579757}
   - component: {fileID: 1403579756}
   - component: {fileID: 1403579755}
+  - component: {fileID: 1403579759}
   m_Layer: 5
   m_Name: RetryButton
   m_TagString: Untagged
@@ -4121,6 +4187,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1403579753}
   m_CullTransparentMesh: 1
+--- !u!114 &1403579759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403579753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &1450837305
 GameObject:
   m_ObjectHideFlags: 0
@@ -4841,6 +4919,7 @@ GameObject:
   - component: {fileID: 1659327484}
   - component: {fileID: 1659327483}
   - component: {fileID: 1659327488}
+  - component: {fileID: 1659327489}
   m_Layer: 5
   m_Name: Option2
   m_TagString: Untagged
@@ -5011,6 +5090,18 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1659327489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659327481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
 --- !u!1 &1689143771
 GameObject:
   m_ObjectHideFlags: 0
@@ -5290,7 +5381,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -7621188609403934177, guid: 7f7fc07a46925584ab2cdb29ef901dbf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5454,6 +5545,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1755120093}
   m_CullTransparentMesh: 1
+--- !u!1001 &1837736203
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4254476225219929291, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148462098974475612, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dfcf2ce048f6f514fbbe3fa91075fa29, type: 3}
 --- !u!1 &1921727557
 GameObject:
   m_ObjectHideFlags: 0
@@ -6502,3 +6650,4 @@ SceneRoots:
   - {fileID: 620699453}
   - {fileID: 1506298878}
   - {fileID: 2116143032}
+  - {fileID: 1837736203}

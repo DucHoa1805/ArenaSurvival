@@ -84,6 +84,7 @@ namespace ArenaSurvival.Combat
             Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
             projectile.OnReturnToPool = ReturnProjectileToPool;
             projectile.Launch(direction, _weaponData.damage * _stats.DamageMultiplier, _weaponData.projectileSpeed);
+            GameEvents.PlayerFired();
         }
 
         private void ReturnProjectileToPool(Projectile projectile)

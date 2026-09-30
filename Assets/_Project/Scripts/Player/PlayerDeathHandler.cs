@@ -21,12 +21,19 @@ namespace ArenaSurvival.Player
 
         private void OnEnable()
         {
+            _health.OnDamaged += HandleDamaged;
             _health.OnDied += HandleDied;
         }
 
         private void OnDisable()
         {
+            _health.OnDamaged -= HandleDamaged;
             _health.OnDied -= HandleDied;
+        }
+
+        private void HandleDamaged(float damage, float currentHealth)
+        {
+            GameEvents.PlayerDamaged(damage);
         }
 
         private void HandleDied()
