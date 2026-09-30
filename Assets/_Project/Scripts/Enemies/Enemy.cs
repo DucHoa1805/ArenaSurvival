@@ -33,11 +33,12 @@ namespace ArenaSurvival.Enemies
         /// <summary>
         /// Gọi ngay sau khi lấy Enemy ra khỏi pool (lúc này object đã active và OnEnable đã chạy),
         /// để cấu hình đúng loại quái (máu, tốc độ, sprite...) theo EnemyData được truyền vào.
+        /// healthMultiplier cho phép spawner làm quái trâu hơn ở các wave sau mà không sửa asset gốc.
         /// </summary>
-        public void Initialize(EnemyData data)
+        public void Initialize(EnemyData data, float healthMultiplier = 1f)
         {
             _data = data;
-            _health.SetMaxHealth(data.maxHealth, healToFull: true);
+            _health.SetMaxHealth(data.maxHealth * healthMultiplier, healToFull: true);
             _spriteRenderer.sprite = data.sprite;
         }
 
