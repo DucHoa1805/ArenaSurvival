@@ -11,6 +11,11 @@ namespace ArenaSurvival.Enemies
         [Header("Combat")]
         [SerializeField] private float _damageCooldown = 1f; // tránh gây damage mỗi frame khi đứng chạm liên tục
 
+        [Header("Rotation")]
+        [Tooltip("Góc lệch nếu sprite gốc không quay mặt sang phải (1,0). Sprite Kenney mặc định quay sang phải nên để 0.")]
+        [SerializeField] private float _spriteAngleOffset = 0f;
+        [SerializeField] private float _rotationSpeed = 540f; // độ/giây — xoay mượt, không giật khi Player đổi hướng liên tục
+
         private Rigidbody2D _rb;
         private ArenaSurvival.Combat.Health _health;
         private SpriteRenderer _spriteRenderer;
@@ -44,6 +49,16 @@ namespace ArenaSurvival.Enemies
             // Gán lại mỗi lần lấy ra từ pool: object này lần trước có thể là 1 loại quái khác kích thước.
             // Scale transform thì collider cũng to theo, không cần chỉnh riêng.
             transform.localScale = Vector3.one * data.scale;
+
+            // Quay mặt về phía Player ngay lúc xuất hiện, thay vì giữ hướng của lần dùng trước rồi mới xoay dần.
+            if (_playerTransform != null)
+            {
+                Vector2 toPlayer = (Vector2)_playerTransform.position - (Vector2)transform.position;
+                if (toPlayer.sqrMagnitude > 0.0001f)
+                {
+                    _rb.rotation = GetFacingAngle(toPlayer);
+                }
+            }
         }
 
         private void OnEnable()
@@ -72,8 +87,22 @@ namespace ArenaSurvival.Enemies
         {
             if (_playerTransform == null || _data == null) return;
 
-            Vector2 direction = (_playerTransform.position - transform.position).normalized;
+            Vector2 toPlayer = (Vector2)_playerTransform.position - _rb.position;
+
+            // Đã chồng lên Player: không có hướng rõ ràng, giữ nguyên để không bị xoay loạn.
+            if (toPlayer.sqrMagnitude < 0.0001f) return;
+
+            Vector2 direction = toPlayer.normalized;
             _rb.MovePosition(_rb.position + direction * (_data.moveSpeed * Time.fixedDeltaTime));
+
+            // Xoay qua Rigidbody2D (không set transform.rotation) để đồng bộ với bước vật lý như MovePosition.
+            float targetAngle = GetFacingAngle(direction);
+            _rb.MoveRotation(Mathf.MoveTowardsAngle(_rb.rotation, targetAngle, _rotationSpeed * Time.fixedDeltaTime));
+        }
+
+        private float GetFacingAngle(Vector2 direction)
+        {
+            return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + _spriteAngleOffset;
         }
 
         private void OnCollisionStay2D(Collision2D collision)
