@@ -15,6 +15,7 @@ namespace ArenaSurvival.Core
     public static class GameEvents
     {
         public static event Action<int, Vector3> OnEnemyKilled; // (xpReward, vị trí chết)
+        public static event Action<Vector3> OnProjectileHit;    // (vị trí trúng) — cho hiệu ứng/âm thanh, không cho logic game
         public static event Action<int> OnXpGained;
         public static event Action<int, int> OnXpChanged; // (XP hiện tại, XP cần để lên cấp kế)
         public static event Action<int> OnLevelUp;
@@ -23,6 +24,7 @@ namespace ArenaSurvival.Core
         public static event Action<int> OnWaveStarted; // (số thứ tự wave, bắt đầu từ 1)
 
         public static void EnemyKilled(int xpReward, Vector3 position) => OnEnemyKilled?.Invoke(xpReward, position);
+        public static void ProjectileHit(Vector3 position) => OnProjectileHit?.Invoke(position);
         public static void XpGained(int amount) => OnXpGained?.Invoke(amount);
         public static void XpChanged(int currentXp, int xpToNextLevel) => OnXpChanged?.Invoke(currentXp, xpToNextLevel);
         public static void LevelUp(int newLevel) => OnLevelUp?.Invoke(newLevel);

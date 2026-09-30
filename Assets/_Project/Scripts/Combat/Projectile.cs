@@ -62,6 +62,7 @@ namespace ArenaSurvival.Combat
             if (other.TryGetComponent(out Health targetHealth))
             {
                 targetHealth.TakeDamage(_damage);
+                Core.GameEvents.ProjectileHit(transform.position);
                 ReturnToPool();
             }
         }
