@@ -21,6 +21,10 @@ namespace ArenaSurvival.Combat
         public event Action<float, float> OnDamaged; // (damage, currentHealth)
         public event Action OnDied;
 
+        // Phát mỗi khi máu hoặc máu tối đa đổi vì BẤT KỲ lý do gì (trúng đòn, hồi máu, nâng cấp),
+        // để thanh máu chỉ cần nghe 1 event duy nhất.
+        public event Action<float, float> OnHealthChanged; // (currentHealth, maxHealth)
+
         private void OnEnable()
         {
             // Reset máu mỗi khi object được kích hoạt lại — quan trọng cho object lấy ra từ pool,
@@ -34,6 +38,7 @@ namespace ArenaSurvival.Combat
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
             OnDamaged?.Invoke(amount, CurrentHealth);
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
 
             if (IsDead)
             {
@@ -45,6 +50,7 @@ namespace ArenaSurvival.Combat
         {
             if (IsDead || amount <= 0f) return;
             CurrentHealth = Mathf.Min(_maxHealth, CurrentHealth + amount);
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
         /// <summary>Dùng khi nâng cấp tăng máu tối đa (Phase 4).</summary>
@@ -52,6 +58,7 @@ namespace ArenaSurvival.Combat
         {
             _maxHealth = newMax;
             CurrentHealth = healToFull ? _maxHealth : Mathf.Min(CurrentHealth, _maxHealth);
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
     }
 }

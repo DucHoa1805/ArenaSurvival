@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 4286960921988771090}
   - component: {fileID: 3491706075365627868}
   - component: {fileID: 2602976628328504595}
+  - component: {fileID: 1064305851388248126}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -262,3 +263,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93a9de49c7e28cb4989a11e294e8e22f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Player.PlayerDeathHandler
+--- !u!114 &1064305851388248126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19ef365b094aafa41be27635ebafd10a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Player.PlayerStats

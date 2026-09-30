@@ -62,6 +62,22 @@ namespace ArenaSurvival.Core
             Time.timeScale = 1f;
         }
 
+        public void BeginLevelUp()
+        {
+            if (CurrentState != GameState.Playing) return;
+
+            SetState(GameState.LevelUp);
+            Time.timeScale = 0f;
+        }
+
+        public void EndLevelUp()
+        {
+            if (CurrentState != GameState.LevelUp) return;
+
+            SetState(GameState.Playing);
+            Time.timeScale = 1f;
+        }
+
         private void HandlePlayerDied()
         {
             SetState(GameState.GameOver);

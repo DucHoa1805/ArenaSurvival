@@ -1,8 +1,10 @@
 using ArenaSurvival.Core;
+using ArenaSurvival.Player;
 using UnityEngine;
 
 namespace ArenaSurvival.Combat
 {
+    [RequireComponent(typeof(PlayerStats))]
     public class PlayerWeapon : MonoBehaviour
     {
         [Header("Data")]
@@ -22,12 +24,15 @@ namespace ArenaSurvival.Combat
 
         private float _fireCooldown;
         private ObjectPool<Projectile> _projectilePool;
+        private PlayerStats _stats;
 
         // Cấp phát 1 lần duy nhất rồi dùng lại mỗi frame — đây mới là thứ làm cho "NonAlloc" có ý nghĩa.
         private readonly Collider2D[] _hitBuffer = new Collider2D[MaxTargetsPerScan];
 
         private void Awake()
         {
+            _stats = GetComponent<PlayerStats>();
+
             // Đạn nằm trong 1 container riêng ở gốc scene, KHÔNG làm con của Player: object con luôn
             // di chuyển/xoay theo cha, nên đạn đang bay sẽ bị quét lệch quỹ đạo mỗi khi Player xoay người.
             Transform projectileRoot = new GameObject("Projectiles").transform;
@@ -49,7 +54,7 @@ namespace ArenaSurvival.Combat
             if (_fireCooldown <= 0f)
             {
                 Fire(direction);
-                _fireCooldown = 1f / _weaponData.fireRate;
+                _fireCooldown = 1f / (_weaponData.fireRate * _stats.FireRateMultiplier);
             }
         }
 
@@ -78,7 +83,7 @@ namespace ArenaSurvival.Combat
         {
             Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
             projectile.OnReturnToPool = ReturnProjectileToPool;
-            projectile.Launch(direction, _weaponData.damage, _weaponData.projectileSpeed);
+            projectile.Launch(direction, _weaponData.damage * _stats.DamageMultiplier, _weaponData.projectileSpeed);
         }
 
         private void ReturnProjectileToPool(Projectile projectile)

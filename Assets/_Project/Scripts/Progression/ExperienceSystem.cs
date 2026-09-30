@@ -41,9 +41,6 @@ namespace ArenaSurvival.Progression
             {
                 CurrentXp -= XpToNextLevel;
                 Level++;
-
-                // TODO (Phase 4): bỏ log này khi có màn chọn nâng cấp lắng nghe OnLevelUp.
-                Debug.Log($"Level up! Cấp {Level}, cần {XpToNextLevel} XP cho cấp kế.");
                 GameEvents.LevelUp(Level);
             }
 

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 namespace ArenaSurvival.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(PlayerStats))]
     public class PlayerController : MonoBehaviour
     {
         [Header("Movement")]
@@ -19,11 +20,13 @@ namespace ArenaSurvival.Player
         [SerializeField] private InputActionReference _moveAction;
 
         private Rigidbody2D _rb;
+        private PlayerStats _stats;
         private Vector2 _moveInput;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _stats = GetComponent<PlayerStats>();
         }
 
         private void OnEnable()
@@ -54,7 +57,8 @@ namespace ArenaSurvival.Player
         private void FixedUpdate()
         {
             // Di chuyển vật lý phải nằm trong FixedUpdate để đồng bộ với physics step.
-            Vector2 targetPosition = _rb.position + _moveInput.normalized * (_moveSpeed * Time.fixedDeltaTime);
+            float speed = _moveSpeed * _stats.MoveSpeedMultiplier;
+            Vector2 targetPosition = _rb.position + _moveInput.normalized * (speed * Time.fixedDeltaTime);
             _rb.MovePosition(targetPosition);
         }
     }
