@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2763961775194599692}
   - component: {fileID: 4286960921988771090}
   - component: {fileID: 3491706075365627868}
+  - component: {fileID: 2602976628328504595}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -242,11 +243,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Combat.PlayerWeapon
-  _fireRate: 1.5
-  _range: 6
-  _damage: 5
+  _weaponData: {fileID: 11400000, guid: 15aeef8b479207f438191e2e9d053d53, type: 2}
   _projectilePrefab: {fileID: 4644805776529081687, guid: 1628a3c5d02f1c64c85cb5f609590bc7, type: 3}
   _firePoint: {fileID: 0}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  _poolPrewarmCount: 20
+--- !u!114 &2602976628328504595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a9de49c7e28cb4989a11e294e8e22f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Player.PlayerDeathHandler

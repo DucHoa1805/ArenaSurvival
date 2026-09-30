@@ -119,6 +119,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &204102605 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7507145249831177368, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
+  m_PrefabInstance: {fileID: 3625615909647938581}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &238929284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 238929286}
+  - component: {fileID: 238929285}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &238929285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238929284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c769a3c888b05b9449302165994957e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Core.GameManager
+--- !u!4 &238929286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238929284}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.88985, y: -1.89013, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963cd7293be5d3047b2405a14f88bfa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Core.CameraFollow
-  _target: {fileID: 0}
+  _target: {fileID: 204102605}
   _smoothTime: 0.15
 --- !u!1 &619394800
 GameObject:
@@ -842,10 +891,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2dab5006df62e4492fcd94318d7ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.EnemySpawner
-  _enemyPrefab: {fileID: 6324038351617840190, guid: cdfcd4882cba7de48a2aacbaeadef3e5, type: 3}
+  _enemyPrefab: {fileID: 847369890010221830, guid: cdfcd4882cba7de48a2aacbaeadef3e5, type: 3}
+  _enemyData: {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
   _spawnInterval: 2
   _targetCamera: {fileID: 0}
   _spawnPadding: 2
+  _poolPrewarmCount: 15
 --- !u!1001 &3625615909647938581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -858,6 +909,10 @@ PrefabInstance:
       propertyPath: _firePoint
       value: 
       objectReference: {fileID: 1303716813}
+    - target: {fileID: 3491706075365627868, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
+      propertyPath: _poolPrewarmCount
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7507145249831177368, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -917,3 +972,4 @@ SceneRoots:
   - {fileID: 3625615909647938581}
   - {fileID: 1994187705}
   - {fileID: 2063012678}
+  - {fileID: 238929286}

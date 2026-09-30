@@ -5,10 +5,8 @@ namespace ArenaSurvival.Combat
 {
     public class PlayerWeapon : MonoBehaviour
     {
-        [Header("Stats")]
-        [SerializeField] private float _fireRate = 1.5f; // số phát bắn mỗi giây
-        [SerializeField] private float _range = 6f;
-        [SerializeField] private float _damage = 5f;
+        [Header("Data")]
+        [SerializeField] private WeaponData _weaponData;
 
         [Header("References")]
         [SerializeField] private Projectile _projectilePrefab;
@@ -41,7 +39,7 @@ namespace ArenaSurvival.Combat
             if (_fireCooldown <= 0f)
             {
                 Fire(direction);
-                _fireCooldown = 1f / _fireRate;
+                _fireCooldown = 1f / _weaponData.fireRate;
             }
         }
 
@@ -49,7 +47,7 @@ namespace ArenaSurvival.Combat
         {
             // NonAlloc để không cấp phát mảng mới mỗi frame — quan trọng khi có nhiều quái.
             Collider2D[] hits = new Collider2D[20];
-            int count = Physics2D.OverlapCircleNonAlloc(transform.position, _range, hits, _enemyLayer);
+            int count = Physics2D.OverlapCircleNonAlloc(transform.position, _weaponData.range, hits, _enemyLayer);
 
             Transform nearest = null;
             float nearestDistSqr = float.MaxValue;
@@ -70,13 +68,8 @@ namespace ArenaSurvival.Combat
         private void Fire(Vector2 direction)
         {
             Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
-
-            // Gán callback mỗi lần Fire là hơi lãng phí (tạo delegate mới), nhưng chấp nhận được
-            // ở quy mô dự án này. Cách tối ưu hơn: gán 1 lần duy nhất lúc pool tạo object mới
-            // (có thể refactor sau nếu muốn, bằng cách thêm callback vào constructor của pool).
             projectile.OnReturnToPool = ReturnProjectileToPool;
-
-            projectile.Launch(direction, _damage);
+            projectile.Launch(direction, _weaponData.damage, _weaponData.projectileSpeed);
         }
 
         private void ReturnProjectileToPool(Projectile projectile)
@@ -86,9 +79,11 @@ namespace ArenaSurvival.Combat
 
         private void OnDrawGizmosSelected()
         {
-            // Vẽ vòng tròn tầm bắn trong Scene view để dễ chỉnh _range bằng mắt.
+            if (_weaponData == null) return;
+
+            // Vẽ vòng tròn tầm bắn trong Scene view để dễ chỉnh bằng mắt.
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, _range);
+            Gizmos.DrawWireSphere(transform.position, _weaponData.range);
         }
     }
 }

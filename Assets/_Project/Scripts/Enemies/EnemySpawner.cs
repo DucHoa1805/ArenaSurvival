@@ -7,6 +7,7 @@ namespace ArenaSurvival.Enemies
     {
         [Header("Prefab")]
         [SerializeField] private Enemy _enemyPrefab;
+        [SerializeField] private EnemyData _enemyData;
 
         [Header("Spawn Timing")]
         [SerializeField] private float _spawnInterval = 2f;
@@ -46,6 +47,7 @@ namespace ArenaSurvival.Enemies
             Vector2 spawnPosition = GetRandomPositionOutsideCamera();
 
             Enemy enemy = _enemyPool.Get(spawnPosition, Quaternion.identity);
+            enemy.Initialize(_enemyData);
             enemy.OnReturnToPool = ReturnEnemyToPool;
         }
 

@@ -5,19 +5,20 @@ namespace ArenaSurvival.Enemies
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(ArenaSurvival.Combat.Health))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public class Enemy : MonoBehaviour
     {
-        [Header("Movement")]
-        [SerializeField] private float _moveSpeed = 2f;
-
         [Header("Combat")]
-        [SerializeField] private float _contactDamage = 5f;
         [SerializeField] private float _damageCooldown = 1f; // tránh gây damage mỗi frame khi đứng chạm liên tục
 
         private Rigidbody2D _rb;
         private ArenaSurvival.Combat.Health _health;
+        private SpriteRenderer _spriteRenderer;
         private Transform _playerTransform;
         private float _lastDamageTime = -999f;
+
+        private EnemyData _data;
+        public EnemyData Data => _data;
 
         // Giống Projectile: Enemy không biết gì về ObjectPool<T>, chỉ gọi callback khi xong việc.
         public Action<Enemy> OnReturnToPool;
@@ -26,6 +27,18 @@ namespace ArenaSurvival.Enemies
         {
             _rb = GetComponent<Rigidbody2D>();
             _health = GetComponent<ArenaSurvival.Combat.Health>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        /// <summary>
+        /// Gọi ngay sau khi lấy Enemy ra khỏi pool, TRƯỚC khi SetActive(true) có hiệu lực đầy đủ,
+        /// để cấu hình đúng loại quái (máu, tốc độ, sprite...) theo EnemyData được truyền vào.
+        /// </summary>
+        public void Initialize(EnemyData data)
+        {
+            _data = data;
+            _health.SetMaxHealth(data.maxHealth, healToFull: true);
+            _spriteRenderer.sprite = data.sprite;
         }
 
         private void OnEnable()
@@ -52,10 +65,10 @@ namespace ArenaSurvival.Enemies
 
         private void FixedUpdate()
         {
-            if (_playerTransform == null) return;
+            if (_playerTransform == null || _data == null) return;
 
             Vector2 direction = (_playerTransform.position - transform.position).normalized;
-            _rb.MovePosition(_rb.position + direction * (_moveSpeed * Time.fixedDeltaTime));
+            _rb.MovePosition(_rb.position + direction * (_data.moveSpeed * Time.fixedDeltaTime));
         }
 
         private void OnCollisionStay2D(Collision2D collision)
@@ -71,12 +84,13 @@ namespace ArenaSurvival.Enemies
 
         private void TryDamagePlayer(Collider2D other)
         {
+            if (_data == null) return;
             if (Time.time - _lastDamageTime < _damageCooldown) return;
             if (!other.CompareTag("Player")) return;
 
             if (other.TryGetComponent(out ArenaSurvival.Combat.Health playerHealth))
             {
-                playerHealth.TakeDamage(_contactDamage);
+                playerHealth.TakeDamage(_data.contactDamage);
                 _lastDamageTime = Time.time;
             }
         }
@@ -84,6 +98,14 @@ namespace ArenaSurvival.Enemies
         private void HandleDied()
         {
             _rb.linearVelocity = Vector2.zero;
+
+            // Phát sự kiện toàn cục để hệ thống XP (Phase 4) lắng nghe mà Enemy không cần biết
+            // ProgressionSystem tồn tại — đây là ví dụ thực tế của giảm coupling qua event.
+            if (_data != null)
+            {
+                Core.GameEvents.EnemyKilled(_data.xpReward, transform.position);
+            }
+
             OnReturnToPool?.Invoke(this);
         }
     }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_Basic
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.EnemyData
+  displayName: Basic Enemy
+  sprite: {fileID: -5291006867049801255, guid: 06911991ba94e4a42b0a59bf8c7edf48, type: 3}
+  maxHealth: 20
+  moveSpeed: 2
+  contactDamage: 5
+  xpReward: 1

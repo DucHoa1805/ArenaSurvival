@@ -29,11 +29,16 @@ namespace ArenaSurvival.Combat
         }
 
         /// <summary>Gọi ngay sau khi lấy đạn ra (từ pool) để thiết lập hướng bắn.</summary>
-        public void Launch(Vector2 direction, float damageOverride = -1f)
+        public void Launch(Vector2 direction, float damageOverride = -1f, float speedOverride = -1f)
         {
             if (damageOverride >= 0f)
             {
                 _damage = damageOverride;
+            }
+
+            if (speedOverride >= 0f)
+            {
+                _speed = speedOverride;
             }
 
             _rb.linearVelocity = direction.normalized * _speed;
