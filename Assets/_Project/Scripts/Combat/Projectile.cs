@@ -1,0 +1,65 @@
+using UnityEngine;
+
+namespace ArenaSurvival.Combat
+{
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class Projectile : MonoBehaviour
+    {
+        [SerializeField] private float _speed = 10f;
+        [SerializeField] private float _damage = 5f;
+        [SerializeField] private float _lifetime = 3f; // tự hủy sau X giây nếu không trúng gì (bay ra ngoài màn hình)
+
+        private Rigidbody2D _rb;
+        private float _spawnTime;
+
+        private void Awake()
+        {
+            _rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnEnable()
+        {
+            _spawnTime = Time.time;
+        }
+
+        /// <summary>Gọi ngay sau khi lấy đạn ra (Instantiate hoặc từ pool) để thiết lập hướng bắn.</summary>
+        public void Launch(Vector2 direction, float damageOverride = -1f)
+        {
+            if (damageOverride >= 0f)
+            {
+                _damage = damageOverride;
+            }
+
+            _rb.linearVelocity = direction.normalized * _speed;
+
+            // Xoay đạn theo hướng bay để sprite (nếu có hình mũi tên/viên đạn dài) hiển thị đúng.
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+        private void Update()
+        {
+            if (Time.time - _spawnTime >= _lifetime)
+            {
+                Deactivate();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            // Đạn chỉ nên va chạm Enemy — việc lọc "đạn không trúng Player" sẽ do
+            // Layer Collision Matrix đảm nhiệm, không cần check tag ở đây.
+            if (other.TryGetComponent(out Health targetHealth))
+            {
+                targetHealth.TakeDamage(_damage);
+                Deactivate();
+            }
+        }
+
+        private void Deactivate()
+        {
+            // TODO (Phase 2 cuối): thay Destroy bằng trả về object pool.
+            Destroy(gameObject);
+        }
+    }
+}
