@@ -20,8 +20,8 @@ namespace ArenaSurvival.Progression
         [Header("Targets")]
         [SerializeField] private PlayerStats _playerStats;
         [SerializeField] private Health _playerHealth;
-        [Tooltip("Mọi khẩu súng gắn trên Player, kể cả khẩu chưa mở khóa (đang disabled).")]
-        [SerializeField] private PlayerWeapon[] _playerWeapons;
+        [Tooltip("Mọi component vũ khí (IWeapon) gắn trên Player, kể cả cái chưa mở khóa (đang disabled).")]
+        [SerializeField] private MonoBehaviour[] _weapons;
 
         /// <summary>Phát mỗi khi có 1 lượt chọn mới. UI nghe event này để hiển thị.</summary>
         public event Action<IReadOnlyList<UpgradeData>> OnOptionsOffered;
@@ -32,6 +32,7 @@ namespace ArenaSurvival.Progression
 
         // Lên nhiều cấp cùng lúc (nhặt 1 lượng XP lớn) thì xếp hàng: chọn xong lượt này mới tới lượt kế.
         private int _pendingLevelUps;
+        private int _currentLevel = 1;
 
         private void OnEnable()
         {
@@ -45,6 +46,7 @@ namespace ArenaSurvival.Progression
 
         private void HandleLevelUp(int newLevel)
         {
+            _currentLevel = newLevel;
             _pendingLevelUps++;
 
             // Chỉ mở lượt chọn nếu chưa có lượt nào đang mở.
@@ -100,18 +102,19 @@ namespace ArenaSurvival.Progression
 
         private bool IsAvailable(UpgradeData upgrade)
         {
+            if (_currentLevel < upgrade.requiredLevel) return false;
             if (upgrade.type != UpgradeType.AddWeapon) return true;
 
-            // Súng mở khóa được khi Player có gắn khẩu đó và nó chưa được bật.
-            PlayerWeapon weapon = FindWeapon(upgrade.weapon);
+            // Vũ khí mở khóa được khi Player có gắn nó và nó chưa được bật.
+            MonoBehaviour weapon = FindWeapon(upgrade.weapon);
             return weapon != null && !weapon.enabled;
         }
 
-        private PlayerWeapon FindWeapon(WeaponData data)
+        private MonoBehaviour FindWeapon(WeaponDefinition definition)
         {
-            foreach (PlayerWeapon weapon in _playerWeapons)
+            foreach (MonoBehaviour behaviour in _weapons)
             {
-                if (weapon != null && weapon.Data == data) return weapon;
+                if (behaviour is IWeapon weapon && weapon.Definition == definition) return behaviour;
             }
 
             return null;
@@ -139,7 +142,7 @@ namespace ArenaSurvival.Progression
                     _playerHealth.Heal(upgrade.value);
                     break;
                 case UpgradeType.AddWeapon:
-                    PlayerWeapon weapon = FindWeapon(upgrade.weapon);
+                    MonoBehaviour weapon = FindWeapon(upgrade.weapon);
                     if (weapon != null) weapon.enabled = true;
                     break;
             }

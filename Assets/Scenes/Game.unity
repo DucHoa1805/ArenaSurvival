@@ -1238,12 +1238,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef973ace634c6734f858163a10ccd6cd, type: 2}
   - {fileID: 11400000, guid: b671adf3915e8e64982a5b0275dcd2da, type: 2}
   - {fileID: 11400000, guid: f5c34410ab25c914086de2232a7dccf0, type: 2}
+  - {fileID: 11400000, guid: da46e7c67a06d6845abc8ff9643ef301, type: 2}
+  - {fileID: 11400000, guid: d674807a3aa3eab4cbee2dc8557bd5ba, type: 2}
   _choicesPerLevelUp: 3
   _playerStats: {fileID: 3625615909647938582}
   _playerHealth: {fileID: 749638466}
-  _playerWeapons:
+  _weapons:
   - {fileID: 3625615909647938584}
   - {fileID: 3625615909647938583}
+  - {fileID: 3625615909647938586}
+  - {fileID: 3625615909647938585}
 --- !u!1 &586251067
 GameObject:
   m_ObjectHideFlags: 0
@@ -6652,6 +6656,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Combat.PlayerWeapon
+--- !u!114 &3625615909647938585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 326507814990378938, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
+  m_PrefabInstance: {fileID: 3625615909647938581}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36350237a890d7f488c1279a8a08b4e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.OrbitWeapon
+--- !u!114 &3625615909647938586 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7356917306387966622, guid: 939b5cab29271f04fbb127bb2645cb41, type: 3}
+  m_PrefabInstance: {fileID: 3625615909647938581}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.PlayerWeapon
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

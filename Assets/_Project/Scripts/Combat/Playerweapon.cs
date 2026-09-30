@@ -9,12 +9,13 @@ namespace ArenaSurvival.Combat
     /// khẩu chưa mở khóa để disabled và được UpgradeManager bật lên khi người chơi chọn nâng cấp tương ứng.
     /// </summary>
     [RequireComponent(typeof(PlayerStats))]
-    public class PlayerWeapon : MonoBehaviour
+    public class PlayerWeapon : MonoBehaviour, IWeapon
     {
         [Header("Data")]
         [SerializeField] private WeaponData _weaponData;
 
         public WeaponData Data => _weaponData;
+        public WeaponDefinition Definition => _weaponData;
 
         [Header("References")]
         [SerializeField] private Projectile _projectilePrefab;

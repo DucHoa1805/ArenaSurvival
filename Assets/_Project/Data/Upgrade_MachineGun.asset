@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
+  m_Name: Upgrade_MachineGun
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Progression.UpgradeData
+  displayName: "S\xFAng m\xE1y"
+  description: "Th\xEAm s\xFAng m\xE1y: 4 ph\xE1t/gi\xE2y, s\xE1t th\u01B0\u01A1ng
+    cao, t\u1EA7m xa."
+  icon: {fileID: 0}
+  type: 5
+  value: 0
+  weapon: {fileID: 11400000, guid: cf00ca75e4b2ba74db307014fbcbdca8, type: 2}
+  requiredLevel: 5

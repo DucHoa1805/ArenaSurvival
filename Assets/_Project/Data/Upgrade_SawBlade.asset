@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
+  m_Name: Upgrade_SawBlade
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Progression.UpgradeData
+  displayName: "L\u01B0\u1EE1i c\u01B0a xoay"
+  description: "3 l\u01B0\u1EE1i c\u01B0a quay quanh ng\u01B0\u1EDDi, qu\xE1i ch\u1EA1m
+    v\xE0o l\xE0 m\u1EA5t m\xE1u."
+  icon: {fileID: 0}
+  type: 5
+  value: 0
+  weapon: {fileID: 11400000, guid: 5b63ab213fea55c4da68ebf2db7f86f2, type: 2}
+  requiredLevel: 1

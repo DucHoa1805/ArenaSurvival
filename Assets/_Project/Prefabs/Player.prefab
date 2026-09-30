@@ -49,6 +49,8 @@ GameObject:
   - component: {fileID: 2602976628328504595}
   - component: {fileID: 1064305851388248126}
   - component: {fileID: 4696066669073839423}
+  - component: {fileID: 7356917306387966622}
+  - component: {fileID: 326507814990378938}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -295,3 +297,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _poolPrewarmCount: 30
+--- !u!114 &7356917306387966622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.PlayerWeapon
+  _weaponData: {fileID: 11400000, guid: cf00ca75e4b2ba74db307014fbcbdca8, type: 2}
+  _projectilePrefab: {fileID: 4644805776529081687, guid: 1628a3c5d02f1c64c85cb5f609590bc7, type: 3}
+  _firePoint: {fileID: 6316952694449696612}
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _poolPrewarmCount: 30
+--- !u!114 &326507814990378938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36350237a890d7f488c1279a8a08b4e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.OrbitWeapon
+  _data: {fileID: 11400000, guid: 5b63ab213fea55c4da68ebf2db7f86f2, type: 2}
