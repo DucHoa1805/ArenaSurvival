@@ -57,8 +57,8 @@ namespace ArenaSurvival.Combat
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player")) return;
-
+            // Không cần tự loại trừ Player ở đây: Layer Collision Matrix chỉ cho layer PlayerProjectile
+            // chạm layer Enemy (và Default), nên đạn không bao giờ nhận được trigger từ Player.
             if (other.TryGetComponent(out Health targetHealth))
             {
                 targetHealth.TakeDamage(_damage);

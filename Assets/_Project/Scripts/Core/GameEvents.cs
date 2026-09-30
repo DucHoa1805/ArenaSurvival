@@ -16,6 +16,7 @@ namespace ArenaSurvival.Core
     {
         public static event Action<int, Vector3> OnEnemyKilled; // (xpReward, vị trí chết)
         public static event Action<int> OnXpGained;
+        public static event Action<int, int> OnXpChanged; // (XP hiện tại, XP cần để lên cấp kế)
         public static event Action<int> OnLevelUp;
         public static event Action OnPlayerDied;
         public static event Action<GameState> OnGameStateChanged;
@@ -23,6 +24,7 @@ namespace ArenaSurvival.Core
 
         public static void EnemyKilled(int xpReward, Vector3 position) => OnEnemyKilled?.Invoke(xpReward, position);
         public static void XpGained(int amount) => OnXpGained?.Invoke(amount);
+        public static void XpChanged(int currentXp, int xpToNextLevel) => OnXpChanged?.Invoke(currentXp, xpToNextLevel);
         public static void LevelUp(int newLevel) => OnLevelUp?.Invoke(newLevel);
         public static void PlayerDied() => OnPlayerDied?.Invoke();
         public static void GameStateChanged(GameState newState) => OnGameStateChanged?.Invoke(newState);
