@@ -1,4 +1,5 @@
 using ArenaSurvival.Core;
+using ArenaSurvival.Save;
 using TMPro;
 using UnityEngine;
 
@@ -11,9 +12,11 @@ namespace ArenaSurvival.UI
     public class GameOverPanel : MonoBehaviour
     {
         [SerializeField] private RunStats _runStats;
+        [SerializeField] private HighScoreTracker _highScores;
         [SerializeField] private GameObject _content;
         [SerializeField] private TMP_Text _timeText;
         [SerializeField] private TMP_Text _killText;
+        [SerializeField] private TMP_Text _bestText;
         [SerializeField] private UnityEngine.UI.Button _retryButton;
         [SerializeField] private UnityEngine.UI.Button _mainMenuButton;
 
@@ -33,11 +36,20 @@ namespace ArenaSurvival.UI
         private void OnEnable()
         {
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
+            _highScores.OnRecordsUpdated += HandleRecordsUpdated;
         }
 
         private void OnDisable()
         {
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
+            _highScores.OnRecordsUpdated -= HandleRecordsUpdated;
+        }
+
+        // Chạy trước hay sau HandleGameStateChanged đều được: 2 hàm ghi vào 2 dòng chữ khác nhau.
+        private void HandleRecordsUpdated()
+        {
+            string best = TimeFormatter.ToClock(_highScores.Best.bestSurvivalTime);
+            _bestText.text = _highScores.IsNewBestTime ? $"Kỷ lục mới: {best}!" : $"Kỷ lục: {best}";
         }
 
         private void HandleGameStateChanged(GameState newState)

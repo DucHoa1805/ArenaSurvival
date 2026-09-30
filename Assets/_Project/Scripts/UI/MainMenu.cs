@@ -1,4 +1,6 @@
 using ArenaSurvival.Core;
+using ArenaSurvival.Save;
+using TMPro;
 using UnityEngine;
 
 namespace ArenaSurvival.UI
@@ -7,11 +9,20 @@ namespace ArenaSurvival.UI
     {
         [SerializeField] private UnityEngine.UI.Button _playButton;
         [SerializeField] private UnityEngine.UI.Button _quitButton;
+        [SerializeField] private TMP_Text _bestText;
 
         private void Awake()
         {
             _playButton.onClick.AddListener(HandlePlayClicked);
             _quitButton.onClick.AddListener(HandleQuitClicked);
+        }
+
+        private void Start()
+        {
+            SaveData best = SaveSystem.Load();
+            _bestText.text = best.bestSurvivalTime > 0f
+                ? $"Kỷ lục: {TimeFormatter.ToClock(best.bestSurvivalTime)}  ·  {best.bestKillCount} quái"
+                : "Chưa có kỷ lục";
         }
 
         private void OnDestroy()
