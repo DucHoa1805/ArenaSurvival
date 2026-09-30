@@ -13,6 +13,9 @@
 # MemoryCaptures can get excessive in size
 /[Mm]emoryCaptures/
 
+# Profiler captures (.data) can get excessive in size too
+/[Pp]rofilerCaptures/
+
 # Recordings can get excessive in size
 /[Rr]ecordings/
 
@@ -37,6 +40,7 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+*.slnx
 *.suo
 *.tmp
 *.user
