@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ArenaSurvival.Enemies
@@ -14,12 +15,17 @@ namespace ArenaSurvival.Enemies
         [SerializeField] private float _damageCooldown = 1f; // tránh gây damage mỗi frame khi đứng chạm liên tục
 
         private Rigidbody2D _rb;
+        private ArenaSurvival.Combat.Health _health;
         private Transform _playerTransform;
         private float _lastDamageTime = -999f;
+
+        // Giống Projectile: Enemy không biết gì về ObjectPool<T>, chỉ gọi callback khi xong việc.
+        public Action<Enemy> OnReturnToPool;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _health = GetComponent<ArenaSurvival.Combat.Health>();
         }
 
         private void OnEnable()
@@ -36,6 +42,12 @@ namespace ArenaSurvival.Enemies
             }
 
             _lastDamageTime = -999f;
+            _health.OnDied += HandleDied;
+        }
+
+        private void OnDisable()
+        {
+            _health.OnDied -= HandleDied;
         }
 
         private void FixedUpdate()
@@ -67,6 +79,12 @@ namespace ArenaSurvival.Enemies
                 playerHealth.TakeDamage(_contactDamage);
                 _lastDamageTime = Time.time;
             }
+        }
+
+        private void HandleDied()
+        {
+            _rb.linearVelocity = Vector2.zero;
+            OnReturnToPool?.Invoke(this);
         }
     }
 }

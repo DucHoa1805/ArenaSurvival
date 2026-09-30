@@ -1,3 +1,4 @@
+using ArenaSurvival.Core;
 using UnityEngine;
 
 namespace ArenaSurvival.Combat
@@ -14,7 +15,16 @@ namespace ArenaSurvival.Combat
         [SerializeField] private Transform _firePoint;
         [SerializeField] private LayerMask _enemyLayer; // chỉ tìm mục tiêu trên layer Enemy
 
+        [Header("Pooling")]
+        [SerializeField] private int _poolPrewarmCount = 20;
+
         private float _fireCooldown;
+        private ObjectPool<Projectile> _projectilePool;
+
+        private void Awake()
+        {
+            _projectilePool = new ObjectPool<Projectile>(_projectilePrefab, _poolPrewarmCount, transform);
+        }
 
         private void Update()
         {
@@ -59,9 +69,19 @@ namespace ArenaSurvival.Combat
 
         private void Fire(Vector2 direction)
         {
-            // TODO (Phase 2 cuối): thay Instantiate bằng lấy đạn từ object pool.
-            Projectile projectile = Instantiate(_projectilePrefab, _firePoint.position, Quaternion.identity);
+            Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
+
+            // Gán callback mỗi lần Fire là hơi lãng phí (tạo delegate mới), nhưng chấp nhận được
+            // ở quy mô dự án này. Cách tối ưu hơn: gán 1 lần duy nhất lúc pool tạo object mới
+            // (có thể refactor sau nếu muốn, bằng cách thêm callback vào constructor của pool).
+            projectile.OnReturnToPool = ReturnProjectileToPool;
+
             projectile.Launch(direction, _damage);
+        }
+
+        private void ReturnProjectileToPool(Projectile projectile)
+        {
+            _projectilePool.Release(projectile);
         }
 
         private void OnDrawGizmosSelected()

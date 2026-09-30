@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ArenaSurvival.Combat
@@ -7,10 +8,15 @@ namespace ArenaSurvival.Combat
     {
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _damage = 5f;
-        [SerializeField] private float _lifetime = 3f; // tự hủy sau X giây nếu không trúng gì (bay ra ngoài màn hình)
+        [SerializeField] private float _lifetime = 3f; // tự trả về pool sau X giây nếu không trúng gì
 
         private Rigidbody2D _rb;
         private float _spawnTime;
+
+        // Người tạo ra pool sẽ gán hàm này vào — Projectile không cần biết pool là gì,
+        // chỉ cần biết "khi xong việc thì gọi callback này". Điều này giữ Projectile
+        // không phụ thuộc trực tiếp vào ObjectPool<T>, dễ tái sử dụng ở nơi khác.
+        public Action<Projectile> OnReturnToPool;
 
         private void Awake()
         {
@@ -22,7 +28,7 @@ namespace ArenaSurvival.Combat
             _spawnTime = Time.time;
         }
 
-        /// <summary>Gọi ngay sau khi lấy đạn ra (Instantiate hoặc từ pool) để thiết lập hướng bắn.</summary>
+        /// <summary>Gọi ngay sau khi lấy đạn ra (từ pool) để thiết lập hướng bắn.</summary>
         public void Launch(Vector2 direction, float damageOverride = -1f)
         {
             if (damageOverride >= 0f)
@@ -32,7 +38,6 @@ namespace ArenaSurvival.Combat
 
             _rb.linearVelocity = direction.normalized * _speed;
 
-            // Xoay đạn theo hướng bay để sprite (nếu có hình mũi tên/viên đạn dài) hiển thị đúng.
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
@@ -41,25 +46,25 @@ namespace ArenaSurvival.Combat
         {
             if (Time.time - _spawnTime >= _lifetime)
             {
-                Deactivate();
+                ReturnToPool();
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // Đạn chỉ nên va chạm Enemy — việc lọc "đạn không trúng Player" sẽ do
-            // Layer Collision Matrix đảm nhiệm, không cần check tag ở đây.
+            if (other.CompareTag("Player")) return;
+
             if (other.TryGetComponent(out Health targetHealth))
             {
                 targetHealth.TakeDamage(_damage);
-                Deactivate();
+                ReturnToPool();
             }
         }
 
-        private void Deactivate()
+        private void ReturnToPool()
         {
-            // TODO (Phase 2 cuối): thay Destroy bằng trả về object pool.
-            Destroy(gameObject);
+            _rb.linearVelocity = Vector2.zero;
+            OnReturnToPool?.Invoke(this);
         }
     }
 }

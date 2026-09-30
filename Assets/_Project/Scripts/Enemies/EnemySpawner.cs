@@ -1,3 +1,4 @@
+using ArenaSurvival.Core;
 using UnityEngine;
 
 namespace ArenaSurvival.Enemies
@@ -5,7 +6,7 @@ namespace ArenaSurvival.Enemies
     public class EnemySpawner : MonoBehaviour
     {
         [Header("Prefab")]
-        [SerializeField] private GameObject _enemyPrefab;
+        [SerializeField] private Enemy _enemyPrefab;
 
         [Header("Spawn Timing")]
         [SerializeField] private float _spawnInterval = 2f;
@@ -14,7 +15,11 @@ namespace ArenaSurvival.Enemies
         [SerializeField] private Camera _targetCamera;
         [SerializeField] private float _spawnPadding = 2f; // khoảng cách ngoài rìa camera để quái xuất hiện
 
+        [Header("Pooling")]
+        [SerializeField] private int _poolPrewarmCount = 15;
+
         private float _spawnTimer;
+        private ObjectPool<Enemy> _enemyPool;
 
         private void Awake()
         {
@@ -22,6 +27,8 @@ namespace ArenaSurvival.Enemies
             {
                 _targetCamera = Camera.main;
             }
+
+            _enemyPool = new ObjectPool<Enemy>(_enemyPrefab, _poolPrewarmCount, transform);
         }
 
         private void Update()
@@ -38,8 +45,13 @@ namespace ArenaSurvival.Enemies
         {
             Vector2 spawnPosition = GetRandomPositionOutsideCamera();
 
-            // TODO (Phase 2 cuối): thay Instantiate bằng object pool để tránh cấp phát GC liên tục.
-            Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = _enemyPool.Get(spawnPosition, Quaternion.identity);
+            enemy.OnReturnToPool = ReturnEnemyToPool;
+        }
+
+        private void ReturnEnemyToPool(Enemy enemy)
+        {
+            _enemyPool.Release(enemy);
         }
 
         private Vector2 GetRandomPositionOutsideCamera()
