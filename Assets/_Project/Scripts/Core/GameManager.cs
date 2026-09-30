@@ -24,9 +24,20 @@ namespace ArenaSurvival.Core
             Instance = this;
         }
 
+        private void OnDestroy()
+        {
+            // Instance là static nên sống qua lần nạp scene — dọn đi để scene Game nạp lại
+            // (Retry) không nhìn thấy GameManager cũ đã bị hủy.
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
+
         private void Start()
         {
-            // TODO (Phase 4): bỏ dòng này khi có Main Menu thật gọi StartGame() qua nút bấm.
+            // GameManager chỉ tồn tại trong scene Game; scene này được nạp nghĩa là người chơi
+            // đã bấm Play (hoặc Retry), nên vào chơi luôn.
             StartGame();
         }
 
@@ -60,6 +71,19 @@ namespace ArenaSurvival.Core
 
             SetState(GameState.Playing);
             Time.timeScale = 1f;
+        }
+
+        /// <summary>Dùng cho phím Pause: đang chơi thì dừng, đang dừng thì chơi tiếp, trạng thái khác thì bỏ qua.</summary>
+        public void TogglePause()
+        {
+            if (CurrentState == GameState.Playing)
+            {
+                PauseGame();
+            }
+            else if (CurrentState == GameState.Paused)
+            {
+                ResumeGame();
+            }
         }
 
         public void BeginLevelUp()

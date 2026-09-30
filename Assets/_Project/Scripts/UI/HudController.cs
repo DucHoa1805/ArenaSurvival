@@ -64,7 +64,7 @@ namespace ArenaSurvival.UI
             if (seconds == _shownSeconds) return;
 
             _shownSeconds = seconds;
-            _timerText.text = $"{seconds / 60:00}:{seconds % 60:00}";
+            _timerText.text = TimeFormatter.ToClock(seconds);
         }
 
         private void HandleHealthChanged(float current, float max)
