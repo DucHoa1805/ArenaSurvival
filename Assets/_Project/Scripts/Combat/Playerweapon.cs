@@ -4,11 +4,17 @@ using UnityEngine;
 
 namespace ArenaSurvival.Combat
 {
+    /// <summary>
+    /// 1 khẩu súng tự bắn quái gần nhất. Player có thể gắn nhiều component này (mỗi cái 1 WeaponData);
+    /// khẩu chưa mở khóa để disabled và được UpgradeManager bật lên khi người chơi chọn nâng cấp tương ứng.
+    /// </summary>
     [RequireComponent(typeof(PlayerStats))]
     public class PlayerWeapon : MonoBehaviour
     {
         [Header("Data")]
         [SerializeField] private WeaponData _weaponData;
+
+        public WeaponData Data => _weaponData;
 
         [Header("References")]
         [SerializeField] private Projectile _projectilePrefab;
@@ -35,7 +41,8 @@ namespace ArenaSurvival.Combat
 
             // Đạn nằm trong 1 container riêng ở gốc scene, KHÔNG làm con của Player: object con luôn
             // di chuyển/xoay theo cha, nên đạn đang bay sẽ bị quét lệch quỹ đạo mỗi khi Player xoay người.
-            Transform projectileRoot = new GameObject("Projectiles").transform;
+            // Awake chạy cả khi component đang disabled, nên súng chưa mở khóa cũng tạo sẵn pool từ đầu trận.
+            Transform projectileRoot = new GameObject($"Projectiles ({_weaponData.name})").transform;
             _projectilePool = new ObjectPool<Projectile>(_projectilePrefab, _poolPrewarmCount, projectileRoot);
         }
 
@@ -81,10 +88,34 @@ namespace ArenaSurvival.Combat
 
         private void Fire(Vector2 direction)
         {
-            Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
-            projectile.OnReturnToPool = ReturnProjectileToPool;
-            projectile.Launch(direction, _weaponData.damage * _stats.DamageMultiplier, _weaponData.projectileSpeed);
+            float damage = _weaponData.damage * _stats.DamageMultiplier;
+            int count = Mathf.Max(1, _weaponData.projectileCount);
+
+            for (int i = 0; i < count; i++)
+            {
+                // Xoay hướng ngắm quanh trục Z để các viên tỏa đều thành hình quạt quanh mục tiêu.
+                float offset = GetSpreadOffset(i, count, _weaponData.spreadAngle);
+                Vector2 shotDirection = Quaternion.Euler(0f, 0f, offset) * direction;
+
+                Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
+                projectile.OnReturnToPool = ReturnProjectileToPool;
+                projectile.Launch(shotDirection, damage, _weaponData.projectileSpeed);
+            }
+
+            // 1 tiếng cho cả loạt đạn, không phải mỗi viên 1 tiếng.
             GameEvents.PlayerFired();
+        }
+
+        /// <summary>
+        /// Góc lệch (độ) của viên thứ <paramref name="index"/> trong 1 loạt <paramref name="count"/> viên,
+        /// chia đều từ -spread/2 đến +spread/2. Viên giữa (nếu số viên lẻ) bay thẳng vào mục tiêu.
+        /// </summary>
+        public static float GetSpreadOffset(int index, int count, float spreadAngle)
+        {
+            if (count <= 1) return 0f;
+
+            float t = (float)index / (count - 1);
+            return Mathf.Lerp(-spreadAngle * 0.5f, spreadAngle * 0.5f, t);
         }
 
         private void ReturnProjectileToPool(Projectile projectile)

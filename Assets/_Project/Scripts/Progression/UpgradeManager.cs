@@ -20,11 +20,14 @@ namespace ArenaSurvival.Progression
         [Header("Targets")]
         [SerializeField] private PlayerStats _playerStats;
         [SerializeField] private Health _playerHealth;
+        [Tooltip("Mọi khẩu súng gắn trên Player, kể cả khẩu chưa mở khóa (đang disabled).")]
+        [SerializeField] private PlayerWeapon[] _playerWeapons;
 
         /// <summary>Phát mỗi khi có 1 lượt chọn mới. UI nghe event này để hiển thị.</summary>
         public event Action<IReadOnlyList<UpgradeData>> OnOptionsOffered;
 
         private readonly List<UpgradeData> _currentOptions = new List<UpgradeData>();
+        private readonly List<UpgradeData> _availableUpgrades = new List<UpgradeData>();
         private readonly List<UpgradeData> _shuffleBuffer = new List<UpgradeData>();
 
         // Lên nhiều cấp cùng lúc (nhặt 1 lượng XP lớn) thì xếp hàng: chọn xong lượt này mới tới lượt kế.
@@ -84,8 +87,34 @@ namespace ArenaSurvival.Progression
                 return;
             }
 
-            RandomPicker.PickDistinct(_allUpgrades, _choicesPerLevelUp, _currentOptions, _shuffleBuffer, UnityEngine.Random.Range);
+            // Chỉ rút từ những nâng cấp còn ý nghĩa (ví dụ không đưa lại súng đã có).
+            _availableUpgrades.Clear();
+            foreach (UpgradeData upgrade in _allUpgrades)
+            {
+                if (IsAvailable(upgrade)) _availableUpgrades.Add(upgrade);
+            }
+
+            RandomPicker.PickDistinct(_availableUpgrades, _choicesPerLevelUp, _currentOptions, _shuffleBuffer, UnityEngine.Random.Range);
             OnOptionsOffered?.Invoke(_currentOptions);
+        }
+
+        private bool IsAvailable(UpgradeData upgrade)
+        {
+            if (upgrade.type != UpgradeType.AddWeapon) return true;
+
+            // Súng mở khóa được khi Player có gắn khẩu đó và nó chưa được bật.
+            PlayerWeapon weapon = FindWeapon(upgrade.weapon);
+            return weapon != null && !weapon.enabled;
+        }
+
+        private PlayerWeapon FindWeapon(WeaponData data)
+        {
+            foreach (PlayerWeapon weapon in _playerWeapons)
+            {
+                if (weapon != null && weapon.Data == data) return weapon;
+            }
+
+            return null;
         }
 
         private void Apply(UpgradeData upgrade)
@@ -108,6 +137,10 @@ namespace ArenaSurvival.Progression
                     break;
                 case UpgradeType.Heal:
                     _playerHealth.Heal(upgrade.value);
+                    break;
+                case UpgradeType.AddWeapon:
+                    PlayerWeapon weapon = FindWeapon(upgrade.weapon);
+                    if (weapon != null) weapon.enabled = true;
                     break;
             }
         }

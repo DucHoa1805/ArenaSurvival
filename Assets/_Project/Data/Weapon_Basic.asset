@@ -18,3 +18,5 @@ MonoBehaviour:
   fireRate: 1.5
   range: 6
   projectileSpeed: 10
+  projectileCount: 1
+  spreadAngle: 0

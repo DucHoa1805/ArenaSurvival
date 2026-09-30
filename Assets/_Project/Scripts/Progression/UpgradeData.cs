@@ -1,3 +1,4 @@
+using ArenaSurvival.Combat;
 using UnityEngine;
 
 namespace ArenaSurvival.Progression
@@ -8,7 +9,8 @@ namespace ArenaSurvival.Progression
         FireRate,   // value = phần cộng thêm vào hệ số tốc độ bắn
         MoveSpeed,  // value = phần cộng thêm vào hệ số tốc độ chạy
         MaxHealth,  // value = số máu tối đa cộng thêm
-        Heal        // value = số máu hồi ngay
+        Heal,       // value = số máu hồi ngay
+        AddWeapon   // mở khóa khẩu súng trong trường weapon; chỉ được đưa ra 1 lần
     }
 
     /// <summary>
@@ -27,5 +29,8 @@ namespace ArenaSurvival.Progression
         [Header("Effect")]
         public UpgradeType type;
         public float value;
+
+        [Tooltip("Chỉ dùng khi type = AddWeapon: khẩu súng được mở khóa.")]
+        public WeaponData weapon;
     }
 }

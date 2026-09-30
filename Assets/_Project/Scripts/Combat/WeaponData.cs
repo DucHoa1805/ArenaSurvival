@@ -19,5 +19,11 @@ namespace ArenaSurvival.Combat
         public float fireRate = 1.5f; // số phát/giây
         public float range = 6f;
         public float projectileSpeed = 10f;
+
+        [Header("Pattern")]
+        [Tooltip("Số viên bắn ra mỗi lần. 1 = súng thường; nhiều hơn = súng chùm.")]
+        [Min(1)] public int projectileCount = 1;
+        [Tooltip("Góc tỏa (độ) giữa viên ngoài cùng bên trái và bên phải. Không có tác dụng khi chỉ bắn 1 viên.")]
+        [Range(0f, 180f)] public float spreadAngle = 0f;
     }
 }
