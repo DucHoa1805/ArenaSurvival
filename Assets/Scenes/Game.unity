@@ -456,6 +456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 66276688}
   - component: {fileID: 66276689}
+  - component: {fileID: 66276690}
   m_Layer: 5
   m_Name: LevelUpPanel
   m_TagString: Untagged
@@ -501,6 +502,32 @@ MonoBehaviour:
   - {fileID: 1114316590}
   - {fileID: 1659327483}
   - {fileID: 622028850}
+  _animator: {fileID: 66276690}
+--- !u!114 &66276690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66276687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9611f84a85b8c5b4b8bc0fba67f75aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.LevelUpPanelAnimator
+  _content: {fileID: 427537207}
+  _title: {fileID: 434690619}
+  _cardRow: {fileID: 441185284}
+  _cards:
+  - {fileID: 1114316598}
+  - {fileID: 1659327491}
+  - {fileID: 622028858}
+  _fadeDuration: 0.18
+  _titleDuration: 0.45
+  _cardDelay: 0.12
+  _cardStagger: 0.08
+  _cardDuration: 0.38
+  _rowSlideDistance: 90
 --- !u!1 &70914683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1433,6 +1460,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 1
+  _playHover: 1
 --- !u!114 &345800261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1458,6 +1487,7 @@ GameObject:
   - component: {fileID: 427537204}
   - component: {fileID: 427537206}
   - component: {fileID: 427537205}
+  - component: {fileID: 427537207}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1525,6 +1555,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427537203}
   m_CullTransparentMesh: 1
+--- !u!225 &427537207
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427537203}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &434690618
 GameObject:
   m_ObjectHideFlags: 0
@@ -2821,6 +2863,7 @@ GameObject:
   - component: {fileID: 622028855}
   - component: {fileID: 622028856}
   - component: {fileID: 622028857}
+  - component: {fileID: 622028858}
   m_Layer: 5
   m_Name: Option3
   m_TagString: Untagged
@@ -3006,6 +3049,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 0
+  _playHover: 1
 --- !u!114 &622028857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3020,6 +3065,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.UiHoverScale
   _hoverScale: 1.06
   _speed: 14
+--- !u!225 &622028858
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622028848}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &637705801
 GameObject:
   m_ObjectHideFlags: 0
@@ -3814,6 +3871,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 1
+  _playHover: 1
 --- !u!114 &748980708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3996,6 +4055,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 1
+  _playHover: 1
 --- !u!114 &756843853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5623,6 +5684,7 @@ GameObject:
   - component: {fileID: 1114316595}
   - component: {fileID: 1114316596}
   - component: {fileID: 1114316597}
+  - component: {fileID: 1114316598}
   m_Layer: 5
   m_Name: Option1
   m_TagString: Untagged
@@ -5808,6 +5870,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 0
+  _playHover: 1
 --- !u!114 &1114316597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5822,6 +5886,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.UiHoverScale
   _hoverScale: 1.06
   _speed: 14
+--- !u!225 &1114316598
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114316588}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1206338040
 GameObject:
   m_ObjectHideFlags: 0
@@ -6578,6 +6654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 1
+  _playHover: 1
 --- !u!114 &1403579760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7692,6 +7770,7 @@ GameObject:
   - component: {fileID: 1659327488}
   - component: {fileID: 1659327489}
   - component: {fileID: 1659327490}
+  - component: {fileID: 1659327491}
   m_Layer: 5
   m_Name: Option2
   m_TagString: Untagged
@@ -7877,6 +7956,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a804b4310f194484caa456da67ce3fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.ButtonSound
+  _playClick: 0
+  _playHover: 1
 --- !u!114 &1659327490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7891,6 +7972,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.UiHoverScale
   _hoverScale: 1.06
   _speed: 14
+--- !u!225 &1659327491
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659327481}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1689143771
 GameObject:
   m_ObjectHideFlags: 0
@@ -9659,6 +9752,7 @@ MonoBehaviour:
   _hitPrefab: {fileID: 3241934974464430755, guid: 7bd6a0b61faed1a4dbb0c047d927cf12, type: 3}
   _enemyDeathPrefab: {fileID: 6287985307764103710, guid: 9d169c3acd0f6b54091f526790b7857e, type: 3}
   _levelUpPrefab: {fileID: 1117910998595578253, guid: 238d7fc9559844d4a80dd81bddeb2402, type: 3}
+  _levelUpTextPrefab: {fileID: 569529996518482080, guid: d0ed1775d55af034abf1045787bce252, type: 3}
   _player: {fileID: 204102605}
   _hitPrewarmCount: 20
   _deathPrewarmCount: 15

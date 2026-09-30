@@ -63,6 +63,7 @@ namespace ArenaSurvival.Progression
             if (!_currentOptions.Contains(upgrade)) return;
 
             Apply(upgrade);
+            GameEvents.UpgradeChosen();
             _currentOptions.Clear();
             _pendingLevelUps--;
 

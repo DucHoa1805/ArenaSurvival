@@ -21,6 +21,7 @@ namespace ArenaSurvival.Core
         public static event Action<int> OnXpGained;
         public static event Action<int, int> OnXpChanged; // (XP hiện tại, XP cần để lên cấp kế)
         public static event Action<int> OnLevelUp;
+        public static event Action OnUpgradeChosen;             // người chơi vừa chọn xong 1 nâng cấp
         public static event Action OnPlayerDied;
         public static event Action<GameState> OnGameStateChanged;
         public static event Action<int> OnWaveStarted; // (số thứ tự wave, bắt đầu từ 1)
@@ -32,6 +33,7 @@ namespace ArenaSurvival.Core
         public static void XpGained(int amount) => OnXpGained?.Invoke(amount);
         public static void XpChanged(int currentXp, int xpToNextLevel) => OnXpChanged?.Invoke(currentXp, xpToNextLevel);
         public static void LevelUp(int newLevel) => OnLevelUp?.Invoke(newLevel);
+        public static void UpgradeChosen() => OnUpgradeChosen?.Invoke();
         public static void PlayerDied() => OnPlayerDied?.Invoke();
         public static void GameStateChanged(GameState newState) => OnGameStateChanged?.Invoke(newState);
         public static void WaveStarted(int waveNumber) => OnWaveStarted?.Invoke(waveNumber);

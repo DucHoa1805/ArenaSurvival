@@ -16,6 +16,8 @@ namespace ArenaSurvival.UI
         [SerializeField] private UpgradeManager _upgradeManager;
         [SerializeField] private GameObject _content;
         [SerializeField] private UpgradeOptionButton[] _optionButtons;
+        [Tooltip("Không bắt buộc: hoạt ảnh lúc bảng hiện ra.")]
+        [SerializeField] private LevelUpPanelAnimator _animator;
 
         private void Awake()
         {
@@ -47,11 +49,14 @@ namespace ArenaSurvival.UI
                     _optionButtons[i].Bind(options[i], HandleOptionClicked);
                 }
             }
+
+            if (_animator != null) _animator.Play();
         }
 
         private void HandleOptionClicked(UpgradeData upgrade)
         {
             // Ẩn trước rồi mới báo: nếu còn lượt lên cấp đang chờ, UpgradeManager sẽ gọi Show() lại ngay.
+            if (_animator != null) _animator.Stop();
             _content.SetActive(false);
             _upgradeManager.Select(upgrade);
         }

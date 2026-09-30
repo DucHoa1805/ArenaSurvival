@@ -17,6 +17,9 @@ namespace ArenaSurvival.Audio
                  "cộng dồn thành 1 tiếng nổ chói tai.")]
         public float minInterval = 0.05f;
 
+        [Tooltip("Lệch cao độ ngẫu nhiên tối đa mỗi lần phát (0.08 = ±8%). 0 = luôn giống hệt nhau.")]
+        [Range(0f, 0.5f)] public float pitchVariation = 0f;
+
         public AudioClip PickClip()
         {
             if (clips == null || clips.Length == 0) return null;

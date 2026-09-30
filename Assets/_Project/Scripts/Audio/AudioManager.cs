@@ -20,8 +20,14 @@ namespace ArenaSurvival.Audio
         [SerializeField] private AudioSource _musicSource;
         [SerializeField] private AudioSource _sfxSource;
 
+        [Tooltip("Số tiếng hiệu ứng được phát chồng lên nhau cùng lúc. Mỗi tiếng cần 1 AudioSource riêng " +
+                 "để đổi cao độ (pitch) mà không ảnh hưởng tiếng khác đang phát.")]
+        [SerializeField] private int _sfxVoices = 10;
+
         // Lần phát gần nhất của mỗi loại âm thanh, để chặn phát dồn dập (xem SoundEffect.minInterval).
         private readonly Dictionary<SoundEffect, float> _lastPlayTime = new Dictionary<SoundEffect, float>();
+        private AudioSource[] _voices;
+        private int _nextVoice;
 
         private void Awake()
         {
@@ -33,7 +39,23 @@ namespace ArenaSurvival.Audio
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            CreateVoices();
             PlayMusic();
+        }
+
+        private void CreateVoices()
+        {
+            // AudioSource gốc trên prefab là giọng đầu tiên; các giọng còn lại sao chép cấu hình của nó.
+            _voices = new AudioSource[Mathf.Max(1, _sfxVoices)];
+            _voices[0] = _sfxSource;
+            for (int i = 1; i < _voices.Length; i++)
+            {
+                AudioSource voice = gameObject.AddComponent<AudioSource>();
+                voice.playOnAwake = false;
+                voice.spatialBlend = _sfxSource.spatialBlend;
+                voice.outputAudioMixerGroup = _sfxSource.outputAudioMixerGroup;
+                _voices[i] = voice;
+            }
         }
 
         private void OnDestroy()
@@ -56,6 +78,7 @@ namespace ArenaSurvival.Audio
             GameEvents.OnPlayerDamaged += HandlePlayerDamaged;
             GameEvents.OnXpGained += HandleXpGained;
             GameEvents.OnLevelUp += HandleLevelUp;
+            GameEvents.OnUpgradeChosen += HandleUpgradeChosen;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
         }
 
@@ -68,11 +91,13 @@ namespace ArenaSurvival.Audio
             GameEvents.OnPlayerDamaged -= HandlePlayerDamaged;
             GameEvents.OnXpGained -= HandleXpGained;
             GameEvents.OnLevelUp -= HandleLevelUp;
+            GameEvents.OnUpgradeChosen -= HandleUpgradeChosen;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
 
         /// <summary>Dùng cho âm thanh không đến từ GameEvents, ví dụ tiếng bấm nút UI.</summary>
         public void PlayUiClick() => Play(_bank.uiClick);
+        public void PlayUiHover() => Play(_bank.uiHover);
 
         private void PlayMusic()
         {
@@ -96,7 +121,13 @@ namespace ArenaSurvival.Audio
             if (clip == null) return;
 
             _lastPlayTime[effect] = now;
-            _sfxSource.PlayOneShot(clip, effect.volume);
+
+            // Xoay vòng các giọng; lệch cao độ ngẫu nhiên một chút để tiếng lặp lại liên tục
+            // (trúng đạn, quái chết) không bị nghe như máy.
+            AudioSource voice = _voices[_nextVoice];
+            _nextVoice = (_nextVoice + 1) % _voices.Length;
+            voice.pitch = 1f + Random.Range(-effect.pitchVariation, effect.pitchVariation);
+            voice.PlayOneShot(clip, effect.volume);
         }
 
         private void HandlePlayerFired() => Play(_bank.shoot);
@@ -105,6 +136,7 @@ namespace ArenaSurvival.Audio
         private void HandlePlayerDamaged(float amount) => Play(_bank.playerHurt);
         private void HandleXpGained(int amount) => Play(_bank.xpPickup);
         private void HandleLevelUp(int newLevel) => Play(_bank.levelUp);
+        private void HandleUpgradeChosen() => Play(_bank.upgradeSelect);
 
         private void HandleGameStateChanged(GameState newState)
         {

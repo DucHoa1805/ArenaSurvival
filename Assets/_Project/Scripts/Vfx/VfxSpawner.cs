@@ -14,6 +14,8 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private PooledVfx _hitPrefab;
         [SerializeField] private PooledVfx _enemyDeathPrefab;
         [SerializeField] private PooledVfx _levelUpPrefab;
+        [Tooltip("Không bắt buộc: chữ \"CẤP n!\" bay lên trên đầu Player khi chọn xong nâng cấp.")]
+        [SerializeField] private FloatingText _levelUpTextPrefab;
 
         [Header("References")]
         [SerializeField] private Transform _player;
@@ -26,18 +28,27 @@ namespace ArenaSurvival.Vfx
         private ObjectPool<PooledVfx> _deathPool;
         private ObjectPool<PooledVfx> _levelUpPool;
         private GameState _previousState;
+        private FloatingText _levelUpText;
+        private int _currentLevel = 1;
 
         private void Awake()
         {
             _hitPool = new ObjectPool<PooledVfx>(_hitPrefab, _hitPrewarmCount, transform);
             _deathPool = new ObjectPool<PooledVfx>(_enemyDeathPrefab, _deathPrewarmCount, transform);
             _levelUpPool = new ObjectPool<PooledVfx>(_levelUpPrefab, 1, transform);
+
+            if (_levelUpTextPrefab != null)
+            {
+                _levelUpText = Instantiate(_levelUpTextPrefab, transform);
+                _levelUpText.gameObject.SetActive(false);
+            }
         }
 
         private void OnEnable()
         {
             GameEvents.OnProjectileHit += HandleProjectileHit;
             GameEvents.OnEnemyKilled += HandleEnemyKilled;
+            GameEvents.OnLevelUp += HandleLevelUp;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
         }
 
@@ -45,8 +56,11 @@ namespace ArenaSurvival.Vfx
         {
             GameEvents.OnProjectileHit -= HandleProjectileHit;
             GameEvents.OnEnemyKilled -= HandleEnemyKilled;
+            GameEvents.OnLevelUp -= HandleLevelUp;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
+
+        private void HandleLevelUp(int newLevel) => _currentLevel = newLevel;
 
         private void HandleProjectileHit(Vector3 position) => Play(_hitPool, position);
 
@@ -59,6 +73,10 @@ namespace ArenaSurvival.Vfx
             if (_previousState == GameState.LevelUp && newState == GameState.Playing)
             {
                 Play(_levelUpPool, _player.position);
+                if (_levelUpText != null)
+                {
+                    _levelUpText.Show($"CẤP {_currentLevel}!", _player.position + Vector3.up * 0.7f);
+                }
             }
 
             _previousState = newState;

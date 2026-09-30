@@ -17,8 +17,9 @@ MonoBehaviour:
   shoot:
     clips:
     - {fileID: 8300000, guid: 2b2550666cf1fdd409852315f6631d6d, type: 3}
-    volume: 0.18
-    minInterval: 0.05
+    volume: 0.12
+    minInterval: 0.07
+    pitchVariation: 0.08
   projectileHit:
     clips:
     - {fileID: 8300000, guid: 4c46bc86eb83ef24797af874fc9e24e0, type: 3}
@@ -26,8 +27,9 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 772c940f0406405499b1ba3f63d03776, type: 3}
     - {fileID: 8300000, guid: 5c93beef9368ba847bddb9b7f0a0c12f, type: 3}
     - {fileID: 8300000, guid: 0f741755ac2a73e4c90fbf1fce8a55cf, type: 3}
-    volume: 0.45
-    minInterval: 0.04
+    volume: 0.28
+    minInterval: 0.07
+    pitchVariation: 0.12
   enemyDeath:
     clips:
     - {fileID: 8300000, guid: eb76a31fff107304caaf57ba221c9b92, type: 3}
@@ -35,34 +37,48 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e52d98c9872ca1d4db27aa7b16b822a8, type: 3}
     - {fileID: 8300000, guid: 4a9b8322da956284db2a5c7cb8ad825b, type: 3}
     - {fileID: 8300000, guid: f6c886ab317c03c48b46e4ca13a91693, type: 3}
-    volume: 0.6
-    minInterval: 0.06
+    volume: 0.4
+    minInterval: 0.08
+    pitchVariation: 0.1
   playerHurt:
     clips:
-    - {fileID: 8300000, guid: 49dde845ca99f7c4b9e2fec32674c937, type: 3}
-    - {fileID: 8300000, guid: c442111bb59bbba4f8e6ab45bebaf69c, type: 3}
-    - {fileID: 8300000, guid: 66f7d5e0722b4a549a558434dfc4414a, type: 3}
-    - {fileID: 8300000, guid: fc1d5b9035c73e6499937d3b8e65c3ab, type: 3}
-    - {fileID: 8300000, guid: c52c6c93eeeb4b64b96b61d67a840270, type: 3}
-    volume: 0.7
-    minInterval: 0.2
+    - {fileID: 8300000, guid: 911c62ad3a52b0b44b071835c2f902c5, type: 3}
+    volume: 0.32
+    minInterval: 0.35
+    pitchVariation: 0.05
   xpPickup:
     clips:
     - {fileID: 8300000, guid: 6f0f6fe0146393c4c8bdde97b5059f7b, type: 3}
     volume: 0.3
     minInterval: 0.05
+    pitchVariation: 0
   levelUp:
     clips:
     - {fileID: 8300000, guid: fa44d6717b798c0459edacae4c52b894, type: 3}
     volume: 0.8
     minInterval: 0.2
+    pitchVariation: 0
+  upgradeSelect:
+    clips:
+    - {fileID: 8300000, guid: f442f77406ec379479d30529e4a193b4, type: 3}
+    volume: 0.75
+    minInterval: 0.1
+    pitchVariation: 0
   gameOver:
     clips:
     - {fileID: 8300000, guid: 5c19e1c333416c54aa6745c5f502bbd0, type: 3}
     volume: 0.8
     minInterval: 0.5
+    pitchVariation: 0
   uiClick:
     clips:
     - {fileID: 8300000, guid: 1b34766e096e9734da9e27750c1f1859, type: 3}
-    volume: 0.7
+    volume: 1
     minInterval: 0.05
+    pitchVariation: 0
+  uiHover:
+    clips:
+    - {fileID: 8300000, guid: 227ac6be0a7b01448a6755996eb66642, type: 3}
+    volume: 0.35
+    minInterval: 0.04
+    pitchVariation: 0.05

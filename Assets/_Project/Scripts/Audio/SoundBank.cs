@@ -22,9 +22,13 @@ namespace ArenaSurvival.Audio
         [Header("Progression")]
         public SoundEffect xpPickup;
         public SoundEffect levelUp;
+        [Tooltip("Lúc bấm chọn 1 nâng cấp trong bảng lên cấp.")]
+        public SoundEffect upgradeSelect;
 
         [Header("Game Flow & UI")]
         public SoundEffect gameOver;
         public SoundEffect uiClick;
+        [Tooltip("Lúc rê chuột vào nút hoặc thẻ nâng cấp.")]
+        public SoundEffect uiHover;
     }
 }
