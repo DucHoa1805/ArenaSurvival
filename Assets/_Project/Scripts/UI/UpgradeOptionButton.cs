@@ -11,6 +11,8 @@ namespace ArenaSurvival.UI
     {
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TMP_Text _descriptionText;
+        [Tooltip("Không bắt buộc. Nâng cấp không có icon thì ô icon được ẩn đi.")]
+        [SerializeField] private UnityEngine.UI.Image _iconImage;
 
         private UnityEngine.UI.Button _button;
         private UpgradeData _upgrade;
@@ -33,6 +35,12 @@ namespace ArenaSurvival.UI
             _onClicked = onClicked;
             _nameText.text = upgrade.displayName;
             _descriptionText.text = upgrade.description;
+
+            if (_iconImage != null)
+            {
+                _iconImage.sprite = upgrade.icon;
+                _iconImage.enabled = upgrade.icon != null;
+            }
         }
 
         private void HandleClick()

@@ -80,7 +80,8 @@ namespace ArenaSurvival.UI
 
         private void HandleLevelUp(int newLevel)
         {
-            _levelText.text = $"Cấp {newLevel}";
+            // Chỉ số: chữ "CẤP" là nhãn cố định nằm cạnh trong huy hiệu.
+            _levelText.text = newLevel.ToString();
         }
 
         private void HandleWaveStarted(int waveNumber)
@@ -90,7 +91,8 @@ namespace ArenaSurvival.UI
 
         private void HandleKillCountChanged(int killCount)
         {
-            _killText.text = $"Hạ gục: {killCount}";
+            // Chỉ số: icon đầu lâu bên cạnh đã nói lên đây là số quái đã hạ.
+            _killText.text = killCount.ToString();
         }
 
         // Thanh được vẽ bằng cách kéo neo phải của phần fill: 0 = rỗng, 1 = đầy.

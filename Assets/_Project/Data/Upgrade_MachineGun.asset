@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: "S\xFAng m\xE1y"
   description: "Th\xEAm s\xFAng m\xE1y: 4 ph\xE1t/gi\xE2y, s\xE1t th\u01B0\u01A1ng
     cao, t\u1EA7m xa."
-  icon: {fileID: 0}
+  icon: {fileID: -778044537197861050, guid: d161d08081a5c894bbe3d3adba0408b6, type: 3}
   type: 5
   value: 0
   weapon: {fileID: 11400000, guid: cf00ca75e4b2ba74db307014fbcbdca8, type: 2}

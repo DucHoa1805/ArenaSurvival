@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Progression.UpgradeData
   displayName: "H\u1ED3i m\xE1u +30"
   description: "H\u1ED3i ngay 30 m\xE1u."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: df281fa9f4d695c4587a442ee632d1ed, type: 3}
   type: 4
   value: 30
+  weapon: {fileID: 0}
+  requiredLevel: 1

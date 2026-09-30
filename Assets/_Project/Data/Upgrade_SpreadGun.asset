@@ -15,7 +15,8 @@ MonoBehaviour:
   displayName: "S\xFAng ch\xF9m"
   description: "Th\xEAm s\xFAng b\u1EAFn 5 vi\xEAn t\u1ECFa h\xECnh qu\u1EA1t, t\u1EA7m
     g\u1EA7n."
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 86fe71844d48b8c4c82713d6cbe24a74, type: 3}
   type: 5
   value: 0
   weapon: {fileID: 11400000, guid: 48d0712e269809b46af2d8e5e0db81a8, type: 2}
+  requiredLevel: 1
