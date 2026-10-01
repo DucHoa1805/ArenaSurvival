@@ -40,6 +40,8 @@ namespace ArenaSurvival.Enemies
         [SerializeField] private int _poolPrewarmCount = 15;
 
         private ObjectPool<Enemy> _enemyPool;
+        // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
+        private System.Action<Enemy> _releaseEnemy;
 
         private int _waveIndex;   // vị trí trong _waves
         private int _waveNumber;  // số thứ tự hiển thị cho người chơi, tăng mãi kể cả khi lặp wave cuối
@@ -51,6 +53,18 @@ namespace ArenaSurvival.Enemies
 
         private WaveData CurrentWave => _waves[_waveIndex];
 
+        /// <summary>Số quái đang sống trên sân.</summary>
+        public int ActiveCount { get; private set; }
+
+        /// <summary>
+        /// Sinh ngay thêm quái (loại của wave hiện tại), không theo nhịp wave. Dùng cho StressTest;
+        /// vẫn đi qua pool như quái thường nên đo được đúng chi phí của game thật.
+        /// </summary>
+        public void SpawnImmediately(int count)
+        {
+            for (int i = 0; i < count; i++) SpawnEnemy();
+        }
+
         private void Awake()
         {
             if (_targetCamera == null)
@@ -59,6 +73,7 @@ namespace ArenaSurvival.Enemies
             }
 
             _enemyPool = new ObjectPool<Enemy>(_enemyPrefab, _poolPrewarmCount, transform);
+            _releaseEnemy = ReturnEnemyToPool;
         }
 
         private void Start()
@@ -126,11 +141,14 @@ namespace ArenaSurvival.Enemies
 
             Enemy enemy = _enemyPool.Get(spawnPosition, Quaternion.identity);
             enemy.Initialize(data, _healthMultiplier);
-            enemy.OnReturnToPool = ReturnEnemyToPool;
+            enemy.OnReturnToPool = _releaseEnemy;
+            ActiveCount++;
         }
 
         private void ReturnEnemyToPool(Enemy enemy)
         {
+            // Release bỏ qua object đã tắt (trả 2 lần); chỉ trừ khi lần trả này thật sự có hiệu lực.
+            if (enemy.gameObject.activeSelf) ActiveCount--;
             _enemyPool.Release(enemy);
         }
 

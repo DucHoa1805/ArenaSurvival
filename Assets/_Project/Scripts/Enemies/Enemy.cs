@@ -34,6 +34,16 @@ namespace ArenaSurvival.Enemies
             // Sprite nằm ở object con "Visual" (để SpriteBodyAnimator làm hoạt ảnh mà không đụng vào
             // transform gốc đang giữ vật lý, hướng mặt và scale theo loại quái).
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+            // Đăng ký 1 lần ở Awake chứ không ở OnEnable/OnDisable: object này nằm trong pool, bật/tắt mỗi lần quái sinh ra
+            // hay chết, và mỗi lần += / -= là tạo delegate mới (rác GC). Health ở cùng object nên sống chết cùng nhau;
+            // object đang tắt thì cũng không bị trúng đòn, nên không cần gỡ lúc tắt.
+            _health.OnDied += HandleDied;
+        }
+
+        private void OnDestroy()
+        {
+            if (_health != null) _health.OnDied -= HandleDied;
         }
 
         /// <summary>
@@ -76,12 +86,6 @@ namespace ArenaSurvival.Enemies
             }
 
             _lastDamageTime = -999f;
-            _health.OnDied += HandleDied;
-        }
-
-        private void OnDisable()
-        {
-            _health.OnDied -= HandleDied;
         }
 
         private void FixedUpdate()

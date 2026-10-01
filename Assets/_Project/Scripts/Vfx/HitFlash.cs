@@ -28,14 +28,20 @@ namespace ArenaSurvival.Vfx
         {
             _health = GetComponent<Health>();
             if (_renderer == null) _renderer = GetComponentInChildren<SpriteRenderer>();
+
+            // Đăng ký 1 lần ở Awake chứ không ở OnEnable/OnDisable: object này nằm trong pool, bật/tắt mỗi lần quái sinh ra
+            // hay chết, và mỗi lần += / -= là tạo delegate mới (rác GC). Health ở cùng object nên sống chết cùng nhau;
+            // object đang tắt thì cũng không bị trúng đòn, nên không cần gỡ lúc tắt.
+            _health.OnDamaged += HandleDamaged;
         }
 
-        private void OnEnable() => _health.OnDamaged += HandleDamaged;
+        private void OnDestroy()
+        {
+            if (_health != null) _health.OnDamaged -= HandleDamaged;
+        }
 
         private void OnDisable()
         {
-            _health.OnDamaged -= HandleDamaged;
-
             // Quái chết giữa lúc đang nháy sẽ vào pool; nếu không trả lại ngay thì lần sau lấy ra
             // nó xuất hiện với màu đỏ và to hơn bình thường.
             Restore();

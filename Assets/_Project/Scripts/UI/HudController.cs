@@ -70,7 +70,8 @@ namespace ArenaSurvival.UI
         private void HandleHealthChanged(float current, float max)
         {
             SetFill(_healthFill, max > 0f ? current / max : 0f);
-            _healthText.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+            // SetText với tham số số không tạo chuỗi mới (đổi mỗi lần Player bị đánh / hồi máu).
+            _healthText.SetText("{0}/{1}", Mathf.CeilToInt(current), Mathf.CeilToInt(max));
         }
 
         private void HandleXpChanged(int currentXp, int xpToNextLevel)
@@ -92,7 +93,7 @@ namespace ArenaSurvival.UI
         private void HandleKillCountChanged(int killCount)
         {
             // Chỉ số: icon đầu lâu bên cạnh đã nói lên đây là số quái đã hạ.
-            _killText.text = killCount.ToString();
+            _killText.SetText("{0}", killCount); // đổi mỗi lần hạ quái; ToString() sẽ tạo 1 chuỗi mỗi lần
         }
 
         // Thanh được vẽ bằng cách kéo neo phải của phần fill: 0 = rỗng, 1 = đầy.

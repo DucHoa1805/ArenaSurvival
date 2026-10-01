@@ -20,14 +20,23 @@ namespace ArenaSurvival.Vfx
         private float _pendingDamage;
         private float _windowEnd;
 
-        private void Awake() => _health = GetComponent<Health>();
+        private void Awake()
+        {
+            _health = GetComponent<Health>();
 
-        private void OnEnable() => _health.OnDamaged += HandleDamaged;
+            // Đăng ký 1 lần ở Awake chứ không ở OnEnable/OnDisable: object này nằm trong pool, bật/tắt mỗi lần quái sinh ra
+            // hay chết, và mỗi lần += / -= là tạo delegate mới (rác GC). Health ở cùng object nên sống chết cùng nhau;
+            // object đang tắt thì cũng không bị trúng đòn, nên không cần gỡ lúc tắt.
+            _health.OnDamaged += HandleDamaged;
+        }
+
+        private void OnDestroy()
+        {
+            if (_health != null) _health.OnDamaged -= HandleDamaged;
+        }
 
         private void OnDisable()
         {
-            _health.OnDamaged -= HandleDamaged;
-
             // Quái chết thì bị tắt ngay (vào pool) nên Update không còn chạy: báo nốt phần đang gộp,
             // nếu không đòn kết liễu sẽ không bao giờ hiện số. Còn bị tắt vì đổi scene thì bỏ, vì phát
             // event lúc đó có thể khiến pool tạo object mới giữa lúc scene đang bị hủy.

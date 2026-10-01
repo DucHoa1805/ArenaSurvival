@@ -33,6 +33,21 @@ namespace ArenaSurvival.Vfx
         public void Show(string message, Vector3 position)
         {
             _text.text = message;
+            Begin(position);
+        }
+
+        /// <summary>
+        /// Hiện 1 số nguyên mà không tạo chuỗi mới. SetText("{0}", value) của TMP ghi thẳng chữ số vào bộ đệm có sẵn;
+        /// value.ToString() thì cấp phát 1 string mỗi lần — với số sát thương là hàng chục lần mỗi giây khi quái đông.
+        /// </summary>
+        public void ShowNumber(int value, Vector3 position)
+        {
+            _text.SetText("{0}", value);
+            Begin(position);
+        }
+
+        private void Begin(Vector3 position)
+        {
             _start = position;
             _elapsed = 0f;
             gameObject.SetActive(true);

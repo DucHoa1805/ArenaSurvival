@@ -25,23 +25,37 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private Transform _player;
 
         [Header("Pooling")]
-        [SerializeField] private int _hitPrewarmCount = 20;
-        [SerializeField] private int _deathPrewarmCount = 15;
-        [SerializeField] private int _damageNumberPrewarmCount = 20;
+        // Số tối đa cùng lúc, và cũng là số tạo sẵn lúc vào trận: lúc chơi không bao giờ phải Instantiate thêm.
+        // Đo ở 300 quái: bình thường chỉ ~30-65 cái cùng lúc, nhưng không giới hạn thì pool phình lên 180-250
+        // theo từng đợt đỉnh, mỗi lần phình là 1 frame giật. Vượt giới hạn thì bỏ qua hiệu ứng đó.
+        [Tooltip("Tia lửa khi đạn trúng quái.")]
+        [SerializeField] private int _maxHitEffects = 48;
+        [Tooltip("Hiệu ứng nổ khi quái chết.")]
+        [SerializeField] private int _maxDeathEffects = 32;
+        [Tooltip("Hơn số này thì màn hình toàn chữ số, đọc không nổi nữa.")]
+        [SerializeField] private int _maxDamageNumbers = 60;
 
         private ObjectPool<PooledVfx> _hitPool;
         private ObjectPool<PooledVfx> _deathPool;
         private ObjectPool<PooledVfx> _levelUpPool;
         private ObjectPool<FloatingText> _damageNumberPool;
+        // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
+        private System.Action<PooledVfx> _releaseHit;
+        private System.Action<PooledVfx> _releaseDeath;
+        private System.Action<PooledVfx> _releaseLevelUp;
+        private System.Action<FloatingText> _releaseDamageNumber;
         private GameState _previousState;
         private FloatingText _levelUpText;
         private int _currentLevel = 1;
 
         private void Awake()
         {
-            _hitPool = new ObjectPool<PooledVfx>(_hitPrefab, _hitPrewarmCount, transform);
-            _deathPool = new ObjectPool<PooledVfx>(_enemyDeathPrefab, _deathPrewarmCount, transform);
+            _hitPool = new ObjectPool<PooledVfx>(_hitPrefab, _maxHitEffects, transform, _maxHitEffects);
+            _deathPool = new ObjectPool<PooledVfx>(_enemyDeathPrefab, _maxDeathEffects, transform, _maxDeathEffects);
             _levelUpPool = new ObjectPool<PooledVfx>(_levelUpPrefab, 1, transform);
+            _releaseHit = _hitPool.Release;
+            _releaseDeath = _deathPool.Release;
+            _releaseLevelUp = _levelUpPool.Release;
 
             if (_levelUpTextPrefab != null)
             {
@@ -51,7 +65,9 @@ namespace ArenaSurvival.Vfx
 
             if (_damageNumberPrefab != null)
             {
-                _damageNumberPool = new ObjectPool<FloatingText>(_damageNumberPrefab, _damageNumberPrewarmCount, transform);
+                _damageNumberPool = new ObjectPool<FloatingText>(
+                    _damageNumberPrefab, _maxDamageNumbers, transform, _maxDamageNumbers);
+                _releaseDamageNumber = _damageNumberPool.Release;
             }
         }
 
@@ -75,20 +91,20 @@ namespace ArenaSurvival.Vfx
 
         private void HandleLevelUp(int newLevel) => _currentLevel = newLevel;
 
-        private void HandleProjectileHit(Vector3 position) => Play(_hitPool, position);
+        private void HandleProjectileHit(Vector3 position) => Play(_hitPool, _releaseHit, position);
 
-        private void HandleEnemyKilled(int xpReward, Vector3 position) => Play(_deathPool, position);
+        private void HandleEnemyKilled(int xpReward, Vector3 position) => Play(_deathPool, _releaseDeath, position);
 
         private void HandleEnemyDamaged(float amount, Vector3 position)
         {
             if (_damageNumberPool == null) return;
 
             position.x += Random.Range(-_damageNumberJitter, _damageNumberJitter);
-            FloatingText text = _damageNumberPool.Get(position, Quaternion.identity);
-            text.OnReturnToPool = _damageNumberPool.Release;
+            if (!_damageNumberPool.TryGet(position, Quaternion.identity, out FloatingText text)) return;
+            text.OnReturnToPool = _releaseDamageNumber;
             // Làm tròn và tối thiểu 1: sát thương lẻ (hệ số nâng cấp x1.2) hiện "12.4" trông rối mắt,
             // còn hiện "0" thì người chơi tưởng đòn không trúng.
-            text.Show(Mathf.Max(1, Mathf.RoundToInt(amount)).ToString(), position);
+            text.ShowNumber(Mathf.Max(1, Mathf.RoundToInt(amount)), position);
         }
 
         private void HandleGameStateChanged(GameState newState)
@@ -97,7 +113,7 @@ namespace ArenaSurvival.Vfx
             // chứ không phải lúc vừa lên cấp — khi đó game đang dừng và bảng chọn đang che màn hình.
             if (_previousState == GameState.LevelUp && newState == GameState.Playing)
             {
-                Play(_levelUpPool, _player.position);
+                Play(_levelUpPool, _releaseLevelUp, _player.position);
                 if (_levelUpText != null)
                 {
                     _levelUpText.Show($"CẤP {_currentLevel}!", _player.position + Vector3.up * 0.7f);
@@ -107,10 +123,10 @@ namespace ArenaSurvival.Vfx
             _previousState = newState;
         }
 
-        private static void Play(ObjectPool<PooledVfx> pool, Vector3 position)
+        private static void Play(ObjectPool<PooledVfx> pool, System.Action<PooledVfx> release, Vector3 position)
         {
-            PooledVfx vfx = pool.Get(position, Quaternion.identity);
-            vfx.OnReturnToPool = pool.Release;
+            if (!pool.TryGet(position, Quaternion.identity, out PooledVfx vfx)) return;
+            vfx.OnReturnToPool = release;
         }
     }
 }

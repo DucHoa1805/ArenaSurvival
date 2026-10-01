@@ -32,6 +32,8 @@ namespace ArenaSurvival.Combat
         private float _fireCooldown;
         private ObjectPool<Projectile> _projectilePool;
         private PlayerStats _stats;
+        // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
+        private System.Action<Projectile> _releaseProjectile;
 
         // Cấp phát 1 lần duy nhất rồi dùng lại mỗi frame — đây mới là thứ làm cho "NonAlloc" có ý nghĩa.
         private readonly Collider2D[] _hitBuffer = new Collider2D[MaxTargetsPerScan];
@@ -39,6 +41,7 @@ namespace ArenaSurvival.Combat
         private void Awake()
         {
             _stats = GetComponent<PlayerStats>();
+            _releaseProjectile = ReturnProjectileToPool;
 
             // Đạn nằm trong 1 container riêng ở gốc scene, KHÔNG làm con của Player: object con luôn
             // di chuyển/xoay theo cha, nên đạn đang bay sẽ bị quét lệch quỹ đạo mỗi khi Player xoay người.
@@ -99,7 +102,7 @@ namespace ArenaSurvival.Combat
                 Vector2 shotDirection = Quaternion.Euler(0f, 0f, offset) * direction;
 
                 Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
-                projectile.OnReturnToPool = ReturnProjectileToPool;
+                projectile.OnReturnToPool = _releaseProjectile;
                 projectile.Launch(shotDirection, damage, _weaponData.projectileSpeed);
             }
 

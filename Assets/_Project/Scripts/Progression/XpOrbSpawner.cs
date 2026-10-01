@@ -15,10 +15,13 @@ namespace ArenaSurvival.Progression
         [SerializeField] private int _poolPrewarmCount = 30;
 
         private ObjectPool<XpOrb> _orbPool;
+        // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
+        private System.Action<XpOrb> _releaseOrb;
 
         private void Awake()
         {
             _orbPool = new ObjectPool<XpOrb>(_orbPrefab, _poolPrewarmCount, transform);
+            _releaseOrb = ReturnOrbToPool;
         }
 
         private void OnEnable()
@@ -37,7 +40,7 @@ namespace ArenaSurvival.Progression
 
             XpOrb orb = _orbPool.Get(position, Quaternion.identity);
             orb.Initialize(xpReward);
-            orb.OnReturnToPool = ReturnOrbToPool;
+            orb.OnReturnToPool = _releaseOrb;
         }
 
         private void ReturnOrbToPool(XpOrb orb)

@@ -16,6 +16,9 @@ namespace ArenaSurvival.Combat
         public float MaxHealth => _maxHealth;
         public bool IsDead => CurrentHealth <= 0f;
 
+        /// <summary>Bỏ qua mọi sát thương. Dùng cho StressTest: giữ Player sống để cảnh đông quái đứng yên mà đo.</summary>
+        public bool Invulnerable { get; set; }
+
         // Truyền kèm giá trị sát thương/máu hiện tại để UI (thanh máu) có thể dùng trực tiếp,
         // không cần tự query lại Health mỗi lần.
         public event Action<float, float> OnDamaged; // (damage, currentHealth)
@@ -34,7 +37,7 @@ namespace ArenaSurvival.Combat
 
         public void TakeDamage(float amount)
         {
-            if (IsDead || amount <= 0f) return;
+            if (IsDead || Invulnerable || amount <= 0f) return;
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
             OnDamaged?.Invoke(amount, CurrentHealth);
