@@ -20,17 +20,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 61ec3f77ce504c96880afbb7a4b459ad, type: 2}
   - {fileID: 11400000, guid: 207b19722ef044398cad73044fcbdf54, type: 2}
   finalWave:
-  - enemy: {fileID: 11400000, guid: f8ec106a602426c4b9eb3f419f431cdb, type: 2}
-    count: 4
-    healthMultiplier: 5
-    scaleMultiplier: 1.3
-    tint: {r: 1, g: 0.75, b: 0.45, a: 1}
   - enemy: {fileID: 11400000, guid: 6be0bf6fd78eab3498608794e9172563, type: 2}
-    count: 6
+    count: 3
     healthMultiplier: 3
     scaleMultiplier: 1.3
     tint: {r: 1, g: 0.75, b: 0.45, a: 1}
   eliteSpawnInterval: 0.6
-  targetTime: 225
+  boss: {fileID: 11400000, guid: 8836961c900573542b666bcaac37a0cc, type: 2}
+  bossDelay: 1.5
+  targetTime: 240
   baseGold: 100
   baseAccountXp: 20

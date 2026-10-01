@@ -9,6 +9,8 @@ namespace ArenaSurvival.Combat
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _damage = 5f;
         [SerializeField] private float _lifetime = 3f; // tự trả về pool sau X giây nếu không trúng gì
+        [Tooltip("Phát GameEvents.ProjectileHit (tia lửa + tiếng \"trúng quái\"). Đạn của quái tắt: Player bị trúng đã có tiếng/hiệu ứng riêng.")]
+        [SerializeField] private bool _raiseHitEvent = true;
 
         private Rigidbody2D _rb;
         private float _spawnTime;
@@ -57,12 +59,12 @@ namespace ArenaSurvival.Combat
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // Không cần tự loại trừ Player ở đây: Layer Collision Matrix chỉ cho layer PlayerProjectile
-            // chạm layer Enemy (và Default), nên đạn không bao giờ nhận được trigger từ Player.
+            // Không cần tự lọc mục tiêu ở đây: Layer Collision Matrix quyết định đạn chạm ai
+            // (PlayerProjectile chỉ chạm Enemy, EnemyProjectile chỉ chạm Player).
             if (other.TryGetComponent(out Health targetHealth))
             {
                 targetHealth.TakeDamage(_damage);
-                Core.GameEvents.ProjectileHit(transform.position);
+                if (_raiseHitEvent) Core.GameEvents.ProjectileHit(transform.position);
                 ReturnToPool();
             }
         }

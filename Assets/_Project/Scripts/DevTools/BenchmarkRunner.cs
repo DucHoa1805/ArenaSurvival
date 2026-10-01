@@ -24,14 +24,12 @@ namespace ArenaSurvival.DevTools
 
         private static bool IsBenchmark => Debug.isDebugBuild && HasArg("-benchmark");
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void SkipMainMenu()
         {
-            // Build luôn mở MainMenu trước; benchmark thì vào thẳng Game, không cần ai bấm "Chơi".
-            if (IsBenchmark && SceneManager.GetActiveScene().name != SceneLoader.GameScene)
-            {
-                SceneLoader.LoadGame();
-            }
+            // Build mở Boot trước; benchmark thì bảo Boot vào thẳng Game thay vì menu (không tự nạp scene ở đây,
+            // để không tranh với việc nạp scene của Boot).
+            if (IsBenchmark) SceneLoader.FirstSceneOverride = SceneLoader.GameScene;
         }
 
         private void Awake()

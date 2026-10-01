@@ -316,8 +316,8 @@ Assets/
 **Cần rà lại để tái sử dụng**
 - [x] Hoàn thành các mục còn dở của Phase 5 (slider âm lượng, animation, unit test).
 - [x] Chuyển code lên cấp trong màn sang thư mục `RunUpgrades/`, tách rõ khỏi tiến trình ngoài màn.
-- [ ] `WaveData` cũ trở thành một phần của `StageData`.
-- [ ] Main Menu cũ sẽ được thay bằng Hub ở Phase 9; lưu điểm cao được thay bằng hồ sơ người chơi ở Phase 7.
+- [x] `WaveData` cũ trở thành một phần của `StageData`.
+- [ ] Main Menu cũ sẽ được thay bằng Hub ở Phase 9; ~~lưu điểm cao được thay bằng hồ sơ người chơi ở Phase 7~~ (xong ở Phase 7).
 - [x] Cập nhật `CLAUDE.md` theo định hướng mới để Claude Code nắm được kiến trúc.
 
 ---
@@ -327,15 +327,15 @@ Assets/
 **Mục tiêu:** một màn chơi có đầu có cuối, thay vì sinh tồn vô hạn.
 
 **Việc cần làm**
-- [ ] `StageData`: danh sách đợt quái, boss cuối màn, hệ số độ khó, thời gian mục tiêu, bảng thưởng.
+- [x] `StageData`: danh sách đợt quái, boss cuối màn, hệ số độ khó, thời gian mục tiêu, bảng thưởng.
 - [x] `StageSession`: điều phối màn (đếm đợt → gọi boss → thắng/thua), phát sự kiện bắt đầu/kết thúc.
-- [ ] `BossData` + `Boss`: thanh máu riêng, 2–3 pha tấn công (bắn tỏa, lao tới, triệu hồi quái), đổi pha theo % máu.
-- [ ] Mini-boss: dùng lại hệ thống boss với ít pha hơn.
+- [x] `BossData` + `Boss`: thanh máu riêng, 2–3 pha tấn công (bắn tỏa, lao tới, triệu hồi quái), đổi pha theo % máu.
+- [x] Mini-boss: dùng lại hệ thống boss với ít pha hơn.
 - [x] Hệ số độ khó theo màn: máu, sát thương, mật độ quái nhân theo công thức (Phần D).
 - [x] Đánh giá sao (thắng, HP > 50%, dưới thời gian).
 - [x] Hồi sinh 1 lần (tạm thời miễn phí, nối với kim cương/quảng cáo ở Phase 11).
 - [x] `StageResult` và màn hình kết quả: thắng/thua, sao, danh sách phần thưởng.
-- [ ] HUD: thanh tiến độ màn, thanh máu boss, cảnh báo boss xuất hiện.
+- [x] HUD: thanh tiến độ màn, thanh máu boss, cảnh báo boss xuất hiện.
 
 **Lưu ý thiết kế**
 - Boss nên dùng **state machine riêng** (mỗi pha một state) để dễ thêm boss mới.
@@ -350,13 +350,13 @@ Assets/
 **Mục tiêu:** có nền dữ liệu vững để mọi hệ thống meta dựa vào.
 
 **Việc cần làm**
-- [ ] `PlayerProfile` (Phần B3) và `SaveService`: lưu JSON vào `Application.persistentDataPath`, ghi file tạm rồi đổi tên để tránh hỏng file khi tắt máy đột ngột.
-- [ ] Số version và cơ chế migration (bản save cũ tự nâng lên cấu trúc mới).
-- [ ] Bản sao lưu: giữ save gần nhất trước đó, tự khôi phục nếu file chính hỏng.
-- [ ] `EconomyService`: `Add`, `TrySpend`, `GetBalance`, sự kiện `OnCurrencyChanged`.
-- [ ] Chống sửa save cơ bản: thêm mã kiểm tra (checksum/HMAC) để phát hiện file bị sửa tay.
-- [ ] Scene `Boot`: tải save, khởi tạo dịch vụ, rồi mới vào Hub.
-- [ ] Unit test: cộng/trừ tiền, không âm, migration từ version 1 lên 2, đọc file hỏng.
+- [x] `PlayerProfile` (Phần B3) và `SaveService`: lưu JSON vào `Application.persistentDataPath`, ghi file tạm rồi đổi tên để tránh hỏng file khi tắt máy đột ngột.
+- [x] Số version và cơ chế migration (bản save cũ tự nâng lên cấu trúc mới).
+- [x] Bản sao lưu: giữ save gần nhất trước đó, tự khôi phục nếu file chính hỏng.
+- [x] `EconomyService`: `Add`, `TrySpend`, `GetBalance`, sự kiện `OnCurrencyChanged`.
+- [x] Chống sửa save cơ bản: thêm mã kiểm tra (checksum/HMAC) để phát hiện file bị sửa tay.
+- [x] Scene `Boot`: tải save, khởi tạo dịch vụ, rồi mới vào Hub.
+- [x] Unit test: cộng/trừ tiền, không âm, migration từ version 1 lên 2, đọc file hỏng.
 
 **Lưu ý:** dữ liệu local luôn có thể bị sửa trên máy đã root. Chống gian lận thật sự cần máy chủ, nhưng với game chơi đơn thì mức cơ bản là đủ cho bản ra mắt. Riêng **giao dịch IAP phải được xác minh**, xem Phase 11.
 

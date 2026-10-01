@@ -15,7 +15,11 @@ MonoBehaviour:
   displayName: Fast Enemy
   sprite: {fileID: 5453849175456367835, guid: d4833a99bc02fe445a3bc8839bc87fb4, type: 3}
   scale: 1
+  tint: {r: 1, g: 1, b: 1, a: 1}
   maxHealth: 10
   moveSpeed: 4
   contactDamage: 3
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: 3c19a325db6feaf49b111d76e8e0b32d, type: 2}
+  isBoss: 0
   xpReward: 1

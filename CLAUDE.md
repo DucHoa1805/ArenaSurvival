@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-01, sau Phase 6A (màn chơi có kết thúc: đợt quái, tinh anh, sao, hồi sinh, kết quả).
+Cập nhật lần cuối: 2026-10-01, sau Phase 7 (hồ sơ người chơi, save v2 có HMAC/sao lưu/migration, EconomyService, tiến độ màn, scene Boot).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -50,8 +50,10 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 6A (màn chơi có kết thúc:
 - **Play mode không chạy frame khi Editor không được focus** (`runInBackground: 0` trong Player Settings; bản build cũng vậy).
   Khi test: `editor_play`, rồi eval `UnityEngine.Application.runInBackground = true;`. Chỉ đổi lúc chạy, file cài đặt không đổi.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 65/65 đạt), hoặc Window → General → Test Runner.
-- Hiện Editor mở scene nào thì Play chạy scene đó. Muốn test cả vòng thì mở `MainMenu.unity` trước.
+- Unit test: `run_tests --mode EditMode` (hiện 110/110 đạt), hoặc Window → General → Test Runner.
+- Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
+- **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
+  test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
 - Build Development: `build --target StandaloneWindows64 --outputPath "Builds/Dev/ArenaSurvival.exe" --options '["Development"]' --confirm true`,
   rồi theo dõi `build_status`. `Builds/` đã được git bỏ qua.
 - ffmpeg đã cài qua winget (`Gyan.FFmpeg`), dùng để đo/chuyển đổi âm thanh.
@@ -62,26 +64,33 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 6A (màn chơi có kết thúc:
 Docs/                   project-plan.md, asset-licenses.md, specs/, plans/, archive/
 Assets/_Project/
 ├── Scripts/            assembly ArenaSurvival (ArenaSurvival.asmdef); namespace = ArenaSurvival.<tên thư mục>
-│   ├── Core/           GameManager, GameState, GameEvents, ObjectPool, SceneLoader, PauseInput, CameraFollow
+│   ├── Core/           GameManager, GameState, GameEvents, ObjectPool, SceneLoader (+ FirstSceneOverride), PauseInput, CameraFollow
 │   ├── Player/         PlayerController, PlayerStats, PlayerDeathHandler, PlayerControls.inputactions
 │   ├── Combat/         Health, Projectile
 │   ├── Weapons/        PlayerWeapon, OrbitWeapon, SawBladeRig, WeaponDefinition/IWeapon, WeaponData, OrbitWeaponData
-│   ├── Enemies/        Enemy, EnemyData, EnemyModifiers (hệ số máu/sát thương/kích thước/màu lúc sinh)
+│   ├── Enemies/        Enemy (lõi), EnemyData, EnemyModifiers, EnemyContext (trạng thái mỗi con), IEnemyWorld, EnemyRules (hàm thuần),
+│   │                   EnemyBehaviour → ChaseBehaviour, KeepDistanceShooterBehaviour, BossBehaviour (+BossPhase);
+│   │                   BossAttack → RadialBurstAttack, DashAttack, SummonAttack; EnemyProjectiles (pool đạn chung)
 │   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog,
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData,
 │   │                   UpgradeManager, RandomPicker
-│   ├── Save/           SaveData, SaveSystem (chưa dùng; nền cho PlayerProfile/SaveService ở Phase 7)
-│   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, MainMenu,
+│   ├── Save/           SaveService (tmp → File.Replace + .bak, HMAC, khôi phục), SaveSecurity (HMAC-SHA256), SaveMigrations (JObject, v1→v2)
+│   ├── Meta/           PlayerProfile, ProfileService, StageProgressService (+Rules, StageGrant), GameServices (static), ServicesHost, BootLoader
+│   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ), CurrencyIds
+│   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, BossHealthBar, MainMenu,
 │   │                   TimeFormatter, UiHoverScale, VolumeSlider (tách thư mục con khi có Hub ở Phase 9)
 │   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
 │   ├── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
 │   └── DevTools/       StressTest, PerfRecorder, BenchmarkRunner (chỉ Editor/Development build; menu cheat Phase 10 đặt ở đây)
 ├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread,
-│                       VolumeSettings, ObjectPool, StageRules, StageCatalog
-├── Scenes/             MainMenu.unity (build index 0), Game.unity (build index 1) — sẽ thành Boot / Hub / Game
-├── Data/               Enemies/, Weapons/, RunUpgrades/, Stages/ (Wave_*, Stage_C1_01..03, StageCatalog_Main), Audio/ (SoundBank)
-├── Prefabs/            Player, Enemy, Projectile, XpOrb, AudioManager, Arena, Vfx/*, UI/VolumeSettings
+│                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress
+├── Scenes/             Boot.unity (0), MainMenu.unity (1, sẽ thành Hub ở Phase 9), Game.unity (2)
+├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
+├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
+│                       Stages/ (Wave_*, Stage_C1_01..03, StageCatalog_Main), Audio/ (SoundBank)
+├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss), Projectile, EnemyProjectile, XpOrb, AudioManager, Arena, Vfx/*,
+│                       UI/VolumeSettings
 ├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
 └── Audio/              MainMixer.mixer (Master/Music/SFX), UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
 ```
@@ -98,6 +107,15 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   (instance event `OnStageEnded`); HUD, `StageResultPanel`, `RevivePanel` nghe instance event của `StageSession`.
   Màn được chọn truyền qua `StageSelection` (static); trống thì dùng màn đầu của `StageCatalog`. Hồi sinh: 1 lần/màn, 50% máu,
   bất tử 2 s, đẩy quái trong bán kính 3. Dev: `StageSession.DebugSkipToFinalWave()`, `PauseProgression(bool)`.
+  Màn có boss (`StageData.boss`): rải tinh anh → sau `bossDelay` sinh boss (`OnBossSpawned`) → boss chết thì `WaveSpawner.DespawnAll()`
+  (quái còn lại nổ, XP 0 nên không rơi orb) → thắng. Màn không boss: dọn sạch sân như cũ.
+- **Hành vi quái (Phase 6B)**: `Enemy` chỉ là lõi (máu, chạm, pool, hệ số). Di chuyển/tấn công là asset `EnemyBehaviour` gán trong
+  `EnemyData.behaviour` (trống = đuổi thẳng). Asset dùng chung nên **không giữ trạng thái**: mọi bộ đếm nằm trong `EnemyContext`
+  (tạo 1 lần/Enemy, ô nhớ Timer/Timer2/State/Index/Counter/Phase/Vector — mỗi asset ghi rõ quy ước dùng ô nào).
+  Boss = `BossBehaviour` (các `BossPhase`: ngưỡng máu + danh sách `BossAttack` xoay vòng; đổi pha chỉ tiến, bỏ ngang đòn đang dở,
+  phát `Enemy.OnBossPhaseChanged`). Boss mới = ghép đòn có sẵn thành asset; kiểu đòn mới = 1 class `BossAttack`.
+  Quái không va chạm tường nên `EnemyContext.Move` kẹp vị trí trong sân (`IEnemyWorld.ClampToArena`). Đòn lao luôn có gồng báo trước.
+  Đạn của quái: 1 pool chung `EnemyProjectiles` trong scene (quái nằm trong pool nên không tự giữ pool đạn), layer `EnemyProjectile`.
 - **Object pool tự viết** (`ObjectPool<T>`): đối tượng gọi callback `OnReturnToPool`, không biết gì về pool; `Release` bỏ qua object đã tắt
   (chống trả hai lần); `TryGet` + `maxSize` cho thứ bỏ qua được (hiệu ứng, số sát thương), tạo sẵn đủ số để lúc chơi không `Instantiate`.
 - **Data-driven bằng ScriptableObject**. Vũ khí dùng lớp cha `WeaponDefinition` và interface `IWeapon`, nên nâng cấp "mở khóa vũ khí"
@@ -110,14 +128,22 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 
   | Layer | Va chạm với |
   |---|---|
-  | `Player` (8) | `Enemy`, `Pickup`, `Boundary`, `Default` |
+  | `Player` (8) | `Enemy`, `EnemyProjectile`, `Pickup`, `Boundary`, `Default` |
   | `Enemy` (6) | `Player`, `PlayerProjectile` |
   | `PlayerProjectile` (7) | `Enemy` |
   | `Pickup` (9) | `Player` |
+  | `EnemyProjectile` (11) | chỉ `Player` (bay xuyên tường, tự hủy sau 4 s) |
   | `Boundary` (10, tường) | chỉ `Player` |
 
 - **Quái sinh trong sân** (`WaveSpawner._arenaArea`), ngoài tầm nhìn camera; tường chỉ giữ Player.
-- **Chưa lưu tiến độ** (Phase 7): kỷ lục/chế độ vô tận đã gỡ ở 6A; `SaveSystem` (JSON, chịu file hỏng) giữ làm nền.
+- **Dịch vụ & save (Phase 7)**: dịch vụ là class C# thường, truy cập qua `GameServices` (static), khởi tạo ở scene Boot hoặc tự khởi tạo
+  (`RuntimeInitializeOnLoadMethod`, có reset static cho trường hợp tắt domain reload). `ServicesHost` (ẩn, DontDestroyOnLoad) lưu khi
+  app chuyển nền/thoát. Save = Newtonsoft JSON `{format, payload(chuỗi), hmac}`; ghi `.tmp` rồi `File.Replace` (bản cũ thành `.bak`).
+  Đọc: hỏng/sai chữ ký → dùng `.bak` hợp lệ; sai chữ ký không có `.bak` → vẫn dùng, `tampered = true` (**không bao giờ xóa tiến độ**);
+  hỏng hẳn → hồ sơ mới + giữ `.corrupt`. Đổi cấu trúc `PlayerProfile` = tăng `CurrentVersion` + thêm 1 bước `SaveMigrations`.
+  Kết quả màn: `StageSession` → `StageEvents.OnStageCompleted` → `StageProgressService.Apply` (thưởng qua `EconomyService`, lần thắng
+  đầu ×2, chơi lại ×0.5, sao chỉ tăng, lưu ngay) → rồi mới `GameManager.EndStage` (màn kết quả đọc `LastGrant`). Mở khóa màn tuần tự;
+  nút Chơi ở menu vào màn chưa thắng đầu tiên. Volume vẫn ở PlayerPrefs (cài đặt thiết bị).
 - **Âm thanh**: `AudioManager` sống xuyên scene (DontDestroyOnLoad), 10 AudioSource xoay vòng, lệch cao độ ngẫu nhiên, giới hạn tần suất.
   Âm lượng qua `MainMixer` (exposed `MasterVolume/MusicVolume/SFXVolume`), lưu bằng **PlayerPrefs** (cài đặt thuộc thiết bị,
   không thuộc hồ sơ người chơi). Tiếng thắng màn / hồi sinh phát theo `OnGameStateChanged`.
@@ -146,13 +172,15 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 
 | Loại | Chi tiết |
 |---|---|
-| Quái (3) | Basic (máu 20, tốc 2), Fast (máu 10, tốc 4), Tank (máu 50, tốc 1.2, to x1.5, từ wave 3) |
-| Màn chơi (3) | 1-1, 1-2, 1-3: 3 đợt × 60 s (`Wave_01..03`) rồi đợt tinh anh (Tank/Fast máu ×3–5, to ×1.3, màu cam). Độ khó ×(1 + 0.12×(màn−1)). Sao: thắng / >50% máu / dưới 3:30–3:45. Thưởng (chỉ hiển thị): 100 vàng, 20 XP × (1 + 0.15×(màn−1)) |
+| Quái (4) | Basic (máu 20, tốc 2), Fast (máu 10, tốc 4), Tank (máu 50, tốc 1.2, to x1.5), Xạ thủ (máu 15, giữ khoảng 5.5±1, bắn 2 s/viên, đạn 6) |
+| Boss (2) | Mini-boss "Cỗ Máy Gác Cổng" (màn 1-2, máu 400, 2 pha: lao + vòng đạn), boss "Thủ Lĩnh Sa Mạc" (màn 1-3, máu 1500,
+  3 pha 100/66/33%: vòng đạn → + lao → vòng đạn dày + lao + gọi 4 Basic, tối đa 8). Sprite Kenney phóng to + tô màu (tạm) |
+| Màn chơi (3) | 1-1, 1-2, 1-3: 3 đợt × 60 s (`Wave_01..03`, Xạ thủ từ đợt 2) rồi đợt cuối: 1-1 tinh anh; 1-2 mini-boss + 2 Tank tinh anh; 1-3 boss + 3 Fast tinh anh. Độ khó ×(1 + 0.12×(màn−1)). Sao: thắng / >50% máu / dưới 3:30–3:45. Thưởng (chỉ hiển thị): 100 vàng, 20 XP × (1 + 0.15×(màn−1)) |
 | Vũ khí (4) | Súng thường (có sẵn), Súng chùm (5 viên tỏa 50°), Súng máy (4 phát/giây, từ cấp 5), Lưỡi cưa xoay (3 lưỡi) |
 | Nâng cấp trong màn (8) | Sát thương +20%, Tốc độ bắn +15%, Tốc độ chạy +10%, Máu tối đa +20, Hồi máu +30, 3 nâng cấp mở khóa vũ khí |
 | XP trong màn | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
 | Màn chơi | Đấu trường Tilemap: sân cát 30×30 ô, viền đá, đường đất, bãi cỏ, bụi cây |
-| UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!"), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), menu chính + bảng Cài đặt |
+| UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!" / "BOSS XUẤT HIỆN!" / "BOSS NỔI GIẬN!"), thanh máu boss (tên + vạch ngưỡng pha), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), menu chính + bảng Cài đặt |
 | Hiệu ứng | Trúng đạn, quái chết, lên cấp, nháy đỏ khi trúng đòn, rung camera, số sát thương (gộp 0.2s) |
 | Hoạt ảnh | Bằng code: thở khi đứng, lắc + co giãn theo bước khi chạy, quái phóng to lúc xuất hiện |
 | Âm thanh | Bắn, trúng, quái chết, bị đánh, nhặt XP, lên cấp, chọn nâng cấp, rê/bấm nút, Game Over, nhạc nền |
@@ -163,9 +191,9 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 |---|---|
 | 0–5 – Core gameplay | Xong (gồm tối ưu GC và đợt cấu trúc lại 2026-10-01) |
 | 6A – Màn chơi | Xong: StageData, StageSession, đợt tinh anh, độ khó, sao, hồi sinh, StageResult, màn kết quả |
-| 6B – Boss | **Tiếp theo**: tách hành vi quái, boss nhiều pha (state machine), mini-boss, đạn của quái, thanh máu boss |
-| 7 – Hồ sơ người chơi, save v2, tiền tệ | Chưa |
-| 8 – Trang bị, tài nguyên, Talent | Chưa |
+| 6B – Boss | Xong: hệ hành vi quái (SO), Xạ thủ, đạn của quái, mini-boss, boss 3 pha, thanh máu boss |
+| 7 – Hồ sơ người chơi, save v2, tiền tệ | Xong: PlayerProfile, SaveService (tmp/bak/HMAC/migration), EconomyService, tiến độ màn, scene Boot |
+| 8 – Trang bị, tài nguyên, Talent | **Tiếp theo**: ItemData/ItemDatabase, InventoryService, nâng cấp/đột phá, mảnh vũ khí, Talent, StatCalculator + lực chiến, giáp, LootTable |
 | 9 – Hub và level tài khoản | Chưa |
 | 10 – Nội dung và cân bằng | Chưa |
 | 11 – Cửa hàng, IAP, quảng cáo | Chưa |
@@ -177,6 +205,7 @@ Tính năng cũ **giữ chạy cho tới khi có thứ thay thế**: MainMenu (�
 
 ## Vấn đề đã biết / lưu ý
 
+- Mỗi lần build, benchmark có thể có 1 frame tệ bất thường (đã gặp 10 ms, chạy lại 2 lần còn 3.7–4.8 ms): chạy lại trước khi kết luận.
 - Sau khi hồi sinh, Player có thể chết lại ~1 s sau khi hết 2 s bất tử nếu quái đông: xem lại khi cân bằng (Phase 10).
 - Test UI có hiệu ứng theo thời gian bằng unity-cli: mỗi lệnh mất ~1 s, chụp ngay sau lệnh kích hoạt (banner chỉ hiện 2 s).
 - Giấy phép âm thanh Kenney và nhạc Juhani Junkala **chưa xác minh** (xem `Docs/asset-licenses.md`) — phải xong trước khi phát hành.

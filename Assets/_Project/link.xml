@@ -1,0 +1,9 @@
+<!--
+  Newtonsoft Json đọc/ghi PlayerProfile bằng reflection. Build IL2CPP (Android, iOS) lược bỏ code "không thấy ai dùng",
+  có thể làm mất constructor/trường của các class này và save đọc ra rỗng. Giữ nguyên toàn bộ namespace Meta (dữ liệu lưu).
+-->
+<linker>
+  <assembly fullname="ArenaSurvival">
+    <namespace fullname="ArenaSurvival.Meta" preserve="all" />
+  </assembly>
+</linker>

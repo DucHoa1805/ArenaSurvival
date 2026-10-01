@@ -9,6 +9,10 @@ namespace ArenaSurvival.Stages
     {
         public static StageData Current { get; private set; }
 
+        // Editor có thể tắt domain reload: không để màn của lần Play trước rò sang lần sau.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Current = null;
+
         public static void Select(StageData stage) => Current = stage;
 
         public static void Clear() => Current = null;

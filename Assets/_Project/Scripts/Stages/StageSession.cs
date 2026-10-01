@@ -49,6 +49,12 @@ namespace ArenaSurvival.Stages
         public event Action OnFinalWaveStarted;
         public event Action OnReviveOffered;
         public event Action<StageResult> OnStageEnded;
+        public event Action<Enemy> OnBossSpawned;
+        public event Action OnBossDefeated;
+
+        /// <summary>Màn này có boss ở đợt cuối không.</summary>
+        public bool HasBoss => Stage != null && Stage.boss != null;
+        public Enemy Boss => _boss;
 
         private Phase _phase;
         private float _difficulty;
@@ -62,6 +68,12 @@ namespace ArenaSurvival.Stages
         private int _nextElite;
         private float _eliteTimer;
         private float _clearedTimer = -1f;
+
+        private Enemy _boss;
+        private bool _bossSpawned;
+        private bool _bossDefeated;
+        private float _bossTimer;
+        private Action _onBossDied; // cache: nghe/gỡ OnDied của boss mà không tạo delegate mới mỗi lần
 
         private readonly Collider2D[] _pushBuffer = new Collider2D[128];
         private ContactFilter2D _enemyFilter;
@@ -164,6 +176,16 @@ namespace ArenaSurvival.Stages
                 return;
             }
 
+            if (HasBoss && !_bossDefeated)
+            {
+                if (!_bossSpawned)
+                {
+                    _bossTimer += dt;
+                    if (_bossTimer >= Stage.bossDelay) SpawnBoss();
+                }
+                return; // màn có boss: thắng khi boss chết, không cần dọn sạch sân
+            }
+
             if (_spawner.ActiveCount > 0)
             {
                 _clearedTimer = -1f;
@@ -177,6 +199,25 @@ namespace ArenaSurvival.Stages
             // Thời gian thực: hiệu ứng nổ của con cuối vẫn chạy, nhưng không phụ thuộc slow-motion nếu sau này có.
             _clearedTimer += Time.unscaledDeltaTime;
             if (_clearedTimer >= _victoryDelay) EndStage(true);
+        }
+
+        private void SpawnBoss()
+        {
+            _bossSpawned = true;
+            // Boss mạnh theo độ khó của màn như mọi quái, giữ màu và kích thước gốc của nó.
+            _boss = _spawner.Spawn(Stage.boss, EnemyModifiers.ForDifficulty(_difficulty));
+            if (_onBossDied == null) _onBossDied = HandleBossDied;
+            _boss.Health.OnDied += _onBossDied;
+            OnBossSpawned?.Invoke(_boss);
+        }
+
+        private void HandleBossDied()
+        {
+            // Boss là object trong pool: gỡ ngay để lần sau object này làm quái thường không kích hoạt "thắng màn".
+            _boss.Health.OnDied -= _onBossDied;
+            _bossDefeated = true;
+            _spawner.DespawnAll();
+            OnBossDefeated?.Invoke();
         }
 
         private void HandlePlayerDied()
@@ -260,6 +301,9 @@ namespace ArenaSurvival.Stages
                 accountXp = xp,
             };
 
+            // Phát kết quả ra ngoài TRƯỚC khi đổi trạng thái: tầng meta áp thưởng + lưu ngay, nên màn kết quả
+            // (hiện khi trạng thái đổi) đã đọc được số thực nhận, và tắt app lúc này cũng không mất thưởng.
+            StageEvents.RaiseStageCompleted(Result);
             GameManager.Instance.EndStage(victory);
             OnStageEnded?.Invoke(Result);
         }

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Boss_Warlord
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "Th\u1EE7 L\u0129nh Sa M\u1EA1c"
+  sprite: {fileID: 4180521964986135262, guid: da80e69df50b1c044af744b3048129a5, type: 3}
+  scale: 2.6
+  tint: {r: 1, g: 0.62, b: 0.55, a: 1}
+  maxHealth: 1500
+  moveSpeed: 1.2
+  contactDamage: 20
+  projectileDamage: 10
+  behaviour: {fileID: 11400000, guid: ca87746ee35ff534eb6e56b83db7438c, type: 2}
+  isBoss: 1
+  xpReward: 40

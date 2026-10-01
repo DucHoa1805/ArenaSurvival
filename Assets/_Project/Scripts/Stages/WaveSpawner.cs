@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ArenaSurvival.Core;
 using ArenaSurvival.Enemies;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace ArenaSurvival.Stages
     /// con cụ thể (quái tinh anh). Không tự biết màn có mấy đợt hay khi nào kết thúc — việc đó là của StageSession,
     /// nên cùng một spawner dùng được cho màn thường, màn boss (6B) hay chế độ khác sau này.
     /// </summary>
-    public class WaveSpawner : MonoBehaviour
+    public class WaveSpawner : MonoBehaviour, IEnemyWorld
     {
         [Header("Prefab")]
         [Tooltip("Mọi loại quái dùng chung 1 prefab và 1 pool — khác biệt nằm hoàn toàn trong EnemyData + EnemyModifiers.")]
@@ -26,6 +27,10 @@ namespace ArenaSurvival.Stages
         [Header("Pooling")]
         [SerializeField] private int _poolPrewarmCount = 15;
 
+        [Header("Services")]
+        [Tooltip("Pool đạn chung cho quái bắn xa và boss.")]
+        [SerializeField] private EnemyProjectiles _projectiles;
+
         // Số lần thử bốc ngẫu nhiên 1 điểm trong sân nằm ngoài màn hình trước khi dùng phương án dự phòng.
         private const int MaxSpawnAttempts = 20;
 
@@ -34,13 +39,15 @@ namespace ArenaSurvival.Stages
         // (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
         private System.Action<Enemy> _releaseEnemy;
         private readonly Vector2[] _corners = new Vector2[4];
+        // Danh sách quái đang sống, tạo sẵn đủ chỗ: để "nổ theo boss" và đếm quái con mà không phải tìm kiếm trong scene.
+        private readonly List<Enemy> _alive = new List<Enemy>(512);
 
         private WaveData _wave;
         private EnemyModifiers _waveModifiers = EnemyModifiers.Default;
         private float _spawnTimer;
 
         /// <summary>Số quái đang sống trên sân.</summary>
-        public int ActiveCount { get; private set; }
+        public int ActiveCount => _alive.Count;
 
         private void Awake()
         {
@@ -65,13 +72,44 @@ namespace ArenaSurvival.Stages
         public void StopSpawning() => _wave = null;
 
         /// <summary>Sinh ngay 1 con cụ thể, ví dụ quái tinh anh của đợt cuối.</summary>
-        public Enemy Spawn(EnemyData data, EnemyModifiers modifiers)
+        public Enemy Spawn(EnemyData data, EnemyModifiers modifiers) => SpawnAt(data, modifiers, GetSpawnPosition());
+
+        /// <summary>Triệu hồi tại vị trí cho trước (boss gọi quái con quanh mình).</summary>
+        public Enemy Summon(EnemyData data, EnemyModifiers modifiers, Vector2 position) => SpawnAt(data, modifiers, position);
+
+        private Enemy SpawnAt(EnemyData data, EnemyModifiers modifiers, Vector2 position)
         {
-            Enemy enemy = _enemyPool.Get(GetSpawnPosition(), Quaternion.identity);
+            Enemy enemy = _enemyPool.Get(position, Quaternion.identity);
+            enemy.SetWorld(this, _projectiles);
             enemy.Initialize(data, modifiers);
             enemy.OnReturnToPool = _releaseEnemy;
-            ActiveCount++;
+            _alive.Add(enemy);
             return enemy;
+        }
+
+        public int CountAlive(EnemyData data)
+        {
+            int count = 0;
+            for (int i = 0; i < _alive.Count; i++)
+            {
+                if (_alive[i].Data == data) count++;
+            }
+            return count;
+        }
+
+        /// <summary>Quái không va chạm tường (tường chỉ giữ Player) nên tự kẹp trong vùng sân.</summary>
+        public Vector2 ClampToArena(Vector2 position) => new Vector2(
+            Mathf.Clamp(position.x, _arenaArea.xMin, _arenaArea.xMax),
+            Mathf.Clamp(position.y, _arenaArea.yMin, _arenaArea.yMax));
+
+        /// <summary>Mọi quái còn sống nổ ngay, không rơi XP (khi boss chết).</summary>
+        public void DespawnAll()
+        {
+            // Duyệt ngược: mỗi con trả về pool tự xóa mình khỏi danh sách.
+            for (int i = _alive.Count - 1; i >= 0; i--)
+            {
+                if (i < _alive.Count) _alive[i].Despawn(false);
+            }
         }
 
         /// <summary>
@@ -107,8 +145,18 @@ namespace ArenaSurvival.Stages
 
         private void ReturnEnemyToPool(Enemy enemy)
         {
-            // Release bỏ qua object đã tắt (trả 2 lần); chỉ trừ khi lần trả này thật sự có hiệu lực.
-            if (enemy.gameObject.activeSelf) ActiveCount--;
+            // Release bỏ qua object đã tắt (trả 2 lần); chỉ xóa khỏi danh sách khi lần trả này thật sự có hiệu lực.
+            if (enemy.gameObject.activeSelf)
+            {
+                // Xóa kiểu "đổi chỗ với phần tử cuối": không phải dời cả nửa danh sách; thứ tự không quan trọng.
+                int index = _alive.IndexOf(enemy);
+                if (index >= 0)
+                {
+                    int last = _alive.Count - 1;
+                    _alive[index] = _alive[last];
+                    _alive.RemoveAt(last);
+                }
+            }
             _enemyPool.Release(enemy);
         }
 

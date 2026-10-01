@@ -9,10 +9,22 @@ namespace ArenaSurvival.Core
     /// </summary>
     public static class SceneLoader
     {
+        public const string BootScene = "Boot";
         public const string MainMenuScene = "MainMenu";
         public const string GameScene = "Game";
 
+        /// <summary>
+        /// Scene Boot nạp scene này thay cho menu nếu được đặt (benchmark vào thẳng Game; sau này: mở thẳng màn từ thông báo đẩy).
+        /// </summary>
+        public static string FirstSceneOverride { get; set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => FirstSceneOverride = null;
+
         public static AsyncOperation LoadMainMenu() => Load(MainMenuScene);
+
+        /// <summary>Scene đầu tiên sau Boot.</summary>
+        public static AsyncOperation LoadFirstScene() => Load(string.IsNullOrEmpty(FirstSceneOverride) ? MainMenuScene : FirstSceneOverride);
 
         /// <summary>Dùng cho cả Play lẫn Retry: nạp lại scene Game là cách reset ván chơi sạch nhất.</summary>
         public static AsyncOperation LoadGame() => Load(GameScene);

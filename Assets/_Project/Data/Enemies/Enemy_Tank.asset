@@ -15,7 +15,11 @@ MonoBehaviour:
   displayName: Tank Enemy
   sprite: {fileID: -9066058787397014428, guid: 6ba963703f1f948408b0b0ab0aabe8e6, type: 3}
   scale: 1.5
+  tint: {r: 1, g: 1, b: 1, a: 1}
   maxHealth: 50
   moveSpeed: 1.2
   contactDamage: 10
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: 3c19a325db6feaf49b111d76e8e0b32d, type: 2}
+  isBoss: 0
   xpReward: 4

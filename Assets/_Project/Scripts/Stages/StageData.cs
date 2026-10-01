@@ -25,6 +25,10 @@ namespace ArenaSurvival.Stages
         [Tooltip("Đợt cuối: sân ngừng sinh quái thường, các nhóm này phải bị hạ hết mới thắng.")]
         public EliteGroup[] finalWave;
         [Min(0.05f)] public float eliteSpawnInterval = 0.6f;
+        [Tooltip("Boss của màn (để trống nếu không có). Có boss thì hạ boss là thắng; quái còn lại nổ theo.")]
+        public EnemyData boss;
+        [Tooltip("Boss xuất hiện sau khi rải xong quái tinh anh bấy nhiêu giây.")]
+        [Min(0f)] public float bossDelay = 1.5f;
 
         [Header("Đánh giá & phần thưởng")]
         [Tooltip("Thắng trong thời gian này (giây) thì đạt sao thứ 3.")]

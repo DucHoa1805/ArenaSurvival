@@ -37,6 +37,8 @@ namespace ArenaSurvival.UI
         [Tooltip("Banner \"ĐỢT TINH ANH!\" giữa màn hình, tắt sẵn.")]
         [SerializeField] private RectTransform _finalWaveBanner;
         [SerializeField] private float _bannerDuration = 2f;
+        [Tooltip("Chữ trong banner: đổi theo tình huống (đợt tinh anh / boss xuất hiện / boss đổi pha).")]
+        [SerializeField] private TMP_Text _bannerText;
 
         private int _shownSeconds = -1;
         private CanvasGroup _bannerGroup;
@@ -50,6 +52,8 @@ namespace ArenaSurvival.UI
             GameEvents.OnLevelUp += HandleLevelUp;
             _session.OnWaveStarted += HandleWaveStarted;
             _session.OnFinalWaveStarted += HandleFinalWaveStarted;
+            _session.OnBossSpawned += HandleBossSpawned;
+            _session.OnBossDefeated += HandleBossDefeated;
         }
 
         private void OnDisable()
@@ -60,6 +64,9 @@ namespace ArenaSurvival.UI
             GameEvents.OnLevelUp -= HandleLevelUp;
             _session.OnWaveStarted -= HandleWaveStarted;
             _session.OnFinalWaveStarted -= HandleFinalWaveStarted;
+            _session.OnBossSpawned -= HandleBossSpawned;
+            _session.OnBossDefeated -= HandleBossDefeated;
+            DetachBoss();
         }
 
         private void Awake()
@@ -114,12 +121,43 @@ namespace ArenaSurvival.UI
         {
             // Đợt cuối không ghi số: "ĐỢT CUỐI" báo rõ hơn là phải dọn sạch sân.
             string name = _session.Stage != null ? _session.Stage.displayName : "";
-            _waveText.text = _session.IsFinalWave ? $"{name} · ĐỢT CUỐI" : $"{name} · Đợt {wave}/{total}";
+            string final = _session.HasBoss ? "BOSS" : "ĐỢT CUỐI";
+            _waveText.text = _session.IsFinalWave ? $"{name} · {final}" : $"{name} · Đợt {wave}/{total}";
         }
 
+        // Màn có boss: banner để dành cho lúc boss thật sự xuất hiện, không báo "đợt tinh anh" (chỉ là quân hộ tống).
         private void HandleFinalWaveStarted()
         {
+            if (!_session.HasBoss) ShowBanner("ĐỢT TINH ANH!");
+        }
+
+        private Enemies.Enemy _boss;
+        private System.Action<int> _onBossPhase;
+
+        private void HandleBossSpawned(Enemies.Enemy boss)
+        {
+            DetachBoss();
+            _boss = boss;
+            if (_onBossPhase == null) _onBossPhase = HandleBossPhaseChanged;
+            _boss.OnBossPhaseChanged += _onBossPhase;
+            ShowBanner("BOSS XUẤT HIỆN!");
+        }
+
+        private void HandleBossPhaseChanged(int phase) => ShowBanner("BOSS NỔI GIẬN!");
+
+        private void HandleBossDefeated() => DetachBoss();
+
+        private void DetachBoss()
+        {
+            // Boss là object trong pool: phải gỡ, nếu không lần sau object này làm quái thường vẫn còn nối vào HUD.
+            if (_boss != null && _onBossPhase != null) _boss.OnBossPhaseChanged -= _onBossPhase;
+            _boss = null;
+        }
+
+        private void ShowBanner(string text)
+        {
             if (_finalWaveBanner == null) return;
+            if (_bannerText != null) _bannerText.text = text;
             _bannerTimer = 0f;
             _finalWaveBanner.gameObject.SetActive(true);
         }

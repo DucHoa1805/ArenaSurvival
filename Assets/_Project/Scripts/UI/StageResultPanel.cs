@@ -1,4 +1,5 @@
 using ArenaSurvival.Core;
+using ArenaSurvival.Meta;
 using ArenaSurvival.Stages;
 using TMPro;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace ArenaSurvival.UI
         [SerializeField] private TMP_Text _killText;
         [SerializeField] private TMP_Text _goldText;
         [SerializeField] private TMP_Text _xpText;
+        [Tooltip("Dòng phụ dưới phần thưởng: lần thắng đầu ×2 / chơi lại ×0.5.")]
+        [SerializeField] private TMP_Text _bonusText;
 
         [Header("Nút")]
         [SerializeField] private Button _nextButton;
@@ -94,8 +97,18 @@ namespace ArenaSurvival.UI
 
             _timeText.text = $"Thời gian: {TimeFormatter.ToClock(result.clearTime)}";
             _killText.text = $"Quái đã hạ: {result.killCount}";
-            _goldText.text = $"+{result.gold}";
-            _xpText.text = $"+{result.accountXp} XP";
+            // Hiện số THỰC NHẬN (đã áp hệ số lần đầu / chơi lại) nếu tầng meta đã áp kết quả của chính màn này.
+            StageGrant grant = GameServices.StageProgress?.LastGrant;
+            bool hasGrant = grant != null && grant.stageId == result.stageId;
+            _goldText.text = $"+{(hasGrant ? grant.gold : result.gold)}";
+            _xpText.text = $"+{(hasGrant ? grant.accountXp : result.accountXp)} XP";
+            if (_bonusText != null)
+            {
+                _bonusText.text = !hasGrant || !result.victory ? ""
+                    : grant.firstClear ? "Lần thắng đầu: thưởng ×2"
+                    : "Chơi lại: thưởng ×0.5";
+                _bonusText.gameObject.SetActive(_bonusText.text.Length > 0);
+            }
 
             // Màn cuối danh sách thì không có "Màn tiếp"; thua thì phải chơi lại chứ không được đi tiếp.
             _nextButton.gameObject.SetActive(result.victory && _session.Catalog.GetNext(stage) != null);

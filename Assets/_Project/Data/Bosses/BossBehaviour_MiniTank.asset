@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 442d1ded778af9d49a94298313e3bb5b, type: 3}
+  m_Name: BossBehaviour_MiniTank
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.BossBehaviour
+  _phases:
+  - healthThreshold: 1
+    attacks:
+    - {fileID: 11400000, guid: f08c87035903f214382da5c93221b00e, type: 2}
+    - {fileID: 11400000, guid: cd33a11826675634cb86a61d3f4e3deb, type: 2}
+    pauseBetweenAttacks: 1.3
+  - healthThreshold: 0.5
+    attacks:
+    - {fileID: 11400000, guid: bb9aedf75074a194eb5a3b7021eefad8, type: 2}
+    - {fileID: 11400000, guid: 62f614799df4e0e4c844602946acce72, type: 2}
+    pauseBetweenAttacks: 1
+  _chaseSpeedMultiplier: 0.6
