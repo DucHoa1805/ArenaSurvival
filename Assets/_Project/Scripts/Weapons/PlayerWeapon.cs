@@ -1,24 +1,29 @@
+using System.Collections.Generic;
+using ArenaSurvival.Combat;
 using ArenaSurvival.Core;
 using ArenaSurvival.Player;
 using UnityEngine;
-using ArenaSurvival.Combat;
 
 namespace ArenaSurvival.Weapons
 {
     /// <summary>
-    /// 1 khẩu súng tự bắn quái gần nhất. Player có thể gắn nhiều component này (mỗi cái 1 WeaponData);
-    /// khẩu chưa mở khóa để disabled và được UpgradeManager bật lên khi người chơi chọn nâng cấp tương ứng.
+    /// Súng chính tự bắn quái gần nhất. Khẩu nào, cấp/sao bao nhiêu do PlayerLoadout gán lúc vào màn (Equip) theo vũ khí meta
+    /// người chơi đang mặc (8C); _weaponData trên prefab chỉ là khẩu dự phòng khi chưa có dịch vụ (scene test cũ).
+    /// Bắn theo WeaponStats (đã cộng cấp, sao) × hệ số nâng cấp trong màn (PlayerStats).
     /// </summary>
     [RequireComponent(typeof(PlayerStats))]
     public class PlayerWeapon : MonoBehaviour, IWeapon
     {
         [Header("Data")]
+        [Tooltip("Khẩu dự phòng (Súng lục). Lúc chơi thật PlayerLoadout gán khẩu người chơi đang mặc.")]
         [SerializeField] private WeaponData _weaponData;
 
         public WeaponData Data => _weaponData;
         public WeaponDefinition Definition => _weaponData;
+        public WeaponStats Stats => _stats;
 
         [Header("References")]
+        [Tooltip("Đạn mặc định khi WeaponData không có prefab đạn riêng.")]
         [SerializeField] private Projectile _projectilePrefab;
         [SerializeField] private Transform _firePoint;
         [SerializeField] private LayerMask _enemyLayer; // chỉ tìm mục tiêu trên layer Enemy
@@ -26,33 +31,64 @@ namespace ArenaSurvival.Weapons
         [Header("Pooling")]
         [SerializeField] private int _poolPrewarmCount = 20;
 
-        // Số collider tối đa đọc được trong 1 lần quét. Nếu số quái trong tầm vượt con số này,
-        // phần dư bị bỏ qua và có thể sót con gần nhất — nên để dư so với mật độ quái thực tế.
-        private const int MaxTargetsPerScan = 64;
+        // Đủ lớn so với mật độ quái thực tế (300 quái trên sân, tầm 8): thiếu chỗ thì có thể sót con gần nhất.
+        private const int MaxTargetsPerScan = 128;
 
         private float _fireCooldown;
+        private WeaponStats _stats;
+        private bool _equipped;
         private ObjectPool<Projectile> _projectilePool;
-        private PlayerStats _stats;
+        private Projectile _poolPrefab;
+        private Transform _projectileRoot;
+        private PlayerStats _playerStats;
+        private ContactFilter2D _enemyFilter;
         // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
         private System.Action<Projectile> _releaseProjectile;
 
-        // Cấp phát 1 lần duy nhất rồi dùng lại mỗi frame — đây mới là thứ làm cho "NonAlloc" có ý nghĩa.
-        private readonly Collider2D[] _hitBuffer = new Collider2D[MaxTargetsPerScan];
+        // List tạo sẵn đủ sức chứa rồi dùng lại mỗi frame: bản OverlapCircle nhận List không cấp phát khi còn đủ chỗ
+        // (bản OverlapCircleNonAlloc cũ bị Unity 6 đánh dấu obsolete).
+        private readonly List<Collider2D> _hits = new List<Collider2D>(MaxTargetsPerScan);
 
         private void Awake()
         {
-            _stats = GetComponent<PlayerStats>();
+            _playerStats = GetComponent<PlayerStats>();
             _releaseProjectile = ReturnProjectileToPool;
+            _enemyFilter = new ContactFilter2D { useLayerMask = true, layerMask = _enemyLayer, useTriggers = true };
+        }
+
+        private void Start()
+        {
+            // Không ai gán (scene test không có dịch vụ): dùng khẩu dự phòng ở cấp 1, 1★.
+            if (!_equipped && _weaponData != null) Equip(_weaponData, WeaponRules.Effective(_weaponData, 1, 1));
+        }
+
+        /// <summary>Gán khẩu súng + chỉ số đã tính. Gọi lại được (benchmark đổi súng) — pool đạn chỉ dựng lại khi đổi loại đạn.</summary>
+        public void Equip(WeaponData data, WeaponStats stats)
+        {
+            _weaponData = data;
+            _stats = stats;
+            _equipped = true;
+            _fireCooldown = 0f;
+
+            Projectile prefab = data.projectilePrefab != null ? data.projectilePrefab : _projectilePrefab;
+            if (_projectilePool != null && prefab == _poolPrefab) return;
 
             // Đạn nằm trong 1 container riêng ở gốc scene, KHÔNG làm con của Player: object con luôn
             // di chuyển/xoay theo cha, nên đạn đang bay sẽ bị quét lệch quỹ đạo mỗi khi Player xoay người.
-            // Awake chạy cả khi component đang disabled, nên súng chưa mở khóa cũng tạo sẵn pool từ đầu trận.
-            Transform projectileRoot = new GameObject($"Projectiles ({_weaponData.name})").transform;
-            _projectilePool = new ObjectPool<Projectile>(_projectilePrefab, _poolPrewarmCount, projectileRoot);
+            if (_projectileRoot != null) Destroy(_projectileRoot.gameObject);
+            _projectileRoot = new GameObject($"Projectiles ({data.name})").transform;
+            _projectilePool = new ObjectPool<Projectile>(prefab, _poolPrewarmCount, _projectileRoot);
+            _poolPrefab = prefab;
+        }
+
+        private void OnDestroy()
+        {
+            if (_projectileRoot != null) Destroy(_projectileRoot.gameObject);
         }
 
         private void Update()
         {
+            if (!_equipped) return;
             _fireCooldown -= Time.deltaTime;
 
             Transform target = FindNearestEnemy();
@@ -66,25 +102,24 @@ namespace ArenaSurvival.Weapons
             if (_fireCooldown <= 0f)
             {
                 Fire(direction);
-                _fireCooldown = 1f / (_weaponData.fireRate * _stats.FireRateMultiplier);
+                _fireCooldown = 1f / Mathf.Max(0.01f, _stats.fireRate * _playerStats.FireRateMultiplier);
             }
         }
 
         private Transform FindNearestEnemy()
         {
-            // NonAlloc ghi kết quả vào buffer có sẵn thay vì trả về mảng mới mỗi frame — quan trọng khi có nhiều quái.
-            int count = Physics2D.OverlapCircleNonAlloc(transform.position, _weaponData.range, _hitBuffer, _enemyLayer);
+            int count = Physics2D.OverlapCircle(transform.position, _stats.range, _enemyFilter, _hits);
 
             Transform nearest = null;
             float nearestDistSqr = float.MaxValue;
 
             for (int i = 0; i < count; i++)
             {
-                float distSqr = (_hitBuffer[i].transform.position - transform.position).sqrMagnitude;
+                float distSqr = (_hits[i].transform.position - transform.position).sqrMagnitude;
                 if (distSqr < nearestDistSqr)
                 {
                     nearestDistSqr = distSqr;
-                    nearest = _hitBuffer[i].transform;
+                    nearest = _hits[i].transform;
                 }
             }
 
@@ -93,18 +128,20 @@ namespace ArenaSurvival.Weapons
 
         private void Fire(Vector2 direction)
         {
-            float damage = _weaponData.damage * _stats.DamageMultiplier;
-            int count = Mathf.Max(1, _weaponData.projectileCount);
+            float damage = _stats.damage * _playerStats.DamageMultiplier;
+            int count = Mathf.Max(1, _stats.projectileCount);
 
             for (int i = 0; i < count; i++)
             {
-                // Xoay hướng ngắm quanh trục Z để các viên tỏa đều thành hình quạt quanh mục tiêu.
-                float offset = GetSpreadOffset(i, count, _weaponData.spreadAngle);
+                // Xoay hướng ngắm quanh trục Z để các viên tỏa đều thành hình quạt quanh mục tiêu; súng máy lệch thêm ngẫu nhiên.
+                float offset = GetSpreadOffset(i, count, _stats.spreadAngle);
+                if (_stats.aimJitter > 0f) offset += Random.Range(-_stats.aimJitter, _stats.aimJitter);
                 Vector2 shotDirection = Quaternion.Euler(0f, 0f, offset) * direction;
 
                 Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
                 projectile.OnReturnToPool = _releaseProjectile;
-                projectile.Launch(shotDirection, damage, _weaponData.projectileSpeed);
+                projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, _stats.pierce,
+                    _stats.explosionRadius, _stats.explosionDamageFraction, _stats.knockback);
             }
 
             // 1 tiếng cho cả loạt đạn, không phải mỗi viên 1 tiếng.
@@ -134,7 +171,7 @@ namespace ArenaSurvival.Weapons
 
             // Vẽ vòng tròn tầm bắn trong Scene view để dễ chỉnh bằng mắt.
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, _weaponData.range);
+            Gizmos.DrawWireSphere(transform.position, _equipped ? _stats.range : _weaponData.range);
         }
     }
 }

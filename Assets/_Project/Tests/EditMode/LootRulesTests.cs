@@ -133,6 +133,40 @@ namespace ArenaSurvival.Tests
         }
 
         [Test]
+        public void Roll_AlsoRoll_RollsSubTablesToo()
+        {
+            var shards = ScriptableObject.CreateInstance<LootTable>();
+            try
+            {
+                shards.rolls = 0;
+                shards.guaranteed = new[] { new LootEntry { material = _ore, min = 3, max = 3 } };
+                _table.rolls = 0;
+                _table.guaranteed = new[] { new LootEntry { material = _leather } };
+                _table.alsoRoll = new[] { shards, null };
+
+                LootRules.Roll(_table, Seeded(1), _out);
+
+                Assert.AreEqual(2, _out.Count);
+                Assert.AreEqual("leather", _out[0].id);
+                Assert.AreEqual("ore", _out[1].id);
+                Assert.AreEqual(3, _out[1].amount);
+            }
+            finally { Object.DestroyImmediate(shards); }
+        }
+
+        [Test]
+        public void Roll_SelfReferencingAlsoRoll_DoesNotLoopForever()
+        {
+            _table.rolls = 0;
+            _table.guaranteed = new[] { new LootEntry { material = _leather } };
+            _table.alsoRoll = new[] { _table };
+
+            LootRules.Roll(_table, Seeded(1), _out);
+
+            Assert.LessOrEqual(_out.Count, LootRules.MaxAlsoRollDepth + 1, "độ sâu bị chặn");
+        }
+
+        [Test]
         public void Roll_NullTableOrEmptyEntry_AddsNothing()
         {
             LootRules.Roll(null, Seeded(1), _out);

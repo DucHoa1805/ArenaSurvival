@@ -205,6 +205,11 @@ namespace ArenaSurvival.Save
             profile.items.RemoveAll(item => item == null || string.IsNullOrEmpty(item.uid));
             if (profile.equipped == null) profile.equipped = new System.Collections.Generic.Dictionary<string, string>();
             if (profile.nextItemUid < 1) profile.nextItemUid = 1;
+            if (profile.weapons == null) profile.weapons = new System.Collections.Generic.Dictionary<string, OwnedWeapon>();
+            // Bỏ mục null (sửa tay hỏng), rồi tặng lại Súng lục nếu thiếu: không bao giờ vào trận tay không.
+            foreach (string key in new System.Collections.Generic.List<string>(profile.weapons.Keys))
+                if (profile.weapons[key] == null) profile.weapons.Remove(key);
+            WeaponService.EnsureDefaults(profile);
             return profile;
         }
     }

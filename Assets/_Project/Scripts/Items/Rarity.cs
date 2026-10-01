@@ -25,6 +25,8 @@ namespace ArenaSurvival.Items
     {
         public const string Armor = "armor";
         public const string Accessory = "accessory";
+        /// <summary>Ô vũ khí chính (8C): giá trị là id vũ khí, không phải uid (mỗi khẩu chỉ có 1 bản).</summary>
+        public const string Weapon = "weapon";
 
         public static string Key(EquipSlot slot) => slot == EquipSlot.Armor ? Armor : Accessory;
     }

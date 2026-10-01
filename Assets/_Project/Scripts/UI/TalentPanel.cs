@@ -83,7 +83,7 @@ namespace ArenaSurvival.UI
             if (_goldText != null) _goldText.SetText("{0}", GameServices.Economy.GetBalance(CurrencyIds.Gold));
             if (_powerText != null)
             {
-                _powerText.SetText("Lực chiến: {0}", StatCalculator.Power(LoadoutStats.Compute(_heroBase, _catalog)));
+                _powerText.SetText("Lực chiến: {0}", LoadoutStats.Power(_heroBase, _catalog));
             }
         }
     }

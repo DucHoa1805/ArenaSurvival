@@ -65,6 +65,16 @@ namespace ArenaSurvival.DevTools
             float settle = GetIntArg("-settle", Mathf.RoundToInt(_settleSeconds));
             int frames = GetIntArg("-frames", 0);
 
+            // Đo từng khẩu súng chính (Phóng lựu nổ vùng, Laser xuyên là 2 trường hợp nặng nhất).
+            string mainWeapon = GetStringArg("-mainWeapon", null);
+            if (!string.IsNullOrEmpty(mainWeapon))
+            {
+                var loadout = FindFirstObjectByType<Player.PlayerLoadout>();
+                bool ok = loadout != null && loadout.EquipMainWeapon(mainWeapon);
+                Debug.Log($"[Benchmark] Súng chính = {mainWeapon} ({(ok ? "ok" : "KHÔNG TÌM THẤY, giữ súng đang mặc")})");
+                if (ok) label += $"-{mainWeapon}";
+            }
+
             _stressTest.Configure(enemies, weapons);
             _stressTest.Begin();
 

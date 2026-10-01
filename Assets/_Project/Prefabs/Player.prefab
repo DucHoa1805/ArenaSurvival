@@ -160,8 +160,6 @@ GameObject:
   - component: {fileID: 3491706075365627868}
   - component: {fileID: 2602976628328504595}
   - component: {fileID: 1064305851388248126}
-  - component: {fileID: 4696066669073839423}
-  - component: {fileID: 7356917306387966622}
   - component: {fileID: 326507814990378938}
   - component: {fileID: 3102533605996374172}
   - component: {fileID: 1857097712224609208}
@@ -335,44 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ef365b094aafa41be27635ebafd10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Player.PlayerStats
---- !u!114 &4696066669073839423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8134866167689488960}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.PlayerWeapon
-  _weaponData: {fileID: 11400000, guid: 48d0712e269809b46af2d8e5e0db81a8, type: 2}
-  _projectilePrefab: {fileID: 4644805776529081687, guid: 1628a3c5d02f1c64c85cb5f609590bc7, type: 3}
-  _firePoint: {fileID: 6316952694449696612}
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _poolPrewarmCount: 30
---- !u!114 &7356917306387966622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8134866167689488960}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6b5749768f444c4892b026ea27fd045, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.PlayerWeapon
-  _weaponData: {fileID: 11400000, guid: cf00ca75e4b2ba74db307014fbcbdca8, type: 2}
-  _projectilePrefab: {fileID: 4644805776529081687, guid: 1628a3c5d02f1c64c85cb5f609590bc7, type: 3}
-  _firePoint: {fileID: 6316952694449696612}
-  _enemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _poolPrewarmCount: 30
 --- !u!114 &326507814990378938
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef93873ae106d7d43bed6972af679921, type: 3}
+  m_Name: Weapon_Laser
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Weapons.WeaponData
+  displayName: Laser
+  icon: {fileID: 21300000, guid: 6b4fe2f1a08e23a4e97f802fe9cecf36, type: 3}
+  id: weapon_laser
+  description: "Tia b\u1EAFn r\u1EA5t nhanh, xuy\xEAn qua 4 qu\xE1i tr\xEAn \u0111\u01B0\u1EDDng
+    bay."
+  shardMaterial: {fileID: 11400000, guid: 6b7cb42fe88d6c3448c968aa13304ce3, type: 2}
+  damage: 6
+  damagePerLevel: 0.48
+  fireRate: 1
+  range: 8
+  projectileSpeed: 24
+  projectileCount: 1
+  spreadAngle: 0
+  aimJitter: 0
+  pierce: 4
+  explosionRadius: 0
+  explosionDamageFraction: 0.7
+  knockback: 0
+  projectilePrefab: {fileID: 4644805776529081687, guid: 35490833a2cc8b34f942e35f687bbdd9, type: 3}
+  starBonus3:
+    extraProjectiles: 0
+    extraPierce: 3
+    fireRatePercent: 0
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "Xuy\xEAn th\xEAm 3 qu\xE1i"
+  starBonus5:
+    extraProjectiles: 0
+    extraPierce: 0
+    fireRatePercent: 30
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "T\u1ED1c b\u1EAFn +30%"

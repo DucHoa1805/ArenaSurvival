@@ -182,3 +182,7 @@ MonoBehaviour:
   _speed: 10
   _damage: 5
   _lifetime: 3
+  _raiseHitEvent: 1
+  _explosionMask:
+    serializedVersion: 2
+    m_Bits: 64

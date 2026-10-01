@@ -39,6 +39,8 @@ namespace ArenaSurvival.Stages
         [Min(0)] public int baseAccountXp = 20;
         [Tooltip("Quay khi thắng màn: lần thắng đầu quay 2 lần, chơi lại 1 lần.")]
         public Loot.LootTable victoryLoot;
+        [Tooltip("Quà CHỈ cho lần thắng đầu tiên (vd đủ mảnh mở 1 vũ khí mới) — luôn rơi, không quay.")]
+        public Loot.LootEntry[] firstClearReward = new Loot.LootEntry[0];
 
         /// <summary>Tổng thời gian các đợt thường, dùng tính tiến độ màn.</summary>
         public float PlannedDuration

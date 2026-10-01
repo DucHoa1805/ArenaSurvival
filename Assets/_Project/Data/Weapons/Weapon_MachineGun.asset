@@ -13,10 +13,35 @@ MonoBehaviour:
   m_Name: Weapon_MachineGun
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.WeaponData
   displayName: "S\xFAng m\xE1y"
-  icon: {fileID: 0}
-  damage: 7
-  fireRate: 4
+  icon: {fileID: 21300000, guid: 0cae29ea6114d764db6a5a7f5272f2b5, type: 3}
+  id: weapon_machinegun
+  description: "Li\xEAn thanh 6 ph\xE1t/gi\xE2y, s\xE1t th\u01B0\u01A1ng th\u1EA5p,
+    h\u01A1i t\u1EA3n."
+  shardMaterial: {fileID: 11400000, guid: 507b5648c0b911c47993ffc80c44c18b, type: 2}
+  damage: 1.6
+  damagePerLevel: 0.128
+  fireRate: 6
   range: 6.5
   projectileSpeed: 16
   projectileCount: 1
   spreadAngle: 0
+  aimJitter: 6
+  pierce: 0
+  explosionRadius: 0
+  explosionDamageFraction: 0.7
+  knockback: 0
+  projectilePrefab: {fileID: 0}
+  starBonus3:
+    extraProjectiles: 0
+    extraPierce: 0
+    fireRatePercent: 25
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "T\u1ED1c b\u1EAFn +25%"
+  starBonus5:
+    extraProjectiles: 0
+    extraPierce: 1
+    fireRatePercent: 0
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "Xuy\xEAn th\xEAm 1 qu\xE1i"

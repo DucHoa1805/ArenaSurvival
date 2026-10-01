@@ -45,9 +45,35 @@ MonoBehaviour:
     min: 1
     max: 2
     weight: 25
-  nothingWeight: 60
+  - material: {fileID: 11400000, guid: c7e57c693526d0842b2089774fcbceea, type: 2}
+    item: {fileID: 0}
+    min: 1
+    max: 1
+    weight: 2
+  - material: {fileID: 11400000, guid: 61da370d261610d44b515d5e399e3fa1, type: 2}
+    item: {fileID: 0}
+    min: 1
+    max: 1
+    weight: 2
+  - material: {fileID: 11400000, guid: 507b5648c0b911c47993ffc80c44c18b, type: 2}
+    item: {fileID: 0}
+    min: 1
+    max: 1
+    weight: 2
+  - material: {fileID: 11400000, guid: fbae4ef4dfb01d444895e27c10dda21b, type: 2}
+    item: {fileID: 0}
+    min: 1
+    max: 1
+    weight: 2
+  - material: {fileID: 11400000, guid: 6b7cb42fe88d6c3448c968aa13304ce3, type: 2}
+    item: {fileID: 0}
+    min: 1
+    max: 1
+    weight: 2
+  nothingWeight: 50
   rarityWeights:
   - 80
   - 20
   - 0
   - 0
+  alsoRoll: []

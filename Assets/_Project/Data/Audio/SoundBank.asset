@@ -64,6 +64,13 @@ MonoBehaviour:
     volume: 0.75
     minInterval: 0.1
     pitchVariation: 0
+  explosion:
+    clips:
+    - {fileID: 8300000, guid: 2db32d4551b33d44a98b3e6013ab9608, type: 3}
+    - {fileID: 8300000, guid: 4a9b8322da956284db2a5c7cb8ad825b, type: 3}
+    volume: 0.7
+    minInterval: 0.08
+    pitchVariation: 0.1
   materialPickup:
     clips:
     - {fileID: 8300000, guid: 9aa1016157960f041aeb3f4a2d2499b5, type: 3}

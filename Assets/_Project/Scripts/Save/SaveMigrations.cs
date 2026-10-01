@@ -17,6 +17,7 @@ namespace ArenaSurvival.Save
             V1ToV2,
             V2ToV3,
             V3ToV4,
+            V4ToV5,
         };
 
         public static JObject Migrate(JObject data, int fromVersion)
@@ -62,6 +63,20 @@ namespace ArenaSurvival.Save
             if (v3["nextItemUid"] == null) v3["nextItemUid"] = 1;
             v3["saveVersion"] = 4;
             return v3;
+        }
+
+        /// <summary>v5 (Phase 8C) thêm vũ khí chính: tặng Súng lục 1★ và mặc sẵn, để người chơi cũ vào màn vẫn có súng như trước.</summary>
+        private static JObject V4ToV5(JObject v4)
+        {
+            if (!(v4["weapons"] is JObject weapons)) v4["weapons"] = weapons = new JObject();
+            if (weapons[WeaponService.DefaultWeaponId] == null)
+                weapons[WeaponService.DefaultWeaponId] = new JObject { ["level"] = 1, ["stars"] = 1 };
+
+            if (!(v4["equipped"] is JObject equipped)) v4["equipped"] = equipped = new JObject();
+            if (equipped["weapon"] == null) equipped["weapon"] = WeaponService.DefaultWeaponId;
+
+            v4["saveVersion"] = 5;
+            return v4;
         }
     }
 }

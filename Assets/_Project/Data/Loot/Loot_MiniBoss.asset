@@ -46,3 +46,5 @@ MonoBehaviour:
   - 80
   - 20
   - 0
+  alsoRoll:
+  - {fileID: 11400000, guid: bcc685244690c6147ad2962a61dced21, type: 2}

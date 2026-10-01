@@ -18,6 +18,7 @@ namespace ArenaSurvival.Meta
         public static StageProgressService StageProgress { get; private set; }
         public static TalentService Talents { get; private set; }
         public static InventoryService Inventory { get; private set; }
+        public static WeaponService Weapons { get; private set; }
         public static bool IsInitialized => Profile != null;
 
         // Gán sẵn 1 lần để gỡ được đúng delegate khi khởi tạo lại.
@@ -34,6 +35,7 @@ namespace ArenaSurvival.Meta
             StageProgress = null;
             Talents = null;
             Inventory = null;
+            Weapons = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -48,7 +50,9 @@ namespace ArenaSurvival.Meta
             Profile.Load();
             Economy = new EconomyService(Profile.Profile, Profile.MarkDirty);
             Talents = new TalentService(Profile.Profile, Economy, () => Profile.Save());
-            Inventory = new InventoryService(Profile.Profile, Economy, LoadItemDatabase(), () => Profile.Save());
+            ItemDatabase database = LoadItemDatabase();
+            Inventory = new InventoryService(Profile.Profile, Economy, database, () => Profile.Save());
+            Weapons = new WeaponService(Profile.Profile, Economy, database, () => Profile.Save());
             StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save(), Inventory);
 
             if (_onStageCompleted == null) _onStageCompleted = result => StageProgress.Apply(result);

@@ -10,6 +10,9 @@ namespace ArenaSurvival.Loot
     /// </summary>
     public static class LootRules
     {
+        /// <summary>Độ sâu tối đa của alsoRoll: chặn bảng tự tham chiếu (lỗi dữ liệu) làm treo game.</summary>
+        public const int MaxAlsoRollDepth = 3;
+
         // Bộ đệm trọng số dùng lại (chỉ chạy trên main thread).
         private static float[] _weights = new float[16];
 
@@ -35,10 +38,20 @@ namespace ArenaSurvival.Loot
             return last;
         }
 
-        public static void Roll(LootTable table, Func<float> random01, List<LootDrop> output)
-        {
-            if (table == null || random01 == null || output == null) return;
+        public static void Roll(LootTable table, Func<float> random01, List<LootDrop> output) => Roll(table, random01, output, 0);
 
+        private static void Roll(LootTable table, Func<float> random01, List<LootDrop> output, int depth)
+        {
+            if (table == null || random01 == null || output == null || depth > MaxAlsoRollDepth) return;
+
+            RollOwnEntries(table, random01, output);
+
+            if (table.alsoRoll == null) return;
+            foreach (LootTable sub in table.alsoRoll) Roll(sub, random01, output, depth + 1);
+        }
+
+        private static void RollOwnEntries(LootTable table, Func<float> random01, List<LootDrop> output)
+        {
             if (table.guaranteed != null)
                 foreach (LootEntry entry in table.guaranteed) AddEntry(entry, table, random01, output);
 

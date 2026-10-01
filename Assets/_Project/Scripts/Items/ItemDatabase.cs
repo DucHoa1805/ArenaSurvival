@@ -14,9 +14,18 @@ namespace ArenaSurvival.Items
 
         public ItemData[] items = new ItemData[0];
         public MaterialData[] materials = new MaterialData[0];
+        [Tooltip("Vũ khí chính (8C). Mảnh của chúng nằm trong materials như nguyên liệu.")]
+        public Weapons.WeaponData[] weapons = new Weapons.WeaponData[0];
 
         private Dictionary<string, ItemData> _items;
         private Dictionary<string, MaterialData> _materials;
+        private Dictionary<string, Weapons.WeaponData> _weapons;
+
+        public Weapons.WeaponData GetWeapon(string id)
+        {
+            if (_weapons == null) Build();
+            return id != null && _weapons.TryGetValue(id, out Weapons.WeaponData weapon) ? weapon : null;
+        }
 
         public ItemData GetItem(string id)
         {
@@ -35,12 +44,17 @@ namespace ArenaSurvival.Items
         {
             _items = null;
             _materials = null;
+            _weapons = null;
         }
 
         private void Build()
         {
             _items = new Dictionary<string, ItemData>();
             _materials = new Dictionary<string, MaterialData>();
+            _weapons = new Dictionary<string, Weapons.WeaponData>();
+            if (weapons != null)
+                foreach (Weapons.WeaponData weapon in weapons)
+                    if (weapon != null && !string.IsNullOrEmpty(weapon.id)) _weapons[weapon.id] = weapon;
             if (items != null)
                 foreach (ItemData item in items)
                     if (item != null && !string.IsNullOrEmpty(item.id)) _items[item.id] = item;

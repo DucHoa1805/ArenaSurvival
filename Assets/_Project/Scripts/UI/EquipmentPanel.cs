@@ -26,6 +26,9 @@ namespace ArenaSurvival.UI
         [SerializeField] private Transform _grid;
         [SerializeField] private ItemSlotView _armorSlot;
         [SerializeField] private ItemSlotView _accessorySlot;
+        [Tooltip("Ô vũ khí chính (8C): bấm để mở bảng Vũ khí.")]
+        [SerializeField] private ItemSlotView _weaponSlot;
+        [SerializeField] private WeaponPanel _weaponPanel;
         [SerializeField] private ItemDetailPopup _detail;
         [Tooltip("Hiện khi kho trống (không bắt buộc).")]
         [SerializeField] private GameObject _emptyHint;
@@ -46,6 +49,8 @@ namespace ArenaSurvival.UI
         private readonly List<OwnedItem> _sorted = new List<OwnedItem>();
         private Action _onChanged;
         private Action<string, long> _onCurrencyChanged;
+        private Action<string> _onWeaponChanged;
+        private Action<ItemSlotView> _onWeaponSlotClicked;
         private Action<ItemSlotView> _onSlotClicked;
         private Comparison<OwnedItem> _compare;
 
@@ -56,12 +61,16 @@ namespace ArenaSurvival.UI
             _onChanged = Refresh;
             _onCurrencyChanged = (_, __) => RefreshResources();
             _onSlotClicked = HandleSlotClicked;
+            _onWeaponChanged = _ => Refresh();
+            _onWeaponSlotClicked = _ => { if (_weaponPanel != null) _weaponPanel.Open(); };
+            if (_weaponSlot != null) _weaponSlot.OnClicked += _onWeaponSlotClicked;
             _compare = CompareItems;
             _armorSlot.OnClicked += _onSlotClicked;
             _accessorySlot.OnClicked += _onSlotClicked;
             _quickDismantleButton.onClick.AddListener(HandleQuickDismantle);
             _closeButton.onClick.AddListener(Close);
             if (_detail != null) _detail.gameObject.SetActive(false);
+            if (_weaponPanel != null) _weaponPanel.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -75,6 +84,7 @@ namespace ArenaSurvival.UI
             Inventory.OnInventoryChanged += _onChanged;
             Inventory.OnEquipmentChanged += _onChanged;
             GameServices.Economy.OnCurrencyChanged += _onCurrencyChanged;
+            GameServices.Weapons.OnWeaponChanged += _onWeaponChanged;
             Refresh();
         }
 
@@ -86,7 +96,9 @@ namespace ArenaSurvival.UI
                 Inventory.OnEquipmentChanged -= _onChanged;
             }
             if (GameServices.Economy != null) GameServices.Economy.OnCurrencyChanged -= _onCurrencyChanged;
+            if (GameServices.Weapons != null) GameServices.Weapons.OnWeaponChanged -= _onWeaponChanged;
             if (_detail != null) _detail.Close();
+            if (_weaponPanel != null) _weaponPanel.Close();
         }
 
         public void Close() => gameObject.SetActive(false);
@@ -95,6 +107,7 @@ namespace ArenaSurvival.UI
         {
             ShowEquipped(_armorSlot, EquipSlot.Armor);
             ShowEquipped(_accessorySlot, EquipSlot.Accessory);
+            ShowWeapon();
 
             _sorted.Clear();
             foreach (OwnedItem item in Inventory.Items)
@@ -121,8 +134,7 @@ namespace ArenaSurvival.UI
             _countText.SetText("Kho đồ {0}/{1}", Inventory.Items.Count, EquipmentRules.InventoryCapacity);
             _quickDismantleButton.interactable = HasQuickDismantleTargets();
 
-            StatBlock stats = LoadoutStats.Compute(_heroBase, _talents);
-            _powerText.SetText("Lực chiến: {0}", StatCalculator.Power(stats));
+            _powerText.SetText("Lực chiến: {0}", LoadoutStats.Power(_heroBase, _talents));
             RefreshResources();
         }
 
@@ -145,6 +157,16 @@ namespace ArenaSurvival.UI
             ItemData data = Inventory.GetData(item);
             if (data == null) slot.ShowEmpty();
             else slot.ShowItem(item, data, equipped: false); // ô "đang mặc" thì không cần dấu đang mặc
+        }
+
+        private void ShowWeapon()
+        {
+            if (_weaponSlot == null) return;
+            WeaponService weapons = GameServices.Weapons;
+            Weapons.WeaponData data = weapons.EquippedData;
+            if (data == null) { _weaponSlot.ShowEmpty(); return; }
+            string id = weapons.EquippedId;
+            _weaponSlot.ShowWeapon(data.icon, WeaponPanel.StarFrame(weapons.GetStars(id)), weapons.GetLevel(id));
         }
 
         private void HandleSlotClicked(ItemSlotView view)

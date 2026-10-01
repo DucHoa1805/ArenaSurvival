@@ -14,6 +14,10 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private PooledVfx _hitPrefab;
         [SerializeField] private PooledVfx _enemyDeathPrefab;
         [SerializeField] private PooledVfx _levelUpPrefab;
+        [Tooltip("Không bắt buộc: hiệu ứng nổ của đạn Phóng lựu (phóng to theo bán kính nổ).")]
+        [SerializeField] private PooledVfx _explosionPrefab;
+        [Tooltip("Bán kính nổ mà prefab hiệu ứng nổ trông vừa khớp ở scale 1.")]
+        [SerializeField] private float _explosionPrefabRadius = 1f;
         [Tooltip("Không bắt buộc: chữ \"CẤP n!\" bay lên trên đầu Player khi chọn xong nâng cấp.")]
         [SerializeField] private FloatingText _levelUpTextPrefab;
         [Tooltip("Không bắt buộc: số sát thương bay lên trên đầu quái.")]
@@ -34,11 +38,15 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private int _maxDeathEffects = 32;
         [Tooltip("Hơn số này thì màn hình toàn chữ số, đọc không nổi nữa.")]
         [SerializeField] private int _maxDamageNumbers = 60;
+        [Tooltip("Phóng lựu bắn ~1 quả/giây; dư cho súng nâng tốc bắn trong màn.")]
+        [SerializeField] private int _maxExplosions = 12;
 
         private ObjectPool<PooledVfx> _hitPool;
         private ObjectPool<PooledVfx> _deathPool;
         private ObjectPool<PooledVfx> _levelUpPool;
         private ObjectPool<FloatingText> _damageNumberPool;
+        private ObjectPool<PooledVfx> _explosionPool;
+        private System.Action<PooledVfx> _releaseExplosion;
         // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
         private System.Action<PooledVfx> _releaseHit;
         private System.Action<PooledVfx> _releaseDeath;
@@ -63,6 +71,12 @@ namespace ArenaSurvival.Vfx
                 _levelUpText.gameObject.SetActive(false);
             }
 
+            if (_explosionPrefab != null)
+            {
+                _explosionPool = new ObjectPool<PooledVfx>(_explosionPrefab, _maxExplosions, transform, _maxExplosions);
+                _releaseExplosion = _explosionPool.Release;
+            }
+
             if (_damageNumberPrefab != null)
             {
                 _damageNumberPool = new ObjectPool<FloatingText>(
@@ -78,6 +92,7 @@ namespace ArenaSurvival.Vfx
             GameEvents.OnEnemyDamaged += HandleEnemyDamaged;
             GameEvents.OnLevelUp += HandleLevelUp;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
+            GameEvents.OnExplosion += HandleExplosion;
         }
 
         private void OnDisable()
@@ -87,6 +102,7 @@ namespace ArenaSurvival.Vfx
             GameEvents.OnEnemyDamaged -= HandleEnemyDamaged;
             GameEvents.OnLevelUp -= HandleLevelUp;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
+            GameEvents.OnExplosion -= HandleExplosion;
         }
 
         private void HandleLevelUp(int newLevel) => _currentLevel = newLevel;
@@ -94,6 +110,14 @@ namespace ArenaSurvival.Vfx
         private void HandleProjectileHit(Vector3 position) => Play(_hitPool, _releaseHit, position);
 
         private void HandleEnemyKilled(int xpReward, Vector3 position) => Play(_deathPool, _releaseDeath, position);
+
+        private void HandleExplosion(Vector3 position, float radius)
+        {
+            if (_explosionPool == null || !_explosionPool.TryGet(position, Quaternion.identity, out PooledVfx vfx)) return;
+            vfx.OnReturnToPool = _releaseExplosion;
+            // Đặt lại scale mỗi lần lấy từ pool: nâng sao Phóng lựu làm bán kính nổ to hơn.
+            vfx.transform.localScale = Vector3.one * (radius / Mathf.Max(0.01f, _explosionPrefabRadius));
+        }
 
         private void HandleEnemyDamaged(float amount, Vector3 position)
         {

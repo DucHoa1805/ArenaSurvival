@@ -9,7 +9,7 @@ namespace ArenaSurvival.Meta
     /// </summary>
     public class PlayerProfile
     {
-        public const int CurrentVersion = 4;
+        public const int CurrentVersion = 5;
 
         public int saveVersion = CurrentVersion;
         public long accountXp;
@@ -21,7 +21,9 @@ namespace ArenaSurvival.Meta
         public Dictionary<string, int> talents = new Dictionary<string, int>();
         /// <summary>Kho trang bị (v4, Phase 8B).</summary>
         public List<OwnedItem> items = new List<OwnedItem>();
-        /// <summary>Khóa ô (EquipSlotIds) → uid món đang mặc (v4).</summary>
+        /// <summary>id vũ khí chính → cấp/sao (v5, Phase 8C). Súng lục luôn có (WeaponService.EnsureDefaults).</summary>
+        public Dictionary<string, OwnedWeapon> weapons = new Dictionary<string, OwnedWeapon>();
+        /// <summary>Khóa ô (EquipSlotIds) → uid món đang mặc (v4); riêng ô "weapon" lưu id vũ khí (v5).</summary>
         public Dictionary<string, string> equipped = new Dictionary<string, string>();
         /// <summary>Bộ đếm sinh uid cho món mới: tăng dần nên không bao giờ trùng, kể cả sau khi phân rã.</summary>
         public long nextItemUid = 1;

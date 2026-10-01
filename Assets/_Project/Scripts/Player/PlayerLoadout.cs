@@ -1,12 +1,13 @@
 using ArenaSurvival.Combat;
 using ArenaSurvival.Meta;
 using ArenaSurvival.Stats;
+using ArenaSurvival.Weapons;
 using UnityEngine;
 
 namespace ArenaSurvival.Player
 {
     /// <summary>
-    /// CỬA DUY NHẤT đưa sức mạnh ngoài trận (Talent, trang bị) vào nhân vật trong trận. Chỉ đọc hồ sơ, không ghi gì.
+    /// CỬA DUY NHẤT đưa sức mạnh ngoài trận (Talent, trang bị, vũ khí chính) vào nhân vật trong trận. Chỉ đọc hồ sơ, không ghi gì.
     /// Gom về một chỗ để khi thêm nguồn chỉ số mới chỉ phải sửa StatCalculator, không phải đi sửa Health/PlayerStats/vũ khí.
     /// </summary>
     [RequireComponent(typeof(Health))]
@@ -30,6 +31,24 @@ namespace ArenaSurvival.Player
             health.Armor = Stats.armor;
             GetComponent<PlayerStats>().SetBaseMultipliers(1f + Stats.damagePercent / 100f, 1f + Stats.moveSpeedPercent / 100f);
             GetComponent<HealthRegen>().RegenPerSecond = Stats.healthRegen;
+
+            WeaponService weapons = GameServices.Weapons;
+            if (weapons != null) EquipMainWeapon(weapons.EquippedId);
+        }
+
+        /// <summary>
+        /// Gắn vũ khí chính theo cấp/sao người chơi đang có (chưa sở hữu → cấp 1, 1★). Public để benchmark đo từng khẩu
+        /// (-mainWeapon). Khẩu không có trong database → giữ khẩu dự phòng trên prefab.
+        /// </summary>
+        public bool EquipMainWeapon(string weaponId)
+        {
+            WeaponService weapons = GameServices.Weapons;
+            WeaponData data = weapons?.GetData(weaponId);
+            PlayerWeapon main = GetComponent<PlayerWeapon>();
+            if (data == null || main == null) return false;
+
+            main.Equip(data, weapons.GetEffective(weaponId));
+            return true;
         }
     }
 }

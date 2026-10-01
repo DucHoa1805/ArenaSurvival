@@ -27,9 +27,12 @@ namespace ArenaSurvival.Core
         public static event Action<GameState> OnGameStateChanged;
         /// <summary>(là trang bị?, vị trí) — chỉ cho âm thanh/hiệu ứng; dữ liệu đồ nhặt được nằm ở LootDropper (Core không biết kiểu Loot).</summary>
         public static event Action<bool, Vector3> OnLootPicked;
+        /// <summary>(tâm, bán kính) — đạn nổ vùng (Phóng lựu). Chỉ cho hiệu ứng/âm thanh; sát thương đã tính trong Projectile.</summary>
+        public static event Action<Vector3, float> OnExplosion;
 
         public static void EnemyKilled(int xpReward, Vector3 position) => OnEnemyKilled?.Invoke(xpReward, position);
         public static void LootPicked(bool isItem, Vector3 position) => OnLootPicked?.Invoke(isItem, position);
+        public static void Explosion(Vector3 position, float radius) => OnExplosion?.Invoke(position, radius);
         public static void ProjectileHit(Vector3 position) => OnProjectileHit?.Invoke(position);
         public static void PlayerFired() => OnPlayerFired?.Invoke();
         public static void PlayerDamaged(float amount) => OnPlayerDamaged?.Invoke(amount);

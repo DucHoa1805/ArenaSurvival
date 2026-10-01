@@ -34,6 +34,9 @@ namespace ArenaSurvival.Loot
         [Tooltip("Trọng số độ hiếm khi kết quả là trang bị: Thường, Hiếm, Sử thi, Huyền thoại.")]
         public float[] rarityWeights = { 1f, 0f, 0f, 0f };
 
+        [Tooltip("Bảng con quay kèm (vd boss: bảng trang bị + bảng mảnh vũ khí), để không phải nhồi chung trọng số vào 1 bảng.")]
+        public LootTable[] alsoRoll = new LootTable[0];
+
         private void OnValidate()
         {
             Validate(guaranteed);

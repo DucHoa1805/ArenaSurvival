@@ -329,10 +329,20 @@ namespace ArenaSurvival.Stages
             if (victory) _lootDropper.CollectAll();
             result.collected.AddRange(_lootDropper.Collected);
 
-            if (!victory || Stage.victoryLoot == null) return;
+            if (!victory) return;
             bool firstClear = GameServices.StageProgress == null || !GameServices.StageProgress.IsCleared(Stage.id);
             int rolls = firstClear ? 2 : 1;
             for (int i = 0; i < rolls; i++) LootRules.Roll(Stage.victoryLoot, LootDropper.UnityRandom, result.bonusLoot);
+
+            if (firstClear && Stage.firstClearReward != null)
+            {
+                foreach (LootEntry entry in Stage.firstClearReward)
+                {
+                    if (entry == null) continue;
+                    if (entry.material != null) result.bonusLoot.Add(LootDrop.Material(entry.material.id, Mathf.Max(1, entry.min)));
+                    else if (entry.item != null) result.bonusLoot.Add(LootDrop.Item(entry.item.id, Items.Rarity.Common));
+                }
+            }
         }
 
         /// <summary>StressTest dùng để màn không tự chuyển đợt hay kết thúc trong lúc đo.</summary>

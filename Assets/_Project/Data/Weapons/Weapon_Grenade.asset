@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef93873ae106d7d43bed6972af679921, type: 3}
+  m_Name: Weapon_Grenade
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Weapons.WeaponData
+  displayName: "Ph\xF3ng l\u1EF1u"
+  icon: {fileID: 21300000, guid: e7955dd045417fe45bdc03307cca61d3, type: 3}
+  id: weapon_grenade
+  description: "B\u1EAFn ch\u1EADm, l\u1EF1u \u0111\u1EA1n n\u1ED5 g\xE2y s\xE1t
+    th\u01B0\u01A1ng c\u1EA3 v\xF9ng."
+  shardMaterial: {fileID: 11400000, guid: fbae4ef4dfb01d444895e27c10dda21b, type: 2}
+  damage: 9
+  damagePerLevel: 0.71999997
+  fireRate: 0.8
+  range: 6.5
+  projectileSpeed: 7
+  projectileCount: 1
+  spreadAngle: 0
+  aimJitter: 0
+  pierce: 0
+  explosionRadius: 1.6
+  explosionDamageFraction: 0.7
+  knockback: 0
+  projectilePrefab: {fileID: 4644805776529081687, guid: b5a719420289a5b438e5b45e1e11e812, type: 3}
+  starBonus3:
+    extraProjectiles: 0
+    extraPierce: 0
+    fireRatePercent: 0
+    explosionRadiusPercent: 30
+    knockbackPercent: 0
+    text: "B\xE1n k\xEDnh n\u1ED5 +30%"
+  starBonus5:
+    extraProjectiles: 1
+    extraPierce: 0
+    fireRatePercent: 0
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "+1 qu\u1EA3"

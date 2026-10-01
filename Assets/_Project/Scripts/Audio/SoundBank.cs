@@ -24,6 +24,8 @@ namespace ArenaSurvival.Audio
         public SoundEffect levelUp;
         [Tooltip("Lúc bấm chọn 1 nâng cấp trong bảng lên cấp.")]
         public SoundEffect upgradeSelect;
+        [Tooltip("Đạn Phóng lựu nổ.")]
+        public SoundEffect explosion;
         [Tooltip("Nhặt nguyên liệu trên sân.")]
         public SoundEffect materialPickup;
         [Tooltip("Nhặt trang bị trên sân (nên nổi bật hơn nguyên liệu).")]

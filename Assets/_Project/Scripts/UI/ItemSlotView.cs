@@ -57,6 +57,15 @@ namespace ArenaSurvival.UI
             SetEquipped(false);
         }
 
+        /// <summary>Ô vũ khí chính ở bảng Trang bị: viền màu theo số sao, chữ "Lv n".</summary>
+        public void ShowWeapon(Sprite icon, Color frame, int level)
+        {
+            Uid = null;
+            SetContent(icon, frame, $"Lv {level}");
+            SetEquipped(false);
+            SetDimmed(false);
+        }
+
         public void ShowMaterial(MaterialData data, long amount)
         {
             Uid = null;

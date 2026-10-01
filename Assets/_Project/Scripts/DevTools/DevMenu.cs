@@ -127,6 +127,12 @@ namespace ArenaSurvival.DevTools
                 if (GUILayout.Button("Nhận 1 trang bị ngẫu nhiên")) GiveRandomItem();
                 GUILayout.EndHorizontal();
 
+                if (GUILayout.Button("+20 mảnh mỗi vũ khí"))
+                {
+                    foreach (Weapons.WeaponData weapon in GameServices.Inventory.Database.weapons)
+                        if (weapon != null) GameServices.Economy.Add(Weapons.WeaponRules.ShardId(weapon.id), 20);
+                }
+
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Mở khóa hết màn")) UnlockAllStages();
                 if (GUILayout.Button("Lưu ngay")) GameServices.Profile.Save();

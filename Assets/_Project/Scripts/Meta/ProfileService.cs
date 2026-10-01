@@ -45,6 +45,8 @@ namespace ArenaSurvival.Meta
             Profile.items.Clear();
             Profile.equipped.Clear();
             Profile.nextItemUid = 1;
+            Profile.weapons.Clear();
+            WeaponService.EnsureDefaults(Profile);
             Profile.tampered = false;
             Save();
         }

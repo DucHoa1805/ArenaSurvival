@@ -1,4 +1,5 @@
 using ArenaSurvival.Stats;
+using ArenaSurvival.Weapons;
 
 namespace ArenaSurvival.Meta
 {
@@ -15,6 +16,18 @@ namespace ArenaSurvival.Meta
 
             StatBlock equipment = GameServices.Inventory != null ? GameServices.Inventory.EquippedStats() : default;
             return StatCalculator.Compute(baseStats, talents, GameServices.Talents.GetLevel, equipment);
+        }
+
+        /// <summary>
+        /// Lực chiến hiển thị = phần chỉ số (StatCalculator.Power) + phần vũ khí đang mặc (WeaponRules.Power).
+        /// Mọi bảng gọi đây để cùng 1 con số.
+        /// </summary>
+        public static int Power(HeroBaseStats heroBase, TalentCatalog talents)
+        {
+            int power = StatCalculator.Power(Compute(heroBase, talents));
+            WeaponService weapons = GameServices.IsInitialized ? GameServices.Weapons : null;
+            if (weapons != null && weapons.EquippedData != null) power += WeaponRules.Power(weapons.GetEffective(weapons.EquippedId));
+            return power;
         }
     }
 }

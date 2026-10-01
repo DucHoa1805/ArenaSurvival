@@ -265,7 +265,7 @@ namespace ArenaSurvival.Tests
                 SaveLoadResult r = new SaveService(path).Load();
 
                 Assert.AreEqual(SaveLoadStatus.Migrated, r.Status);
-                Assert.AreEqual(4, r.Profile.saveVersion);
+                Assert.AreEqual(PlayerProfile.CurrentVersion, r.Profile.saveVersion);
                 Assert.AreEqual(4, r.Profile.talents["talent_hp"], "dữ liệu cũ giữ nguyên");
                 Assert.IsNotNull(r.Profile.items);
                 Assert.AreEqual(0, r.Profile.items.Count);
