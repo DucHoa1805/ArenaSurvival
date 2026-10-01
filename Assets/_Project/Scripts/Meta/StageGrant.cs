@@ -13,6 +13,9 @@ namespace ArenaSurvival.Meta
         public float multiplier;
         public int starsBefore;
         public int starsAfter;
+        /// <summary>Level tài khoản trước/sau khi cộng XP màn này (màn kết quả hiện "Lên cấp N!").</summary>
+        public int levelBefore;
+        public int levelAfter;
 
         /// <summary>id nguyên liệu → tổng số đã cộng (nhặt trên sân + thưởng thắng màn).</summary>
         public Dictionary<string, int> materials = new Dictionary<string, int>();

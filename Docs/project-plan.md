@@ -390,16 +390,16 @@ Assets/
 **Mục tiêu:** người chơi có "ngôi nhà" để quay về sau mỗi màn và luôn thấy việc tiếp theo cần làm.
 
 **Việc cần làm**
-- [ ] **Thanh trên cùng:** avatar, level tài khoản + thanh XP, vàng, kim cương.
-- [ ] **Thanh dưới:** các tab Cửa hàng, Trang bị, Chiến đấu (giữa, nổi bật), Talent, (sau này) Sự kiện.
-- [ ] **Tab Chiến đấu:** chương hiện tại, nút vào màn tiếp theo, lực chiến hiện tại so với đề xuất.
-- [ ] **Màn chọn màn:** bản đồ chương, màn đã qua hiển thị sao, màn chưa mở bị khóa.
-- [ ] **Tab Trang bị:** nhân vật ở giữa, các ô trang bị xung quanh, kho đồ bên dưới, bảng chi tiết khi chạm vào món đồ.
-- [ ] **Tab Talent:** danh sách chỉ số, cấp hiện tại, giá nâng, nút nâng.
-- [ ] Level tài khoản: nhận XP sau màn, popup lên cấp, phần thưởng, mở khóa tính năng theo `AccountLevelTable`.
-- [ ] **Chấm đỏ thông báo** khi có thứ nâng cấp được hoặc quà chưa nhận.
-- [ ] Hoạt ảnh nhận thưởng (tiền bay vào thanh trên cùng) để tạo cảm giác thỏa mãn.
-- [ ] UI tương thích nhiều tỉ lệ màn hình và vùng tai thỏ (Safe Area).
+- [x] **Thanh trên cùng:** avatar, level tài khoản + thanh XP, vàng, kim cương.
+- [x] **Thanh dưới:** các tab Cửa hàng, Trang bị, Chiến đấu (giữa, nổi bật), Talent, (sau này) Sự kiện.
+- [x] **Tab Chiến đấu:** chương hiện tại, nút vào màn tiếp theo, lực chiến hiện tại so với đề xuất.
+- [x] **Màn chọn màn:** _(danh sách nút màn; bản đồ vẽ ở Phase 10)_  bản đồ chương, màn đã qua hiển thị sao, màn chưa mở bị khóa.
+- [x] **Tab Trang bị:** _(chưa có nhân vật ở giữa)_  nhân vật ở giữa, các ô trang bị xung quanh, kho đồ bên dưới, bảng chi tiết khi chạm vào món đồ.
+- [x] **Tab Talent:** danh sách chỉ số, cấp hiện tại, giá nâng, nút nâng.
+- [x] Level tài khoản: nhận XP sau màn, popup lên cấp, phần thưởng, mở khóa tính năng theo `AccountLevelTable`.
+- [x] **Chấm đỏ thông báo** khi có thứ nâng cấp được hoặc quà chưa nhận.
+- [x] Hoạt ảnh nhận thưởng (tiền bay vào thanh trên cùng) để tạo cảm giác thỏa mãn.
+- [x] UI tương thích nhiều tỉ lệ màn hình và vùng tai thỏ (Safe Area). _(Safe Area xong; chưa thử tỉ lệ 19.5:9 trên máy thật)_
 
 **Tiêu chí hoàn thành:** từ Hub vào màn, thắng, quay về Hub thấy phần thưởng được cộng, level tài khoản tăng, nâng cấp được đồ, mở màn tiếp theo, tất cả không lỗi.
 
@@ -579,7 +579,7 @@ Một nền kinh tế lành mạnh cần **nguồn vào** (người chơi nhận
 - [ ] Người chơi mới không nạp tiền vẫn qua được toàn bộ nội dung bằng cách farm
 
 **Tiến trình ngoài màn**
-- [ ] Level tài khoản, mở khóa tính năng theo mốc
+- [x] Level tài khoản, mở khóa tính năng theo mốc
 - [x] Trang bị 3 ô: nâng cấp, đột phá, độ hiếm _(8B: Giáp/Phụ kiện; 8C: ô Vũ khí — cấp + sao thay cho độ hiếm)_
 - [x] Mảnh vũ khí: mở khóa và tăng sao
 - [x] Talent: máu, giáp, sát thương, tốc độ, hồi máu

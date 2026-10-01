@@ -66,6 +66,15 @@ namespace ArenaSurvival.UI
             SetDimmed(false);
         }
 
+        /// <summary>Vàng / kim cương (không có MaterialData) — popup lên cấp.</summary>
+        public void ShowCurrency(Sprite icon, long amount)
+        {
+            Uid = null;
+            SetContent(icon, MaterialFrame, $"x{amount}");
+            SetEquipped(false);
+            SetDimmed(false);
+        }
+
         public void ShowMaterial(MaterialData data, long amount)
         {
             Uid = null;

@@ -30,6 +30,7 @@ MonoBehaviour:
   boss: {fileID: 11400000, guid: 44feb5caa5768d24d90b3c144ab90173, type: 2}
   bossDelay: 1.5
   bossLoot: {fileID: 11400000, guid: a5159b10e4562ec468d0bc21e76a9ca2, type: 2}
+  recommendedPower: 200
   targetTime: 210
   baseGold: 100
   baseAccountXp: 20

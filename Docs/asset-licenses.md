@@ -18,6 +18,7 @@ Cập nhật: 2026-10-01
 | Icon ngôi sao, đồng vàng, khiên (`icon_star.png`, `icon_coin.png`, `icon_shield.png`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 6A và 8A) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
 | Icon trang bị, nguyên liệu, vòng sáng pickup (`icon_armor_leather`, `icon_armor_iron`, `icon_ring_power`, `icon_charm_wind`, `icon_ore`, `icon_leather`, `icon_boss_core`, `pickup_glow`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 8B) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
 | Icon 5 vũ khí chính, 5 icon mảnh, sprite đạn lựu và tia laser (`icon_weapon_*`, `icon_shard_*`, `Projectiles/grenade.png`, `Projectiles/laser_bolt.png`) | `Assets/_Project/Art/UI/`, `Assets/_Project/Art/Projectiles/` | Tự làm (vẽ bằng script trong Unity, Phase 8C) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
+| Icon Hub (`icon_gem`, `icon_gear`, `icon_lock`, `icon_shop`, `icon_gift`, `icon_backpack`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 9) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
 | XP orb, đạn, lưỡi cưa, VFX | `Assets/_Project/Art/Pickups/`, `Projectiles/`, `Weapons/`, `Vfx/` | Tự làm trong dự án | — | ⚠ Người dùng xác nhận |
 
 ## Quy tắc khi thêm asset mới

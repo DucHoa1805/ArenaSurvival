@@ -2870,6 +2870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 404059946}
   - component: {fileID: 404059947}
+  - component: {fileID: 404059948}
   m_Layer: 5
   m_Name: BossHealthBar
   m_TagString: Untagged
@@ -2915,6 +2916,18 @@ MonoBehaviour:
   _fill: {fileID: 1700141316}
   _markerRoot: {fileID: 989628695}
   _markerColor: {r: 1, g: 1, b: 1, a: 0.85}
+--- !u!114 &404059948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404059945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7bf4ee73526dd4e8ebcef8839a100d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.SafeAreaFitter
 --- !u!1 &427537203
 GameObject:
   m_ObjectHideFlags: 0
@@ -3218,6 +3231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 453343323}
   - component: {fileID: 453343324}
+  - component: {fileID: 453343325}
   m_Layer: 5
   m_Name: Hud
   m_TagString: Untagged
@@ -3279,6 +3293,18 @@ MonoBehaviour:
   _finalWaveBanner: {fileID: 250203045}
   _bannerDuration: 2
   _bannerText: {fileID: 1385896290}
+--- !u!114 &453343325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453343322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7bf4ee73526dd4e8ebcef8839a100d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.UI.SafeAreaFitter
 --- !u!1 &469221303
 GameObject:
   m_ObjectHideFlags: 0

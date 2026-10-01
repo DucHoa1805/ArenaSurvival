@@ -32,6 +32,9 @@ namespace ArenaSurvival.Stages
         [Tooltip("Bảng rơi đồ của boss (luôn rơi khi boss chết).")]
         public Loot.LootTable bossLoot;
 
+        [Tooltip("Lực chiến đề xuất (tab Chiến đấu so với lực chiến hiện tại). Cân bằng ở Phase 10.")]
+        [Min(0)] public int recommendedPower = 100;
+
         [Header("Đánh giá & phần thưởng")]
         [Tooltip("Thắng trong thời gian này (giây) thì đạt sao thứ 3.")]
         [Min(1f)] public float targetTime = 210f;

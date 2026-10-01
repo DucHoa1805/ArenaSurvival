@@ -111,6 +111,9 @@ namespace ArenaSurvival.UI
                 _bonusText.text = !hasGrant || !result.victory ? ""
                     : grant.firstClear ? "Lần thắng đầu: thưởng ×2"
                     : "Chơi lại: thưởng ×0.5";
+                // Lên cấp tài khoản báo ngay ở đây; phần thưởng cấp + popup chi tiết hiện khi về Hub.
+                if (hasGrant && grant.levelAfter > grant.levelBefore && grant.levelBefore > 0)
+                    _bonusText.text += (_bonusText.text.Length > 0 ? "  ·  " : "") + $"Lên cấp {grant.levelAfter}!";
                 _bonusText.gameObject.SetActive(_bonusText.text.Length > 0);
             }
 

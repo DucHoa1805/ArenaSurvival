@@ -127,6 +127,11 @@ namespace ArenaSurvival.DevTools
                 if (GUILayout.Button("Nhận 1 trang bị ngẫu nhiên")) GiveRandomItem();
                 GUILayout.EndHorizontal();
 
+                if (GUILayout.Button("+100 XP tài khoản"))
+                {
+                    GameServices.Account.AddXp(100);
+                    GameServices.Profile.Save();
+                }
                 if (GUILayout.Button("+20 mảnh mỗi vũ khí"))
                 {
                     foreach (Weapons.WeaponData weapon in GameServices.Inventory.Database.weapons)
@@ -194,8 +199,8 @@ namespace ArenaSurvival.DevTools
             {
                 var session = FindFirstObjectByType<StageSession>();
                 if (session != null) return session.Catalog;
-                var menu = FindFirstObjectByType<UI.MainMenu>();
-                return menu != null ? menu.Catalog : null;
+                var battle = FindFirstObjectByType<UI.Hub.BattleTab>(FindObjectsInactive.Include);
+                return battle != null ? battle.Catalog : null;
             }
 
             private static void UnlockAllStages()

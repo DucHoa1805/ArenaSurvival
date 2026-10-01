@@ -17,13 +17,17 @@ namespace ArenaSurvival.Meta
         private readonly EconomyService _economy;
         private readonly Action _save;
         private readonly InventoryService _inventory;
+        private readonly AccountService _account;
 
         /// <summary>Lần áp gần nhất — màn kết quả đọc để hiện số thực nhận.</summary>
         public StageGrant LastGrant { get; private set; }
 
         /// <param name="inventory">Null được (test chỉ về thưởng/sao): khi đó trang bị trong kết quả bị bỏ qua.</param>
-        public StageProgressService(PlayerProfile profile, EconomyService economy, Action save, InventoryService inventory = null)
+        /// <param name="account">Null được (test cũ): khi đó XP cộng thẳng vào hồ sơ, không có thưởng lên cấp.</param>
+        public StageProgressService(PlayerProfile profile, EconomyService economy, Action save, InventoryService inventory = null,
+            AccountService account = null)
         {
+            _account = account;
             _profile = profile;
             _economy = economy;
             _save = save;
@@ -49,7 +53,10 @@ namespace ArenaSurvival.Meta
             };
 
             if (grant.gold > 0) _economy.Add(CurrencyIds.Gold, grant.gold);
-            _profile.accountXp += grant.accountXp;
+            grant.levelBefore = _account != null ? _account.Level : 0;
+            if (_account != null) _account.AddXp(grant.accountXp);
+            else _profile.accountXp += grant.accountXp;
+            grant.levelAfter = _account != null ? _account.Level : 0;
 
             // Chỉ màn thắng mới vào danh sách đã qua; sao chỉ tăng — chơi lại kém hơn không làm mất thành tích cũ.
             if (result.victory) _profile.stageStars[result.stageId] = Mathf.Max(starsBefore, result.starCount);

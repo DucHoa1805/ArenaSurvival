@@ -19,6 +19,7 @@ namespace ArenaSurvival.Meta
         public static TalentService Talents { get; private set; }
         public static InventoryService Inventory { get; private set; }
         public static WeaponService Weapons { get; private set; }
+        public static AccountService Account { get; private set; }
         public static bool IsInitialized => Profile != null;
 
         // Gán sẵn 1 lần để gỡ được đúng delegate khi khởi tạo lại.
@@ -36,6 +37,7 @@ namespace ArenaSurvival.Meta
             Talents = null;
             Inventory = null;
             Weapons = null;
+            Account = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -53,13 +55,23 @@ namespace ArenaSurvival.Meta
             ItemDatabase database = LoadItemDatabase();
             Inventory = new InventoryService(Profile.Profile, Economy, database, () => Profile.Save());
             Weapons = new WeaponService(Profile.Profile, Economy, database, () => Profile.Save());
-            StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save(), Inventory);
+            Account = new AccountService(Profile.Profile, Economy, LoadAccountTable());
+            StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save(), Inventory, Account);
 
             if (_onStageCompleted == null) _onStageCompleted = result => StageProgress.Apply(result);
             StageEvents.OnStageCompleted -= _onStageCompleted;
             StageEvents.OnStageCompleted += _onStageCompleted;
 
             ServicesHost.Create();
+        }
+
+        private static AccountLevelTable LoadAccountTable()
+        {
+            var table = Resources.Load<AccountLevelTable>(AccountLevelTable.ResourcePath);
+            if (table != null) return table;
+            // Thiếu bảng thì mọi tính năng coi như mở từ đầu — game vẫn chơi được, chỉ mất phần mở khóa dần.
+            Debug.LogWarning($"GameServices: không tìm thấy Resources/{AccountLevelTable.ResourcePath}; mọi tính năng mở từ đầu.");
+            return ScriptableObject.CreateInstance<AccountLevelTable>();
         }
 
         private static ItemDatabase LoadItemDatabase()
