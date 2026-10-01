@@ -11,10 +11,18 @@ namespace ArenaSurvival.UI
         [SerializeField] private UnityEngine.UI.Button _quitButton;
         [SerializeField] private TMP_Text _bestText;
 
+        [Header("Cài đặt")]
+        [SerializeField] private UnityEngine.UI.Button _settingsButton;
+        [SerializeField] private GameObject _settingsPanel;
+        [SerializeField] private UnityEngine.UI.Button _closeSettingsButton;
+
         private void Awake()
         {
             _playButton.onClick.AddListener(HandlePlayClicked);
             _quitButton.onClick.AddListener(HandleQuitClicked);
+            _settingsButton.onClick.AddListener(OpenSettings);
+            _closeSettingsButton.onClick.AddListener(CloseSettings);
+            _settingsPanel.SetActive(false);
         }
 
         private void Start()
@@ -29,7 +37,13 @@ namespace ArenaSurvival.UI
         {
             _playButton.onClick.RemoveListener(HandlePlayClicked);
             _quitButton.onClick.RemoveListener(HandleQuitClicked);
+            _settingsButton.onClick.RemoveListener(OpenSettings);
+            _closeSettingsButton.onClick.RemoveListener(CloseSettings);
         }
+
+        // Tắt bảng là đủ để lưu: VolumeSlider tự ghi xuống đĩa trong OnDisable.
+        private void OpenSettings() => _settingsPanel.SetActive(true);
+        private void CloseSettings() => _settingsPanel.SetActive(false);
 
         private void HandlePlayClicked()
         {

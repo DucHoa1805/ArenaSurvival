@@ -43,7 +43,7 @@ AudioSource:
   m_GameObject: {fileID: 4254476225219929291}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 306953619128077198, guid: 7174b68643a7e3d46aec1e9a9bc23797, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -140,7 +140,7 @@ AudioSource:
   m_GameObject: {fileID: 4254476225219929291}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6066908443403385341, guid: 7174b68643a7e3d46aec1e9a9bc23797, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -241,5 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Audio.AudioManager
   _bank: {fileID: 11400000, guid: fc063eca480b185408aea550c7eacc12, type: 2}
+  _mixer: {fileID: 24100000, guid: 7174b68643a7e3d46aec1e9a9bc23797, type: 2}
   _musicSource: {fileID: 2226373338087516074}
   _sfxSource: {fileID: 166874572166786041}
+  _sfxVoices: 10

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ArenaSurvival.Core;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace ArenaSurvival.Audio
 {
@@ -17,6 +18,8 @@ namespace ArenaSurvival.Audio
         public static AudioManager Instance { get; private set; }
 
         [SerializeField] private SoundBank _bank;
+        [Tooltip("Cần có tham số exposed MasterVolume, MusicVolume, SFXVolume (xem VolumeSettings).")]
+        [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioSource _musicSource;
         [SerializeField] private AudioSource _sfxSource;
 
@@ -28,6 +31,10 @@ namespace ArenaSurvival.Audio
         private readonly Dictionary<SoundEffect, float> _lastPlayTime = new Dictionary<SoundEffect, float>();
         private AudioSource[] _voices;
         private int _nextVoice;
+        private float _lastVolumePreviewTime = -1f;
+
+        // Kéo slider bắn onValueChanged mỗi frame; giới hạn riêng của uiHover (0.04s) vẫn quá dày cho việc này.
+        private const float VolumePreviewInterval = 0.15f;
 
         private void Awake()
         {
@@ -56,6 +63,36 @@ namespace ArenaSurvival.Audio
                 voice.outputAudioMixerGroup = _sfxSource.outputAudioMixerGroup;
                 _voices[i] = voice;
             }
+        }
+
+        private void Start()
+        {
+            // Áp âm lượng đã lưu ở Start chứ không ở Awake: AudioMixer.SetFloat gọi trong Awake bị Unity bỏ qua.
+            if (Instance != this) return;
+
+            ApplyVolume(VolumeChannel.Master, VolumeSettings.Load(VolumeChannel.Master));
+            ApplyVolume(VolumeChannel.Music, VolumeSettings.Load(VolumeChannel.Music));
+            ApplyVolume(VolumeChannel.Sfx, VolumeSettings.Load(VolumeChannel.Sfx));
+        }
+
+        /// <summary>Gọi từ slider cài đặt: đổi âm lượng ngay và ghi nhớ (chưa ghi đĩa, xem VolumeSettings.Flush).</summary>
+        public void SetVolume(VolumeChannel channel, float volume)
+        {
+            VolumeSettings.Store(channel, volume);
+            ApplyVolume(channel, volume);
+
+            // Cho người chơi nghe ngay mức SFX mới. Kênh Music thì nhạc nền đang phát sẵn, không cần.
+            if (channel != VolumeChannel.Music && Time.unscaledTime - _lastVolumePreviewTime >= VolumePreviewInterval)
+            {
+                _lastVolumePreviewTime = Time.unscaledTime;
+                Play(_bank.uiHover);
+            }
+        }
+
+        private void ApplyVolume(VolumeChannel channel, float volume)
+        {
+            if (_mixer == null) return;
+            _mixer.SetFloat(VolumeSettings.ParameterName(channel), VolumeSettings.ToDecibels(volume));
         }
 
         private void OnDestroy()
