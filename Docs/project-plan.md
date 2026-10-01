@@ -373,10 +373,10 @@ Assets/
 - [ ] `InventoryService`: thêm/bớt đồ, mặc/tháo, đếm nguyên liệu.
 - [ ] Nâng cấp trang bị: tốn vàng + nguyên liệu theo `UpgradeCostCurve`; đột phá ở mốc cấp bằng lõi boss.
 - [ ] Mảnh vũ khí: mở khóa khi đủ mảnh, tăng sao bằng mảnh thừa.
-- [ ] Talent: Máu, Giáp, Sát thương, Tốc độ chạy, Hồi máu; giá tăng dần.
-- [ ] `StatCalculator`: tính chỉ số cuối và **lực chiến**.
-- [ ] Truyền chỉ số vào màn: Player và vũ khí đọc chỉ số đã tính khi bắt đầu màn.
-- [ ] Thêm chỉ số **Giáp** vào hệ thống sát thương (công thức giảm sát thương, Phần D).
+- [x] Talent: Máu, Giáp, Sát thương, Tốc độ chạy, Hồi máu; giá tăng dần.
+- [x] `StatCalculator`: tính chỉ số cuối và **lực chiến**.
+- [x] Truyền chỉ số vào màn: Player và vũ khí đọc chỉ số đã tính khi bắt đầu màn. _(8A: `PlayerLoadout`; trang bị cộng thêm ở 8B)_
+- [x] Thêm chỉ số **Giáp** vào hệ thống sát thương (công thức giảm sát thương, Phần D).
 - [ ] `LootTable`: quái, boss, rương rơi đồ theo trọng số; phần thưởng màn sinh từ bảng này.
 - [ ] Vũ khí khác nhau về **cách bắn**, không chỉ khác chỉ số (súng lục, shotgun, súng máy, phóng lựu...).
 - [ ] Unit test: công thức chỉ số, chi phí nâng cấp, rơi đồ theo tỷ lệ (chạy 10.000 lần, kiểm tra phân phối).
@@ -582,7 +582,7 @@ Một nền kinh tế lành mạnh cần **nguồn vào** (người chơi nhận
 - [ ] Level tài khoản, mở khóa tính năng theo mốc
 - [ ] Trang bị 3 ô: nâng cấp, đột phá, độ hiếm
 - [ ] Mảnh vũ khí: mở khóa và tăng sao
-- [ ] Talent: máu, giáp, sát thương, tốc độ, hồi máu
+- [x] Talent: máu, giáp, sát thương, tốc độ, hồi máu
 - [ ] Hub đầy đủ, chấm đỏ thông báo, màn chọn màn có sao
 
 **Kinh doanh**

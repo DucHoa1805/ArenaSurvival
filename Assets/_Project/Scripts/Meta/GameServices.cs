@@ -15,6 +15,7 @@ namespace ArenaSurvival.Meta
         public static ProfileService Profile { get; private set; }
         public static EconomyService Economy { get; private set; }
         public static StageProgressService StageProgress { get; private set; }
+        public static TalentService Talents { get; private set; }
         public static bool IsInitialized => Profile != null;
 
         // Gán sẵn 1 lần để gỡ được đúng delegate khi khởi tạo lại.
@@ -29,6 +30,7 @@ namespace ArenaSurvival.Meta
             Profile = null;
             Economy = null;
             StageProgress = null;
+            Talents = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -43,6 +45,7 @@ namespace ArenaSurvival.Meta
             Profile.Load();
             Economy = new EconomyService(Profile.Profile, Profile.MarkDirty);
             StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save());
+            Talents = new TalentService(Profile.Profile, Economy, () => Profile.Save());
 
             if (_onStageCompleted == null) _onStageCompleted = result => StageProgress.Apply(result);
             StageEvents.OnStageCompleted -= _onStageCompleted;

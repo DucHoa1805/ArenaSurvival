@@ -23,6 +23,11 @@ namespace ArenaSurvival.UI
 
         public StageCatalog Catalog => _catalog;
 
+        [Header("Nâng cấp (Talent)")]
+        [SerializeField] private UnityEngine.UI.Button _talentButton;
+        [Tooltip("Prefab TalentPanel trong scene, tắt sẵn; tự đóng bằng nút Đóng của nó.")]
+        [SerializeField] private GameObject _talentPanel;
+
         [Header("Cài đặt")]
         [SerializeField] private UnityEngine.UI.Button _settingsButton;
         [SerializeField] private GameObject _settingsPanel;
@@ -35,7 +40,11 @@ namespace ArenaSurvival.UI
             _settingsButton.onClick.AddListener(OpenSettings);
             _closeSettingsButton.onClick.AddListener(CloseSettings);
             _settingsPanel.SetActive(false);
+            if (_talentButton != null) _talentButton.onClick.AddListener(OpenTalents);
+            if (_talentPanel != null) _talentPanel.SetActive(false);
         }
+
+        private void OpenTalents() => _talentPanel.SetActive(true);
 
         private void Start()
         {
@@ -62,6 +71,7 @@ namespace ArenaSurvival.UI
             _quitButton.onClick.RemoveListener(HandleQuitClicked);
             _settingsButton.onClick.RemoveListener(OpenSettings);
             _closeSettingsButton.onClick.RemoveListener(CloseSettings);
+            if (_talentButton != null) _talentButton.onClick.RemoveListener(OpenTalents);
         }
 
         // Tắt bảng là đủ để lưu: VolumeSlider tự ghi xuống đĩa trong OnDisable.

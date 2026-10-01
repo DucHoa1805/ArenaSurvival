@@ -19,6 +19,9 @@ namespace ArenaSurvival.Combat
         /// <summary>Bỏ qua mọi sát thương. Dùng cho StressTest: giữ Player sống để cảnh đông quái đứng yên mà đo.</summary>
         public bool Invulnerable { get; set; }
 
+        /// <summary>Giáp giảm sát thương nhận vào (CombatRules.ApplyArmor). Quái để 0; Player lấy từ Talent/trang bị.</summary>
+        public float Armor { get; set; }
+
         // Truyền kèm giá trị sát thương/máu hiện tại để UI (thanh máu) có thể dùng trực tiếp,
         // không cần tự query lại Health mỗi lần.
         public event Action<float, float> OnDamaged; // (damage, currentHealth)
@@ -38,6 +41,7 @@ namespace ArenaSurvival.Combat
         public void TakeDamage(float amount)
         {
             if (IsDead || Invulnerable || amount <= 0f) return;
+            if (Armor > 0f) amount = CombatRules.ApplyArmor(amount, Armor);
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
             OnDamaged?.Invoke(amount, CurrentHealth);

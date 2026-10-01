@@ -9,13 +9,15 @@ namespace ArenaSurvival.Meta
     /// </summary>
     public class PlayerProfile
     {
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
 
         public int saveVersion = CurrentVersion;
         public long accountXp;
         public Dictionary<string, long> currencies = new Dictionary<string, long>();
         /// <summary>id màn → số sao cao nhất đã đạt. Có mặt trong từ điển = đã thắng màn đó ít nhất 1 lần.</summary>
         public Dictionary<string, int> stageStars = new Dictionary<string, int>();
+        /// <summary>id Talent → cấp đã nâng (v3, Phase 8A).</summary>
+        public Dictionary<string, int> talents = new Dictionary<string, int>();
         /// <summary>Phát hiện file save bị sửa tay. Không phạt, chỉ đánh dấu để analytics (Phase 12) thống kê.</summary>
         public bool tampered;
     }

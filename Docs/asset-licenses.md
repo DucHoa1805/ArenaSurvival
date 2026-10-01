@@ -15,7 +15,7 @@ Cập nhật: 2026-10-01
 | Font Chakra Petch | `Assets/_Project/Art/Fonts/` | SIL Open Font License 1.1 | `ChakraPetch-OFL.txt` | ✅ Đã xác minh |
 | LiberationSans (font mặc định của TextMesh Pro) | `Assets/TextMesh Pro/` | Cần kiểm tra | Đi kèm package TextMesh Pro | ⚠ Ghi chú lại; game hiện dùng Bungee/Chakra Petch, LiberationSans chỉ là font dự phòng |
 | Sprite UI và icon nâng cấp | `Assets/_Project/Art/UI/` | Tự làm trong dự án | — | ⚠ Người dùng xác nhận |
-| Icon ngôi sao, đồng vàng (`icon_star.png`, `icon_coin.png`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 6A) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
+| Icon ngôi sao, đồng vàng, khiên (`icon_star.png`, `icon_coin.png`, `icon_shield.png`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 6A và 8A) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
 | XP orb, đạn, lưỡi cưa, VFX | `Assets/_Project/Art/Pickups/`, `Projectiles/`, `Weapons/`, `Vfx/` | Tự làm trong dự án | — | ⚠ Người dùng xác nhận |
 
 ## Quy tắc khi thêm asset mới

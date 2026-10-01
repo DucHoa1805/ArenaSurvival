@@ -199,6 +199,7 @@ namespace ArenaSurvival.Save
             // JSON có thể ghi "currencies": null; đảm bảo phần còn lại của game không phải kiểm tra null.
             if (profile.currencies == null) profile.currencies = new System.Collections.Generic.Dictionary<string, long>();
             if (profile.stageStars == null) profile.stageStars = new System.Collections.Generic.Dictionary<string, int>();
+            if (profile.talents == null) profile.talents = new System.Collections.Generic.Dictionary<string, int>();
             return profile;
         }
     }

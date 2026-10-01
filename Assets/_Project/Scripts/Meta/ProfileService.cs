@@ -41,6 +41,7 @@ namespace ArenaSurvival.Meta
             Profile.accountXp = 0;
             Profile.currencies.Clear();
             Profile.stageStars.Clear();
+            Profile.talents.Clear();
             Profile.tampered = false;
             Save();
         }

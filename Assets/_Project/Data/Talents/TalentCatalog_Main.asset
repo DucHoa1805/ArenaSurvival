@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef259f7dae890a242a15d6502c28b5b7, type: 3}
+  m_Name: TalentCatalog_Main
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Meta.TalentCatalog
+  talents:
+  - {fileID: 11400000, guid: 2c7ea647e2bcede45bcf37b5da87599e, type: 2}
+  - {fileID: 11400000, guid: 050a96438b619a64293114ce099bafa7, type: 2}
+  - {fileID: 11400000, guid: 1365c5298cd865d44a35545499f4a9fc, type: 2}
+  - {fileID: 11400000, guid: 37bf6a3d105136745b04c841396e61e8, type: 2}
+  - {fileID: 11400000, guid: 6ef3eed72f234eb49be1175c07c7270f, type: 2}

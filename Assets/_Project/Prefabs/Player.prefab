@@ -164,6 +164,8 @@ GameObject:
   - component: {fileID: 7356917306387966622}
   - component: {fileID: 326507814990378938}
   - component: {fileID: 3102533605996374172}
+  - component: {fileID: 1857097712224609208}
+  - component: {fileID: 537869423439544657}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -400,3 +402,29 @@ MonoBehaviour:
   _flashColor: {r: 1, g: 0.45, b: 0.45, a: 1}
   _duration: 0.15
   _punchScale: 1.1
+--- !u!114 &1857097712224609208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7add930da2827c741a162e2e94dc7ee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.HealthRegen
+--- !u!114 &537869423439544657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba98cc8ab3f6b940ba8c4460cf40a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Player.PlayerLoadout
+  _heroBase: {fileID: 11400000, guid: 4cc33fd96d3b5704ebe63bc38fa8c600, type: 2}
+  _talents: {fileID: 11400000, guid: 87e460acc3d287f4cb31929884927e6a, type: 2}

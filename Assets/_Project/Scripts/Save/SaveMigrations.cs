@@ -15,6 +15,7 @@ namespace ArenaSurvival.Save
         private static readonly Func<JObject, JObject>[] Steps =
         {
             V1ToV2,
+            V2ToV3,
         };
 
         public static JObject Migrate(JObject data, int fromVersion)
@@ -43,5 +44,13 @@ namespace ArenaSurvival.Save
             ["stageStars"] = new JObject(),
             ["tampered"] = false,
         };
+
+        /// <summary>v3 (Phase 8A) thêm cấp Talent. Mọi dữ liệu v2 giữ nguyên, chỉ thêm từ điển rỗng.</summary>
+        private static JObject V2ToV3(JObject v2)
+        {
+            if (v2["talents"] == null) v2["talents"] = new JObject();
+            v2["saveVersion"] = 3;
+            return v2;
+        }
     }
 }
