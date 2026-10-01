@@ -9,3 +9,13 @@ c1,Sa mạc,7,c1_s07,1-7,Wave_C1_07a;Wave_C1_07b;Wave_C1_07c,Enemy_Splitter,3,4,
 c1,Sa mạc,8,c1_s08,1-8,Wave_C1_08a;Wave_C1_08b;Wave_C1_08c,Enemy_Tank,3,5,Loot_Elite,,1.5,230,100,20,395,,Loot_StageClear,,
 c1,Sa mạc,9,c1_s09,1-9,Wave_C1_09a;Wave_C1_09b;Wave_C1_09c,Enemy_Healer,2,4,Loot_Elite,,1.5,230,100,20,435,,Loot_StageClear,,
 c1,Sa mạc,10,c1_s10,1-10,Wave_C1_10a;Wave_C1_10b;Wave_C1_10c,Enemy_Fast,3,3,Loot_Elite,Boss_Warlord,1.5,270,100,20,575,Loot_Boss,Loot_StageClear,weapon_grenade,10
+c2,Thành phố,11,c2_s01,2-1,Wave_C2_01a;Wave_C2_01b;Wave_C2_01c,Enemy_C2_Basic,3,4,Loot_Elite,,1.5,240,100,20,565,,Loot_StageClear_C2,,
+c2,Thành phố,12,c2_s02,2-2,Wave_C2_02a;Wave_C2_02b;Wave_C2_02c,Enemy_Sniper,3,4,Loot_Elite,,1.5,240,100,20,605,,Loot_StageClear_C2,,
+c2,Thành phố,13,c2_s03,2-3,Wave_C2_03a;Wave_C2_03b;Wave_C2_03c,Enemy_C2_Tank,2,4,Loot_Elite,,1.5,240,100,20,645,,Loot_StageClear_C2,weapon_laser,10
+c2,Thành phố,14,c2_s04,2-4,Wave_C2_04a;Wave_C2_04b;Wave_C2_04c,Enemy_C2_Charger,3,4,Loot_Elite,,1.5,240,100,20,685,,Loot_StageClear_C2,,
+c2,Thành phố,15,c2_s05,2-5,Wave_C2_05a;Wave_C2_05b;Wave_C2_05c,Enemy_C2_Tank,2,5,Loot_Elite,Boss_Armored,1.5,255,100,20,800,Loot_MiniBoss_C2,Loot_StageClear_C2,,
+c2,Thành phố,16,c2_s06,2-6,Wave_C2_06a;Wave_C2_06b;Wave_C2_06c,Enemy_Splitter,3,4,Loot_Elite,,1.5,240,100,20,760,,Loot_StageClear_C2,,
+c2,Thành phố,17,c2_s07,2-7,Wave_C2_07a;Wave_C2_07b;Wave_C2_07c,Enemy_Healer,2,4,Loot_Elite,,1.5,240,100,20,800,,Loot_StageClear_C2,,
+c2,Thành phố,18,c2_s08,2-8,Wave_C2_08a;Wave_C2_08b;Wave_C2_08c,Enemy_Kamikaze,4,3,Loot_Elite,,1.5,240,100,20,835,,Loot_StageClear_C2,,
+c2,Thành phố,19,c2_s09,2-9,Wave_C2_09a;Wave_C2_09b;Wave_C2_09c,Enemy_Sniper,3,5,Loot_Elite,,1.5,245,100,20,870,,Loot_StageClear_C2,,
+c2,Thành phố,20,c2_s10,2-10,Wave_C2_10a;Wave_C2_10b;Wave_C2_10c,Enemy_C2_Fast,3,3,Loot_Elite,Boss_Commander,1.5,285,100,20,1115,Loot_Boss_C2,Loot_StageClear_C2,weapon_grenade,20

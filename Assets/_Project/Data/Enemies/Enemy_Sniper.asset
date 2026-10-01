@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_Sniper
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "X\u1EA1 Th\u1EE7 B\u1EAFn T\u1EC9a"
+  sprite: {fileID: 6938567719944695527, guid: 5f50efba63695244ebd02a7a55fb66d2, type: 3}
+  scale: 1
+  tint: {r: 0.84705883, g: 0.89411765, b: 1, a: 1}
+  maxHealth: 18
+  moveSpeed: 1.8
+  contactDamage: 4
+  projectileDamage: 12
+  behaviour: {fileID: 11400000, guid: e44a5431acef6b0488e3e963623f6fb6, type: 2}
+  isBoss: 0
+  xpReward: 3
+  loot: {fileID: 11400000, guid: dcc768424911bcb49b774b95506eda47, type: 2}
+  lootChance: 0.04

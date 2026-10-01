@@ -11,7 +11,9 @@ namespace ArenaSurvival.Enemies
     {
         public Enemy Enemy;
         public Rigidbody2D Body;
-        public Transform Visual;          // object con "Visual": rung khi boss gồng đòn mà không đụng vật lý
+        public Transform Visual;
+        /// <summary>Tia báo trước (LineRenderer con, tắt sẵn) — Sniper ngắm. Null nếu prefab không có.</summary>
+        public LineRenderer Telegraph;          // object con "Visual": rung khi boss gồng đòn mà không đụng vật lý
         public Transform Player;
         public EnemyData Data;
         public EnemyModifiers Modifiers;
@@ -74,6 +76,8 @@ namespace ArenaSurvival.Enemies
         public void ResetVisual()
         {
             if (Visual != null) Visual.localPosition = Vector3.zero;
+            // Chết/trả về pool giữa lúc ngắm: không để tia đỏ treo lại trên sân.
+            if (Telegraph != null) Telegraph.enabled = false;
         }
     }
 }

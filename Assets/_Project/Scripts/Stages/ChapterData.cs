@@ -14,5 +14,7 @@ namespace ArenaSurvival.Stages
         [Min(1)] public int number = 1;
         public string displayName = "Sa mạc";
         public StageData[] stages = Array.Empty<StageData>();
+        [Tooltip("Prefab sân (Tilemap) của chương — ArenaLoader tạo khi vào màn/Hub. Trống = dùng sân có sẵn trong scene.")]
+        public GameObject arenaPrefab;
     }
 }

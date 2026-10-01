@@ -35,6 +35,12 @@ namespace ArenaSurvival.Enemies
             return Mathf.Max(0f, Mathf.Min(maxHealth * fraction, maxHealth - currentHealth));
         }
 
+        /// <summary>Sniper: trong khoảng cuối của lúc ngắm thì chốt hướng (tia đứng yên) để người chơi kịp né.</summary>
+        public static bool AimLocked(float remaining, float lockWindow) => remaining <= lockWindow;
+
+        /// <summary>Góc gốc (độ, 0..360) của đòn xoắn ốc sau `elapsed` giây xoay với tốc `degreesPerSecond`.</summary>
+        public static float SpiralAngle(float elapsed, float degreesPerSecond) => Mathf.Repeat(elapsed * degreesPerSecond, 360f);
+
         /// <summary>Player có trúng vụ nổ của Kamikaze không (tính cả đúng mép bán kính).</summary>
         public static bool KamikazeHit(float distance, float radius) => distance <= radius;
 

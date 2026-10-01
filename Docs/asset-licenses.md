@@ -6,7 +6,7 @@ Cập nhật: 2026-10-01
 
 | Asset | Vị trí | Giấy phép | Bằng chứng | Trạng thái |
 |---|---|---|---|---|
-| Kenney – Topdown Shooter Pack | `Assets/_Project/Art/Kenney-TopDownShooter/` | CC0 1.0 | `License.txt` trong thư mục | ✅ Đã xác minh |
+| Kenney – Topdown Shooter Pack (cả tile sân sa mạc/thành phố `Art/Tiles/Tile_*.asset` dựng từ sprite của gói) | `Assets/_Project/Art/Kenney-TopDownShooter/` | CC0 1.0 | `License.txt` trong thư mục | ✅ Đã xác minh |
 | Âm thanh Kenney (giao diện) | `Assets/_Project/Audio/UI/` | Cần kiểm tra (các gói Kenney thường là CC0) | Chưa có | ⚠ Tải `License.txt` từ trang gói trên kenney.nl, đặt vào thư mục |
 | Âm thanh Kenney (va chạm) | `Assets/_Project/Audio/Impact/` | Cần kiểm tra (các gói Kenney thường là CC0) | Chưa có | ⚠ Như trên |
 | Âm thanh Kenney (digital) | `Assets/_Project/Audio/Digital/` | Cần kiểm tra (các gói Kenney thường là CC0) | Chưa có | ⚠ Như trên |

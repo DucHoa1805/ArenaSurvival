@@ -81,6 +81,22 @@ namespace ArenaSurvival.Tests
         }
 
         [Test]
+        public void AimLocked_OnlyInLastWindow()
+        {
+            Assert.IsFalse(EnemyRules.AimLocked(0.6f, 0.25f), "còn sớm: tia còn bám theo Player");
+            Assert.IsTrue(EnemyRules.AimLocked(0.25f, 0.25f));
+            Assert.IsTrue(EnemyRules.AimLocked(0.1f, 0.25f), "đã chốt hướng: người chơi né được");
+        }
+
+        [Test]
+        public void SpiralAngle_AdvancesWithTime()
+        {
+            Assert.AreEqual(0f, EnemyRules.SpiralAngle(0f, 110f), 1e-4);
+            Assert.AreEqual(55f, EnemyRules.SpiralAngle(0.5f, 110f), 1e-4);
+            Assert.AreEqual(10f, EnemyRules.SpiralAngle(10f / 3f, 111f), 1e-3, "quấn vòng về 0..360");
+        }
+
+        [Test]
         public void KamikazeHit_InsideRadiusOnly()
         {
             Assert.IsTrue(EnemyRules.KamikazeHit(1.7f, 1.8f));

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.StageCatalog
   chapters:
   - {fileID: 11400000, guid: a96d17b3a902e554da2d0573c3864390, type: 2}
+  - {fileID: 11400000, guid: 1fd457ecba07c64439ccb4ad8c30bd67, type: 2}
   stages:
   - {fileID: 11400000, guid: 0b6d5636a16abbc4682f907e9c022506, type: 2}
   - {fileID: 11400000, guid: 8727b27697e68ae428cf3ac9445231b4, type: 2}
@@ -25,3 +26,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3763081d59043e439679e00aa68015f, type: 2}
   - {fileID: 11400000, guid: 46c03d06b22a8d847a5f71778fd3484f, type: 2}
   - {fileID: 11400000, guid: 50c3e6d76d1d1354e9b25b372f55c6de, type: 2}
+  - {fileID: 11400000, guid: 5101e5fb4f0c99948aa734edcf4ac228, type: 2}
+  - {fileID: 11400000, guid: 0058e39cf2bcdf54ba73e27649beb040, type: 2}
+  - {fileID: 11400000, guid: 7ffebec2e527d1646b3580644e65976e, type: 2}
+  - {fileID: 11400000, guid: 20477c7b81653924286230a8903be219, type: 2}
+  - {fileID: 11400000, guid: 627e0951a1524c348a4635dab185665e, type: 2}
+  - {fileID: 11400000, guid: b78336bd2fa99584c9c1800854a012c4, type: 2}
+  - {fileID: 11400000, guid: 581a13f7d2f3c7340953b59adc678c57, type: 2}
+  - {fileID: 11400000, guid: da6393e3d0c59904d921c1ef0a844316, type: 2}
+  - {fileID: 11400000, guid: 540d74b92eb03d74d85e24fbeed8c4f7, type: 2}
+  - {fileID: 11400000, guid: 5485eeea4dea3a74791f20a0370b2c44, type: 2}

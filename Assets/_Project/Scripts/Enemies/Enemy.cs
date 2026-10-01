@@ -69,7 +69,9 @@ namespace ArenaSurvival.Enemies
                 Visual = _spriteRenderer.transform,
                 RotationSpeed = _rotationSpeed,
                 SpriteAngleOffset = _spriteAngleOffset,
+                Telegraph = GetComponentInChildren<LineRenderer>(true),
             };
+            if (_ctx.Telegraph != null) _ctx.Telegraph.enabled = false;
 
             // Đăng ký 1 lần ở Awake chứ không ở OnEnable/OnDisable: object này nằm trong pool, bật/tắt mỗi lần quái sinh ra
             // hay chết, và mỗi lần += / -= là tạo delegate mới (rác GC). Health ở cùng object nên sống chết cùng nhau;

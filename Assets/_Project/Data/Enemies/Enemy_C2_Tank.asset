@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_C2_Tank
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "L\xEDnh Gi\xE1p N\u1EB7ng"
+  sprite: {fileID: 7918000657238069813, guid: 4ff6dacdcfa9df647b94b0d75a23daad, type: 3}
+  scale: 1.55
+  tint: {r: 0.7058824, g: 0.74509805, b: 0.8235294, a: 1}
+  maxHealth: 60
+  moveSpeed: 1.25
+  contactDamage: 12
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: 3c19a325db6feaf49b111d76e8e0b32d, type: 2}
+  isBoss: 0
+  xpReward: 4
+  loot: {fileID: 11400000, guid: dcc768424911bcb49b774b95506eda47, type: 2}
+  lootChance: 0.04

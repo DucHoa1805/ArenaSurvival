@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_C2_Shooter
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "Tay S\xFAng Ph\u1ED1"
+  sprite: {fileID: 5908627030027194432, guid: b41400e4e8469b245b81cf83e366d3b0, type: 3}
+  scale: 1
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  maxHealth: 18
+  moveSpeed: 2.2
+  contactDamage: 4
+  projectileDamage: 7
+  behaviour: {fileID: 11400000, guid: 9259b1dcc6f11c54bbdbf0d60cca7d20, type: 2}
+  isBoss: 0
+  xpReward: 2
+  loot: {fileID: 11400000, guid: dcc768424911bcb49b774b95506eda47, type: 2}
+  lootChance: 0.03

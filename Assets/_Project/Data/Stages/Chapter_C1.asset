@@ -26,3 +26,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3763081d59043e439679e00aa68015f, type: 2}
   - {fileID: 11400000, guid: 46c03d06b22a8d847a5f71778fd3484f, type: 2}
   - {fileID: 11400000, guid: 50c3e6d76d1d1354e9b25b372f55c6de, type: 2}
+  arenaPrefab: {fileID: 79078184368663345, guid: d5d74848ab3090b49ba29b7e2baa053f, type: 3}

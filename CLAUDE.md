@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-01, sau Phase 10A (bảng cân bằng CSV + công cụ nhập/xuất, mô phỏng tiến trình, Chương 1 đủ 10 màn, 4 quái mới).
+Cập nhật lần cuối: 2026-10-02, sau Phase 10B (Chương 2 "Thành phố": sân riêng đổi theo chương, 10 màn, Sniper, 5 biến thể, mini-boss + boss mới, đòn xoắn ốc).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -77,9 +77,10 @@ Assets/_Project/
 │   │                   WeaponData (+ meta: id, mảnh, hiệu ứng sao, thuộc tính đạn), WeaponRules (+WeaponStats, WeaponStarBonus), OrbitWeaponData
 │   ├── Enemies/        Enemy (lõi), EnemyData, EnemyModifiers, EnemyContext (trạng thái mỗi con), IEnemyWorld, EnemyRules (hàm thuần),
 │   │                   EnemyBehaviour (+OnDeath) → ChaseBehaviour, KeepDistanceShooterBehaviour, ChargerBehaviour, KamikazeBehaviour,
-│   │                   SplitterBehaviour, HealerBehaviour, BossBehaviour (+BossPhase);
-│   │                   BossAttack → RadialBurstAttack, DashAttack, SummonAttack; EnemyProjectiles (pool đạn chung)
-│   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog (+chapters), ChapterData,
+│   │                   SplitterBehaviour, HealerBehaviour, SniperBehaviour, BossBehaviour (+BossPhase);
+│   │                   BossAttack → RadialBurstAttack, DashAttack, SummonAttack, SpiralAttack; EnemyProjectiles (pool đạn chung)
+│   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog (+chapters), ChapterData (+arenaPrefab),
+│   │                   ArenaLoader (đổi sân theo chương, trong Game + MainMenu),
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData,
 │   │                   UpgradeManager, RandomPicker
@@ -103,14 +104,15 @@ Assets/_Project/
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress,
 │                       StatRules, TalentService (+ migration v3), EquipmentRules, LootRules, InventoryService (+ migration v4),
 │                       StageLootApply, WeaponRules, WeaponService (+ migration v5), AccountService, RedDotRules, CsvReader,
-│                       BalanceRows, Chapter, ProgressionSim
+│                       BalanceRows, Chapter, ProgressionSim, ArenaLoader
 ├── Resources/        ItemDatabase.asset, AccountLevelTable.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, chứa Hub — chưa đổi tên scene), Game.unity (2)
 ├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
 ├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
-│                       Stages/ (Waves/Wave_C1_*, Stage_C1_01..10, Chapter_C1, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
+│                       Stages/ (Waves/Wave_C1_*, Wave_C2_*, Stage_C1_01..10, Stage_C2_01..10, Chapter_C1/C2, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
 │                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*)
-├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss), Projectile, EnemyProjectile, XpOrb, AudioManager, Arena, Vfx/*,
+├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss; con `Telegraph` = tia ngắm), Projectile, EnemyProjectile, XpOrb, AudioManager,
+│                       Arena (sa mạc), Arena_City (thành phố), Vfx/*,
 │                       LootPickup, UI/VolumeSettings, UI/TalentPanel, UI/TalentRow, UI/EquipmentPanel, UI/ItemSlot, UI/ItemSlotSmall, UI/WeaponRow, UI/StageNode,
 │                       Projectile_Grenade, Projectile_Laser, Vfx/Vfx_Explosion, Vfx/Vfx_HealPulse
 ├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
@@ -216,6 +218,13 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 - **Quái mới (10A)**: Charger (gồng 0.6 s rồi lao), Kamikaze (chớp rồi nổ r=1.8, tự nổ thì **không** XP/đồ — `Despawn(false)`),
   Splitter (`OnDeath` → 2 `Enemy_SplitterSmall`; không gọi khi nổ theo boss), Healer (giữ khoảng cách, 4 s hồi 20% máu quái quanh r=3.5,
   `GameEvents.EnemyHealPulse` → vòng xanh). `EnemyBehaviour.OnDeath` chỉ gọi khi chết thật.
+- **Chương 2 (10B)**: sân theo chương = `ChapterData.arenaPrefab` (C1 `Arena`, C2 `Arena_City`). `ArenaLoader` (Awake, chạy sớm) trong `Game.unity`
+  (chương của `StageSelection.Current`) và `MainMenu.unity` (chương của màn nên chơi tiếp → nền Hub đổi theo tiến độ): khác sân có sẵn thì tắt
+  instance trong scene và tạo prefab chương **cùng vị trí**. Mọi sân dùng chung Grid 0.64 và phạm vi ô, chỉ là nền (không collider) — tường
+  biên vẫn nằm trong scene, nên sân mới phải giữ đúng khung ô. `Arena_City` dựng bằng script (tô lại từ `Arena`), không vẽ tay.
+  Sniper (`SniperBehaviour`): giữ khoảng 8, ngắm 1 s bằng tia đỏ (`EnemyContext.Telegraph` = LineRenderer con của prefab `Enemy`, tắt sẵn,
+  `ResetVisual` tắt khi chết/trả pool), 0.25 s cuối chốt hướng rồi bắn 1 viên tốc 16. `SpiralAttack`: bắn liên tục vài cánh, góc xoay đều
+  (`EnemyRules.SpiralAngle`). Biến thể quái C2 = asset `Enemy_C2_*` qua CSV (sprite cùng bộ, tư thế/màu khác). Bảng rơi riêng `Loot_*_C2`.
 - **Âm thanh**: `AudioManager` sống xuyên scene (DontDestroyOnLoad), 10 AudioSource xoay vòng, lệch cao độ ngẫu nhiên, giới hạn tần suất.
   Âm lượng qua `MainMixer` (exposed `MasterVolume/MusicVolume/SFXVolume`), lưu bằng **PlayerPrefs** (cài đặt thuộc thiết bị,
   không thuộc hồ sơ người chơi). Tiếng thắng màn / hồi sinh phát theo `OnGameStateChanged`.
@@ -244,19 +253,22 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 
 | Loại | Chi tiết |
 |---|---|
-| Quái (8 + 1 con nhỏ) | Basic, Fast, Tank, Xạ thủ, Charger, Kamikaze, Splitter (+ Phân Thân Nhỏ), Healer — số liệu trong `Docs/Balance/enemies.csv` |
-| Boss (2) | Mini-boss "Cỗ Máy Gác Cổng" (màn 1-5, máu 400, 2 pha: lao + vòng đạn), boss chương "Thủ Lĩnh Sa Mạc" (màn 1-10, máu 1500,
-  3 pha 100/66/33%: vòng đạn → + lao → vòng đạn dày + lao + gọi 4 Basic, tối đa 8). Sprite Kenney phóng to + tô màu (tạm) |
+| Quái (9 + 1 con nhỏ + 5 biến thể) | Basic, Fast, Tank, Xạ thủ, Charger, Kamikaze, Splitter (+ Phân Thân Nhỏ), Healer, Sniper (C2); biến thể C2: Basic/Fast/Tank/Xạ thủ/Charger (~×1.2 máu) — số liệu trong `Docs/Balance/enemies.csv` |
+| Boss (4) | Mini-boss "Cỗ Máy Gác Cổng" (1-5, máu 400, 2 pha: lao + vòng đạn), boss "Thủ Lĩnh Sa Mạc" (1-10, máu 1500,
+  3 pha 100/66/33%: vòng đạn → + lao → vòng đạn dày + lao + gọi 4 Basic, tối đa 8); mini-boss "Xe Bọc Thép" (2-5, máu 450, 2 pha 100/50%:
+  lao + vòng đạn dày → xoắn ốc + lao nhanh), boss "Chỉ Huy Robot" (2-10, máu 1700, 3 pha: vòng đạn → xoắn ốc + gọi 3 Kamikaze →
+  xoắn ốc 5 cánh + lao + gọi Kamikaze, tối đa 6). Máu gốc, nhân hệ số độ khó theo số màn. Sprite Kenney phóng to + tô màu (tạm) |
 | Màn chơi (10) | Chương 1 "Sa mạc" 1-1..1-10 (`Docs/Balance/stages.csv`): mỗi màn 3 đợt (45 s ở 1-1/1-2, 60 s từ 1-3) + đợt tinh anh; quái mới giới thiệu dần (1-3 Charger, 1-4 Xạ thủ, 1-6 Kamikaze, 1-7 Splitter, 1-9 Healer); 1-5 mini-boss, 1-10 boss chương. Quà lần đầu: 1-3 mảnh Shotgun, 1-5 Súng máy, 1-10 Phóng lựu. Lực chiến đề xuất 110 → 575 |
+| Màn chơi (10, C2) | Chương 2 "Thành phố" 2-1..2-10 (số màn 11–20): 3 đợt × 60 s (nhịp sinh 0.95 → 0.67 s) + đợt tinh anh; 2-2 Sniper, 2-3 Charger C2, 2-4 Xạ thủ C2 + Kamikaze, 2-6 Splitter, 2-7 Healer; 2-5 mini-boss, 2-10 boss. Quà lần đầu: 2-3 10 mảnh Laser, 2-10 20 mảnh Phóng lựu. Lực chiến đề xuất 565 → 1115 (mô phỏng: 20 màn ~108 phút) |
 | Vũ khí chính (5) | Súng lục (có sẵn), Shotgun (6 viên tầm ngắn, đẩy lùi), Súng máy (6 phát/giây, tản), Phóng lựu (nổ r=1.6), Laser (xuyên 4); cấp + 5 sao |
 | Vũ khí phụ trong màn (1) | Lưỡi cưa xoay (3 lưỡi) |
 | Nâng cấp trong màn (6) | Sát thương +20%, Tốc độ bắn +15%, Tốc độ chạy +10%, Máu tối đa +20, Hồi máu +30, mở khóa Lưỡi cưa |
 | XP trong màn | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
-| Màn chơi | Đấu trường Tilemap: sân cát 30×30 ô, viền đá, đường đất, bãi cỏ, bụi cây |
+| Sân | Tilemap 30×30 ô trong viền đá. Sa mạc: cát, đường đất, bãi cỏ, bụi cây. Thành phố: đường nhựa + vạch vàng ngã tư, thùng phuy, mảnh vụn, vỉa hè bê tông, bụi cây |
 | UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!" / "BOSS XUẤT HIỆN!" / "BOSS NỔI GIẬN!"), thanh máu boss (tên + vạch ngưỡng pha), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), Hub (thanh trên, 5 tab, chọn màn, popup lên cấp, tiền bay, chấm đỏ) + bảng Cài đặt + bảng Nâng cấp (Talent, lực chiến) + bảng Trang bị (kho, chi tiết, nâng cấp/đột phá/phân rã, ô Vũ khí) + bảng Vũ khí (mở khóa, lên sao, nâng cấp), hàng vật phẩm ở màn kết quả |
 | Trang bị (4) | Áo Da (máu 20, giáp 3), Giáp Sắt (máu 10, giáp 6), Nhẫn Sức Mạnh (+4% sát thương), Bùa Gió (+3% tốc chạy, +0.2 hồi máu); 4 độ hiếm |
 | Nguyên liệu | Quặng (nâng vũ khí), Da (nâng giáp/phụ kiện), Lõi boss (đột phá), 5 loại mảnh vũ khí |
-| Rơi đồ | Quái thường 2–4% (1 da/quặng), tinh anh (2–4 da, 15% trang bị), mini-boss/boss (lõi + 1 trang bị Hiếm+), thắng màn (3–6 da, 25% trang bị) |
+| Rơi đồ | Quái thường 2–4% (1 da/quặng; C2 quặng nhiều hơn), tinh anh (2–4 da, 15% trang bị), mini-boss/boss (lõi + 1 trang bị Hiếm+; C2: lõi 2/3, độ hiếm cao hơn), thắng màn (3–6 da, 25% trang bị; C2: 4–8 da + 3–6 quặng, 30%) |
 | Talent (5) | Máu +10/cấp (50 cấp, giá 100), Giáp +2 (50, 150), Sát thương +3% (50, 150), Tốc chạy +1% (20, 200), Hồi máu +0.2/s (25, 200); giá ×1.12 mỗi cấp |
 | Hiệu ứng | Trúng đạn, quái chết, lên cấp, nháy đỏ khi trúng đòn, rung camera, số sát thương (gộp 0.2s) |
 | Hoạt ảnh | Bằng code: thở khi đứng, lắc + co giãn theo bước khi chạy, quái phóng to lúc xuất hiện |
@@ -275,8 +287,8 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 8C – Vũ khí meta | Xong: 5 vũ khí chính, cấp/sao/mảnh, xuyên/nổ/đẩy lùi/tầm, bảng Vũ khí, quà thắng lần đầu, save v5 |
 | 9 – Hub và level tài khoản | Xong: AccountService, Hub 5 tab, chọn màn + lực chiến đề xuất, popup lên cấp, chấm đỏ, tiền bay, Safe Area |
 | 10A – Công cụ dữ liệu + Chương 1 | Xong: CSV + nhập/xuất, mô phỏng tiến trình, ChapterData, 10 màn, 4 quái mới, tab Chiến đấu 10 màn |
-| 10B – Chương 2 | **Tiếp theo**: bối cảnh/Tilemap mới, 10 màn, quái biến thể, boss chương 2 |
-| 10C – Chương 3 + cân bằng | Chưa: 10 màn, chơi thử 30 màn bằng tài khoản mới, chỉnh số cuối |
+| 10B – Chương 2 | Xong: Arena_City + ArenaLoader (sân theo chương, cả nền Hub), 10 màn, Sniper, 5 biến thể, đòn xoắn ốc, mini-boss + boss mới, bảng rơi C2 |
+| 10C – Chương 3 + cân bằng | **Tiếp theo**: 10 màn, chơi thử 30 màn bằng tài khoản mới, chỉnh số cuối |
 | 11 – Cửa hàng, IAP, quảng cáo | Chưa |
 | 12 – Giữ chân, analytics, cloud save | Chưa |
 | 13 – Mobile, tối ưu, playtest | Chưa |
