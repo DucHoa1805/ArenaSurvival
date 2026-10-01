@@ -3,7 +3,7 @@
 Game 2D top-down arena survival (kiểu Vampire Survivors thu nhỏ), dự án thực tập / portfolio phỏng vấn Unity Developer.
 Kế hoạch gốc: `unity-game-project-plan.md` (Phase 0–6). Design doc: `DESIGN.md`.
 
-Cập nhật lần cuối: 2026-10-01, sau commit `f096152`.
+Cập nhật lần cuối: 2026-10-01, sau khi xong game feel, AudioMixer + slider âm lượng, animation nhân vật bằng code (Phase 5 xong).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -25,7 +25,7 @@ Cập nhật lần cuối: 2026-10-01, sau commit `f096152`.
 - **Play mode không chạy frame khi Editor không được focus** (`runInBackground: 0` trong Player Settings).
   Khi test: `editor_play`, rồi eval `UnityEngine.Application.runInBackground = true;`. Chỉ đổi lúc chạy, file cài đặt không đổi.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 28/28 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 35/35 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó. Muốn test cả vòng thì mở `MainMenu.unity` trước.
 - ffmpeg đã cài qua winget (`Gyan.FFmpeg`), dùng để đo/chuyển đổi âm thanh.
 
@@ -40,15 +40,15 @@ Assets/_Project/
 │   ├── Enemies/        Enemy, EnemyData, EnemySpawner, WaveData
 │   ├── Progression/    ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData, UpgradeManager, RandomPicker
 │   ├── UI/             HudController, LevelUpPanel, LevelUpPanelAnimator, UpgradeOptionButton, PauseMenu, GameOverPanel,
-│   │                   MainMenu, TimeFormatter, UiHoverScale
+│   │                   MainMenu, TimeFormatter, UiHoverScale, VolumeSlider
 │   ├── Save/           SaveData, SaveSystem, HighScoreTracker
-│   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound
-│   └── Vfx/            VfxSpawner, PooledVfx, FloatingText
-├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread
+│   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
+│   └── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
+├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread, VolumeSettings
 ├── Data/               ScriptableObject: Enemy_*, Weapon_*, Orbit_SawBlade, Upgrade_*, Wave_01..03, SoundBank
-├── Prefabs/            Player, Enemy, Projectile, XpOrb, AudioManager, Arena, Vfx/*
+├── Prefabs/            Player, Enemy, Projectile, XpOrb, AudioManager, Arena, Vfx/*, UI/VolumeSettings
 ├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
-└── Audio/              UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
+└── Audio/              MainMixer.mixer (Master/Music/SFX), UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
 Assets/Scenes/          MainMenu.unity (build index 0), Game.unity (build index 1)
 ```
 
@@ -77,9 +77,12 @@ Assets/Scenes/          MainMenu.unity (build index 0), Game.unity (build index 
   | `Boundary` (10, tường) | chỉ `Player` |
 
 - **Quái sinh trong sân** (`EnemySpawner._arenaArea`), ngoài tầm nhìn camera; tường chỉ giữ Player.
+- **Player/Enemy tách gốc và `Visual`**: gốc giữ Rigidbody, collider, hướng mặt, scale theo loại quái và phồng của `HitFlash`;
+  con `Visual` giữ SpriteRenderer + `SpriteBodyAnimator` (hoạt ảnh bằng code). Đừng gắn hoạt ảnh lên gốc.
 - **Lưu kỷ lục**: JSON (`JsonUtility`) ở `persistentDataPath/save.json`; file hỏng hoặc thiếu thì dùng dữ liệu trống.
 - **Âm thanh**: `AudioManager` sống xuyên scene (DontDestroyOnLoad), 10 AudioSource xoay vòng, có lệch cao độ ngẫu nhiên và
-  giới hạn tần suất phát cho từng tiếng.
+  giới hạn tần suất phát cho từng tiếng. Âm lượng qua `MainMixer` (tham số exposed `MasterVolume/MusicVolume/SFXVolume`),
+  lưu bằng **PlayerPrefs** chứ không vào `save.json` (HighScoreTracker ghi đè cả file bằng bản đọc lúc vào scene).
 
 ## Nội dung game hiện có
 
@@ -91,8 +94,9 @@ Assets/Scenes/          MainMenu.unity (build index 0), Game.unity (build index 
 | Nâng cấp (8) | Sát thương +20%, Tốc độ bắn +15%, Tốc độ chạy +10%, Máu tối đa +20, Hồi máu +30, 3 nâng cấp mở khóa vũ khí |
 | XP | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
 | Màn chơi | Đấu trường Tilemap: sân cát 30×30 ô, viền đá, đường đất, bãi cỏ, bụi cây |
-| UI | HUD, bảng lên cấp (có hoạt ảnh), menu ESC, Game Over, menu chính (nền là đấu trường); font Bungee + Chakra Petch |
-| Hiệu ứng | Trúng đạn, quái chết, lên cấp (vòng sóng, tia sáng, chữ "CẤP n!") |
+| UI | HUD, bảng lên cấp (có hoạt ảnh), menu ESC (có slider âm lượng), Game Over, menu chính + bảng Cài đặt; font Bungee + Chakra Petch |
+| Hiệu ứng | Trúng đạn, quái chết, lên cấp (vòng sóng, tia sáng, chữ "CẤP n!"), nháy đỏ khi trúng đòn, rung camera, số sát thương (gộp 0.2s) |
+| Hoạt ảnh | Bằng code: thở khi đứng, lắc + co giãn theo bước khi chạy, quái phóng to lúc xuất hiện |
 | Âm thanh | Bắn, trúng, quái chết, bị đánh, nhặt XP, lên cấp, chọn nâng cấp, rê/bấm nút, Game Over, nhạc nền |
 
 ## Tiến độ theo plan
@@ -104,7 +108,7 @@ Assets/Scenes/          MainMenu.unity (build index 0), Game.unity (build index 
 | 2 – Combat cốt lõi | Xong (chưa làm bước so sánh với `UnityEngine.Pool`, chưa đo "100+ quái không giật") |
 | 3 – Kiến trúc & dữ liệu | Xong (có asmdef) |
 | 4 – Tiến trình & UI | Xong |
-| 5 – Hoàn thiện & lưu trữ | Gần xong: đã có save, âm thanh, VFX, độ khó, 3 quái / 4 vũ khí / 8 nâng cấp, 28 unit test. Chưa có animation nhân vật |
+| 5 – Hoàn thiện & lưu trữ | Xong: save, âm thanh + AudioMixer/slider, VFX, game feel, animation bằng code, độ khó, 3 quái / 4 vũ khí / 8 nâng cấp, 35 unit test |
 | 6 – Tối ưu, build, portfolio | **Chưa bắt đầu** |
 
 Checklist "Must have" trong DESIGN.md: **đã đủ**.
@@ -115,7 +119,7 @@ Checklist "Must have" trong DESIGN.md: **đã đủ**.
 2. Build Windows (và/hoặc WebGL), thử trên máy khác, đưa lên itch.io.
 3. Viết README theo mẫu ở mục E1 của plan (kèm Credits: Kenney, Juhani Junkala, font Bungee/Chakra Petch – SIL OFL).
 4. Quay video demo 1 phút; gắn tag git theo phase (`phase-1` … `phase-6`, `v1.0`). Repo hiện chưa có tag nào.
-5. Tùy chọn: animation nhân vật, cài đặt âm lượng (cần AudioMixer tạo bằng tay trong Editor), boss, gamepad.
+5. Tùy chọn: ESC đóng bảng Cài đặt ở menu chính, boss, gamepad.
 
 ## Vấn đề đã biết / lưu ý
 
