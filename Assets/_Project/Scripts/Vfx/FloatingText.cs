@@ -1,11 +1,12 @@
+using System;
 using TMPro;
 using UnityEngine;
 
 namespace ArenaSurvival.Vfx
 {
     /// <summary>
-    /// Dòng chữ nổi trong thế giới game (ví dụ "CẤP 5!" trên đầu Player): bật to ra, bay lên rồi mờ dần.
-    /// Dùng lại 1 object duy nhất, không tạo mới mỗi lần.
+    /// Dòng chữ nổi trong thế giới game ("CẤP 5!" trên đầu Player, số sát thương trên đầu quái):
+    /// bật to ra, bay lên rồi mờ dần. Không tự tạo/hủy: hoặc dùng lại 1 object, hoặc lấy từ pool.
     /// </summary>
     [RequireComponent(typeof(TextMeshPro))]
     public class FloatingText : MonoBehaviour
@@ -18,6 +19,10 @@ namespace ArenaSurvival.Vfx
         private Color _baseColor;
         private Vector3 _start;
         private float _elapsed;
+
+        // Giống PooledVfx: không biết gì về pool, chỉ gọi callback khi xong. Để trống thì tự tắt
+        // (trường hợp chữ "CẤP n!" chỉ có 1 object dùng lại).
+        public Action<FloatingText> OnReturnToPool;
 
         private void Awake()
         {
@@ -40,7 +45,8 @@ namespace ArenaSurvival.Vfx
             float p = _elapsed / _duration;
             if (p >= 1f)
             {
-                gameObject.SetActive(false);
+                if (OnReturnToPool != null) OnReturnToPool(this);
+                else gameObject.SetActive(false);
                 return;
             }
 

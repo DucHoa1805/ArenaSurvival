@@ -18,6 +18,7 @@ namespace ArenaSurvival.Core
         public static event Action<Vector3> OnProjectileHit;    // (vị trí trúng) — cho hiệu ứng/âm thanh, không cho logic game
         public static event Action OnPlayerFired;               // cho âm thanh
         public static event Action<float> OnPlayerDamaged;      // (lượng sát thương) — cho âm thanh/hiệu ứng
+        public static event Action<float, Vector3> OnEnemyDamaged; // (sát thương đã gộp, vị trí) — chỉ để hiện số
         public static event Action<int> OnXpGained;
         public static event Action<int, int> OnXpChanged; // (XP hiện tại, XP cần để lên cấp kế)
         public static event Action<int> OnLevelUp;
@@ -30,6 +31,7 @@ namespace ArenaSurvival.Core
         public static void ProjectileHit(Vector3 position) => OnProjectileHit?.Invoke(position);
         public static void PlayerFired() => OnPlayerFired?.Invoke();
         public static void PlayerDamaged(float amount) => OnPlayerDamaged?.Invoke(amount);
+        public static void EnemyDamaged(float amount, Vector3 position) => OnEnemyDamaged?.Invoke(amount, position);
         public static void XpGained(int amount) => OnXpGained?.Invoke(amount);
         public static void XpChanged(int currentXp, int xpToNextLevel) => OnXpChanged?.Invoke(currentXp, xpToNextLevel);
         public static void LevelUp(int newLevel) => OnLevelUp?.Invoke(newLevel);

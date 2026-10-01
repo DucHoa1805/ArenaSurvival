@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4063500922280122349}
   - component: {fileID: 42723553947789564}
   - component: {fileID: 847369890010221830}
+  - component: {fileID: 1468814717609280168}
+  - component: {fileID: 8959322777465281189}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -194,3 +196,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.Enemy
   _damageCooldown: 1
+  _spriteAngleOffset: 0
+  _rotationSpeed: 540
+--- !u!114 &1468814717609280168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6324038351617840190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f41b37da338e7418160ab71003a8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Vfx.HitFlash
+  _renderer: {fileID: 3903329345204832900}
+  _flashColor: {r: 1, g: 0.45, b: 0.45, a: 1}
+  _duration: 0.1
+  _punchScale: 1.15
+--- !u!114 &8959322777465281189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6324038351617840190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa8474c7f1f03a4183f7cb5725d7b6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Vfx.DamageNumberSource
+  _mergeWindow: 0.2
+  _offset: {x: 0, y: 0.5, z: 0}

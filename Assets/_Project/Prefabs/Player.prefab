@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 4696066669073839423}
   - component: {fileID: 7356917306387966622}
   - component: {fileID: 326507814990378938}
+  - component: {fileID: 3102533605996374172}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -329,3 +330,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Combat.OrbitWeapon
   _data: {fileID: 11400000, guid: 5b63ab213fea55c4da68ebf2db7f86f2, type: 2}
+--- !u!114 &3102533605996374172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f41b37da338e7418160ab71003a8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Vfx.HitFlash
+  _renderer: {fileID: 6020543225162878897}
+  _flashColor: {r: 1, g: 0.45, b: 0.45, a: 1}
+  _duration: 0.15
+  _punchScale: 1.1

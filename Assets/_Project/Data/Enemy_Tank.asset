@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Tank
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
   displayName: Tank Enemy
-  sprite: {fileID: 2425458600322947948, guid: 8b87076bbff2fb34a8141f70fc3d38c1, type: 3}
+  sprite: {fileID: -9066058787397014428, guid: 6ba963703f1f948408b0b0ab0aabe8e6, type: 3}
   scale: 1.5
   maxHealth: 50
   moveSpeed: 1.2

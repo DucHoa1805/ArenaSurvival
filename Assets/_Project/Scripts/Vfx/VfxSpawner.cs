@@ -16,6 +16,10 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private PooledVfx _levelUpPrefab;
         [Tooltip("Không bắt buộc: chữ \"CẤP n!\" bay lên trên đầu Player khi chọn xong nâng cấp.")]
         [SerializeField] private FloatingText _levelUpTextPrefab;
+        [Tooltip("Không bắt buộc: số sát thương bay lên trên đầu quái.")]
+        [SerializeField] private FloatingText _damageNumberPrefab;
+        [Tooltip("Lệch ngang ngẫu nhiên tối đa, để số của nhiều quái đứng sát nhau không đè lên nhau.")]
+        [SerializeField] private float _damageNumberJitter = 0.25f;
 
         [Header("References")]
         [SerializeField] private Transform _player;
@@ -23,10 +27,12 @@ namespace ArenaSurvival.Vfx
         [Header("Pooling")]
         [SerializeField] private int _hitPrewarmCount = 20;
         [SerializeField] private int _deathPrewarmCount = 15;
+        [SerializeField] private int _damageNumberPrewarmCount = 20;
 
         private ObjectPool<PooledVfx> _hitPool;
         private ObjectPool<PooledVfx> _deathPool;
         private ObjectPool<PooledVfx> _levelUpPool;
+        private ObjectPool<FloatingText> _damageNumberPool;
         private GameState _previousState;
         private FloatingText _levelUpText;
         private int _currentLevel = 1;
@@ -42,12 +48,18 @@ namespace ArenaSurvival.Vfx
                 _levelUpText = Instantiate(_levelUpTextPrefab, transform);
                 _levelUpText.gameObject.SetActive(false);
             }
+
+            if (_damageNumberPrefab != null)
+            {
+                _damageNumberPool = new ObjectPool<FloatingText>(_damageNumberPrefab, _damageNumberPrewarmCount, transform);
+            }
         }
 
         private void OnEnable()
         {
             GameEvents.OnProjectileHit += HandleProjectileHit;
             GameEvents.OnEnemyKilled += HandleEnemyKilled;
+            GameEvents.OnEnemyDamaged += HandleEnemyDamaged;
             GameEvents.OnLevelUp += HandleLevelUp;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
         }
@@ -56,6 +68,7 @@ namespace ArenaSurvival.Vfx
         {
             GameEvents.OnProjectileHit -= HandleProjectileHit;
             GameEvents.OnEnemyKilled -= HandleEnemyKilled;
+            GameEvents.OnEnemyDamaged -= HandleEnemyDamaged;
             GameEvents.OnLevelUp -= HandleLevelUp;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
@@ -65,6 +78,18 @@ namespace ArenaSurvival.Vfx
         private void HandleProjectileHit(Vector3 position) => Play(_hitPool, position);
 
         private void HandleEnemyKilled(int xpReward, Vector3 position) => Play(_deathPool, position);
+
+        private void HandleEnemyDamaged(float amount, Vector3 position)
+        {
+            if (_damageNumberPool == null) return;
+
+            position.x += Random.Range(-_damageNumberJitter, _damageNumberJitter);
+            FloatingText text = _damageNumberPool.Get(position, Quaternion.identity);
+            text.OnReturnToPool = _damageNumberPool.Release;
+            // Làm tròn và tối thiểu 1: sát thương lẻ (hệ số nâng cấp x1.2) hiện "12.4" trông rối mắt,
+            // còn hiện "0" thì người chơi tưởng đòn không trúng.
+            text.Show(Mathf.Max(1, Mathf.RoundToInt(amount)).ToString(), position);
+        }
 
         private void HandleGameStateChanged(GameState newState)
         {
