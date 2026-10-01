@@ -16,11 +16,21 @@ namespace ArenaSurvival.Core
         private readonly T _prefab;
         private readonly Transform _parent;
         private readonly Queue<T> _available = new Queue<T>();
+        private readonly int _maxSize;
 
-        public ObjectPool(T prefab, int prewarmCount = 0, Transform parent = null)
+        /// <summary>Tổng số object pool đã tạo (đang dùng + đang rảnh).</summary>
+        public int CountAll { get; private set; }
+
+        /// <param name="maxSize">
+        /// 0 = không giới hạn. Đặt giới hạn cho thứ chỉ mang tính trang trí (hiệu ứng, số sát thương): lúc đông quái,
+        /// cứ mỗi đợt đỉnh mới pool lại Instantiate thêm (đo thấy ~400 lần cấp phát, ~40 KB trong 1 frame với object TMP),
+        /// tức giật giữa trận. Có giới hạn + tạo sẵn đủ số đó thì lúc chơi không còn Instantiate nào.
+        /// </param>
+        public ObjectPool(T prefab, int prewarmCount = 0, Transform parent = null, int maxSize = 0)
         {
             _prefab = prefab;
             _parent = parent;
+            _maxSize = maxSize;
 
             // Prewarm: tạo sẵn 1 số lượng object từ đầu, tránh phải Instantiate ngay lúc gameplay
             // đang căng thẳng nhất (ví dụ wave quái đầu tiên).
@@ -35,10 +45,30 @@ namespace ArenaSurvival.Core
         public T Get(Vector3 position, Quaternion rotation)
         {
             T instance = _available.Count > 0 ? _available.Dequeue() : CreateNew();
+            Activate(instance, position, rotation);
+            return instance;
+        }
 
+        /// <summary>
+        /// Như Get nhưng tôn trọng maxSize: hết object rảnh mà pool đã đủ số tối đa thì trả về false thay vì tạo mới.
+        /// Dùng cho thứ bỏ qua được (thêm 1 tia lửa khi đã có 60 cái trên màn hình thì không ai thấy khác).
+        /// </summary>
+        public bool TryGet(Vector3 position, Quaternion rotation, out T instance)
+        {
+            if (_available.Count == 0 && _maxSize > 0 && CountAll >= _maxSize)
+            {
+                instance = null;
+                return false;
+            }
+
+            instance = Get(position, rotation);
+            return true;
+        }
+
+        private static void Activate(T instance, Vector3 position, Quaternion rotation)
+        {
             instance.transform.SetPositionAndRotation(position, rotation);
             instance.gameObject.SetActive(true);
-            return instance;
         }
 
         public void Release(T instance)
@@ -54,6 +84,7 @@ namespace ArenaSurvival.Core
 
         private T CreateNew()
         {
+            CountAll++;
             return Object.Instantiate(_prefab, _parent);
         }
     }
