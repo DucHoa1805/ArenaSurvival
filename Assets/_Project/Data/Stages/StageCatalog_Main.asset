@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350c1d30192d2494b949acf1404523cb, type: 3}
   m_Name: StageCatalog_Main
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.StageCatalog
+  chapters:
+  - {fileID: 11400000, guid: a96d17b3a902e554da2d0573c3864390, type: 2}
   stages:
   - {fileID: 11400000, guid: 0b6d5636a16abbc4682f907e9c022506, type: 2}
   - {fileID: 11400000, guid: 8727b27697e68ae428cf3ac9445231b4, type: 2}
   - {fileID: 11400000, guid: 2f0697bf2a18a6948a6c024c60402eeb, type: 2}
+  - {fileID: 11400000, guid: 901f56b4bd80a9347914bbc5a91899de, type: 2}
+  - {fileID: 11400000, guid: d4cc6728812e4d446accfd27b8b894f8, type: 2}
+  - {fileID: 11400000, guid: 51d0f82ab073fc74cb7fbfddaf4c8637, type: 2}
+  - {fileID: 11400000, guid: 40c60b2ac292a1c4f92fa62ce77eb478, type: 2}
+  - {fileID: 11400000, guid: d3763081d59043e439679e00aa68015f, type: 2}
+  - {fileID: 11400000, guid: 46c03d06b22a8d847a5f71778fd3484f, type: 2}
+  - {fileID: 11400000, guid: 50c3e6d76d1d1354e9b25b372f55c6de, type: 2}

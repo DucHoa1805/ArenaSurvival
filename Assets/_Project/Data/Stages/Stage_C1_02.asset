@@ -16,28 +16,23 @@ MonoBehaviour:
   displayName: 1-2
   stageNumber: 2
   waves:
-  - {fileID: 11400000, guid: 50d0e3bc57b94996830a0403bceed750, type: 2}
-  - {fileID: 11400000, guid: 61ec3f77ce504c96880afbb7a4b459ad, type: 2}
-  - {fileID: 11400000, guid: 207b19722ef044398cad73044fcbdf54, type: 2}
+  - {fileID: 11400000, guid: b86b551ff678053419190c1b801e6146, type: 2}
+  - {fileID: 11400000, guid: 5730b9060badc954aa9915bb349a487f, type: 2}
+  - {fileID: 11400000, guid: 7d9a387d6231fd442a650c33afff2c60, type: 2}
   finalWave:
-  - enemy: {fileID: 11400000, guid: f8ec106a602426c4b9eb3f419f431cdb, type: 2}
-    count: 2
-    healthMultiplier: 5
+  - enemy: {fileID: 11400000, guid: 6be0bf6fd78eab3498608794e9172563, type: 2}
+    count: 4
+    healthMultiplier: 4
     scaleMultiplier: 1.3
     tint: {r: 1, g: 0.75, b: 0.45, a: 1}
     loot: {fileID: 11400000, guid: 65a7ac1e6c3bd1f40aa0caf972055ea9, type: 2}
   eliteSpawnInterval: 0.6
-  boss: {fileID: 11400000, guid: 44feb5caa5768d24d90b3c144ab90173, type: 2}
+  boss: {fileID: 0}
   bossDelay: 1.5
-  bossLoot: {fileID: 11400000, guid: a5159b10e4562ec468d0bc21e76a9ca2, type: 2}
-  recommendedPower: 200
-  targetTime: 210
+  bossLoot: {fileID: 0}
+  recommendedPower: 148
+  targetTime: 195
   baseGold: 100
   baseAccountXp: 20
   victoryLoot: {fileID: 11400000, guid: 96f72f72c97d25a4ba67898af754b3ca, type: 2}
-  firstClearReward:
-  - material: {fileID: 11400000, guid: 507b5648c0b911c47993ffc80c44c18b, type: 2}
-    item: {fileID: 0}
-    min: 10
-    max: 10
-    weight: 1
+  firstClearReward: []

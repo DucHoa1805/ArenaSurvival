@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-01, sau Phase 9 (Hub thay menu chính, level tài khoản, chọn màn, chấm đỏ, tiền bay, Safe Area).
+Cập nhật lần cuối: 2026-10-01, sau Phase 10A (bảng cân bằng CSV + công cụ nhập/xuất, mô phỏng tiến trình, Chương 1 đủ 10 màn, 4 quái mới).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -52,7 +52,7 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 9 (Hub thay menu chính, level 
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 211/211 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 233/233 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -63,7 +63,7 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 9 (Hub thay menu chính, level 
 ## Cấu trúc project
 
 ```
-Docs/                   project-plan.md, asset-licenses.md, specs/, plans/, archive/
+Docs/                   project-plan.md, asset-licenses.md, specs/, plans/, archive/, Balance/ (enemies/waves/stages.csv, sim-report.md)
 Assets/_Project/
 ├── Scripts/            assembly ArenaSurvival (ArenaSurvival.asmdef); namespace = ArenaSurvival.<tên thư mục>
 │   ├── Core/           GameManager, GameState, GameEvents, ObjectPool, SceneLoader (+ FirstSceneOverride), PauseInput, CameraFollow
@@ -76,9 +76,10 @@ Assets/_Project/
 │   ├── Weapons/        PlayerWeapon (súng chính, Equip theo WeaponStats), OrbitWeapon, SawBladeRig, WeaponDefinition/IWeapon,
 │   │                   WeaponData (+ meta: id, mảnh, hiệu ứng sao, thuộc tính đạn), WeaponRules (+WeaponStats, WeaponStarBonus), OrbitWeaponData
 │   ├── Enemies/        Enemy (lõi), EnemyData, EnemyModifiers, EnemyContext (trạng thái mỗi con), IEnemyWorld, EnemyRules (hàm thuần),
-│   │                   EnemyBehaviour → ChaseBehaviour, KeepDistanceShooterBehaviour, BossBehaviour (+BossPhase);
+│   │                   EnemyBehaviour (+OnDeath) → ChaseBehaviour, KeepDistanceShooterBehaviour, ChargerBehaviour, KamikazeBehaviour,
+│   │                   SplitterBehaviour, HealerBehaviour, BossBehaviour (+BossPhase);
 │   │                   BossAttack → RadialBurstAttack, DashAttack, SummonAttack; EnemyProjectiles (pool đạn chung)
-│   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog,
+│   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog (+chapters), ChapterData,
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData,
 │   │                   UpgradeManager, RandomPicker
@@ -86,7 +87,8 @@ Assets/_Project/
 │   ├── Meta/           PlayerProfile, ProfileService, StageProgressService (+Rules, StageGrant), GameServices (static), ServicesHost, BootLoader,
 │   │                   TalentData, TalentCatalog, TalentRules (giá), TalentService, StatCalculator (chỉ số cuối + lực chiến),
 │   │                   OwnedItem, InventoryService (kho đồ), OwnedWeapon, WeaponService (vũ khí chính), LoadoutStats (chỉ số + lực chiến),
-│   │                   AccountRules, AccountLevelTable (+FeatureIds), AccountService (level tài khoản), RedDotRules
+│   │                   AccountRules, AccountLevelTable (+FeatureIds), AccountService (level tài khoản), RedDotRules, ProgressionSim
+│   ├── Data/           CsvReader, BalanceRows (EnemyRow/WaveRow/StageRow) — đọc bảng cân bằng (hàm thuần)
 │   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ VÀ nguyên liệu; TrySpendMany, CanAfford), CurrencyIds, CurrencyCost
 │   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, BossHealthBar, SafeAreaFitter,
 │   │                   TalentPanel, TalentRow, EquipmentPanel, ItemDetailPopup, ItemSlotView, ItemTextFormatter, LootRowView, WeaponPanel, WeaponRowView,
@@ -96,19 +98,21 @@ Assets/_Project/
 │   ├── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
 │   └── DevTools/       StressTest (F9), PerfRecorder (F10), BenchmarkRunner, DevMenu (F1: xem hồ sơ, +vàng/kim cương, mở khóa màn,
 │                       xóa hồ sơ, +nguyên liệu, nhận trang bị ngẫu nhiên, +20 mảnh mỗi vũ khí, tới đợt cuối, thắng ngay, bất tử). Chỉ Editor/Development build; tự tạo, sống xuyên scene
+├── Editor/             assembly ArenaSurvival.Editor: BalanceImporter, BalanceExporter, ProgressionSimMenu, BalanceAssets (menu ArenaSurvival/...)
 ├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread,
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress,
 │                       StatRules, TalentService (+ migration v3), EquipmentRules, LootRules, InventoryService (+ migration v4),
-│                       StageLootApply, WeaponRules, WeaponService (+ migration v5)
+│                       StageLootApply, WeaponRules, WeaponService (+ migration v5), AccountService, RedDotRules, CsvReader,
+│                       BalanceRows, Chapter, ProgressionSim
 ├── Resources/        ItemDatabase.asset, AccountLevelTable.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, chứa Hub — chưa đổi tên scene), Game.unity (2)
 ├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
 ├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
-│                       Stages/ (Wave_*, Stage_C1_01..03, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
+│                       Stages/ (Waves/Wave_C1_*, Stage_C1_01..10, Chapter_C1, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
 │                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*)
 ├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss), Projectile, EnemyProjectile, XpOrb, AudioManager, Arena, Vfx/*,
 │                       LootPickup, UI/VolumeSettings, UI/TalentPanel, UI/TalentRow, UI/EquipmentPanel, UI/ItemSlot, UI/ItemSlotSmall, UI/WeaponRow, UI/StageNode,
-│                       Projectile_Grenade, Projectile_Laser, Vfx/Vfx_Explosion
+│                       Projectile_Grenade, Projectile_Laser, Vfx/Vfx_Explosion, Vfx/Vfx_HealPulse
 ├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
 └── Audio/              MainMixer.mixer (Master/Music/SFX), UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
 ```
@@ -201,6 +205,17 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   (tắt nền tối + nút Đóng, co hộp theo vùng — chỉnh trên instance), `BattleTab` (chọn màn, sao, khóa, lực chiến so với `StageData.recommendedPower`),
   chấm đỏ theo `RedDotRules`, tiền bay vào thanh trên khi vừa chơi xong màn (`RewardFly`, `HubTopBar.HoldCounters`), bảng Cài đặt chứa nút Thoát.
   `SafeAreaFitter` trên gốc Hub và HUD/thanh máu boss trong màn.
+- **Bảng cân bằng (Phase 10A)**: `Docs/Balance/enemies.csv`, `waves.csv`, `stages.csv` (UTF-8 có BOM, `;` ngăn phần tử trong 1 ô) là nguồn số liệu
+  của quái/đợt/màn; menu `ArenaSurvival > Nhập bảng cân bằng` tạo/sửa asset tại chỗ (giữ GUID). Id: quái và đợt = **tên asset**
+  (`Enemy_Basic`, `Wave_C1_03a`), màn = `StageData.id`. "Tất cả hoặc không gì": lỗi ở bất kỳ dòng/tham chiếu nào thì không ghi gì.
+  Ô trống = giữ giá trị đang có (asset chỉnh tay chỉ đổi đúng ô bảng ghi); màu so theo hex (không làm tròn màu lẻ). Nhập lại phải báo
+  "không đổi". `Xuất bảng cân bằng` ghi CSV từ asset. Boss: pha/đòn dựng tay, chỉ số qua CSV. `StageData.stageNumber` là số thứ tự
+  **toàn cục** (chương 2 từ 11) để độ khó/thưởng tăng qua các chương. `StageCatalog` giữ cả `chapters` lẫn `stages` phẳng (công cụ ghi cả hai).
+  `Mô phỏng tiến trình` (`ProgressionSim`): người không nạp, thắng theo lực chiến/đề xuất (0% dưới 75% → 100% từ 125%), ghi
+  `Docs/Balance/sim-report.md` — dùng để chỉnh `recommendedPower` (Chương 1: ~50 phút, 1-5 ≈ 2 lượt, 1-10 ≈ 3 lượt).
+- **Quái mới (10A)**: Charger (gồng 0.6 s rồi lao), Kamikaze (chớp rồi nổ r=1.8, tự nổ thì **không** XP/đồ — `Despawn(false)`),
+  Splitter (`OnDeath` → 2 `Enemy_SplitterSmall`; không gọi khi nổ theo boss), Healer (giữ khoảng cách, 4 s hồi 20% máu quái quanh r=3.5,
+  `GameEvents.EnemyHealPulse` → vòng xanh). `EnemyBehaviour.OnDeath` chỉ gọi khi chết thật.
 - **Âm thanh**: `AudioManager` sống xuyên scene (DontDestroyOnLoad), 10 AudioSource xoay vòng, lệch cao độ ngẫu nhiên, giới hạn tần suất.
   Âm lượng qua `MainMixer` (exposed `MasterVolume/MusicVolume/SFXVolume`), lưu bằng **PlayerPrefs** (cài đặt thuộc thiết bị,
   không thuộc hồ sơ người chơi). Tiếng thắng màn / hồi sinh phát theo `OnGameStateChanged`.
@@ -229,10 +244,10 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 
 | Loại | Chi tiết |
 |---|---|
-| Quái (4) | Basic (máu 20, tốc 2), Fast (máu 10, tốc 4), Tank (máu 50, tốc 1.2, to x1.5), Xạ thủ (máu 15, giữ khoảng 5.5±1, bắn 2 s/viên, đạn 6) |
-| Boss (2) | Mini-boss "Cỗ Máy Gác Cổng" (màn 1-2, máu 400, 2 pha: lao + vòng đạn), boss "Thủ Lĩnh Sa Mạc" (màn 1-3, máu 1500,
+| Quái (8 + 1 con nhỏ) | Basic, Fast, Tank, Xạ thủ, Charger, Kamikaze, Splitter (+ Phân Thân Nhỏ), Healer — số liệu trong `Docs/Balance/enemies.csv` |
+| Boss (2) | Mini-boss "Cỗ Máy Gác Cổng" (màn 1-5, máu 400, 2 pha: lao + vòng đạn), boss chương "Thủ Lĩnh Sa Mạc" (màn 1-10, máu 1500,
   3 pha 100/66/33%: vòng đạn → + lao → vòng đạn dày + lao + gọi 4 Basic, tối đa 8). Sprite Kenney phóng to + tô màu (tạm) |
-| Màn chơi (3) | 1-1, 1-2, 1-3: 3 đợt × 60 s (`Wave_01..03`, Xạ thủ từ đợt 2) rồi đợt cuối: 1-1 tinh anh; 1-2 mini-boss + 2 Tank tinh anh; 1-3 boss + 3 Fast tinh anh. Độ khó ×(1 + 0.12×(màn−1)). Sao: thắng / >50% máu / dưới 3:30–3:45. Thưởng (chỉ hiển thị): 100 vàng, 20 XP × (1 + 0.15×(màn−1)) |
+| Màn chơi (10) | Chương 1 "Sa mạc" 1-1..1-10 (`Docs/Balance/stages.csv`): mỗi màn 3 đợt (45 s ở 1-1/1-2, 60 s từ 1-3) + đợt tinh anh; quái mới giới thiệu dần (1-3 Charger, 1-4 Xạ thủ, 1-6 Kamikaze, 1-7 Splitter, 1-9 Healer); 1-5 mini-boss, 1-10 boss chương. Quà lần đầu: 1-3 mảnh Shotgun, 1-5 Súng máy, 1-10 Phóng lựu. Lực chiến đề xuất 110 → 575 |
 | Vũ khí chính (5) | Súng lục (có sẵn), Shotgun (6 viên tầm ngắn, đẩy lùi), Súng máy (6 phát/giây, tản), Phóng lựu (nổ r=1.6), Laser (xuyên 4); cấp + 5 sao |
 | Vũ khí phụ trong màn (1) | Lưỡi cưa xoay (3 lưỡi) |
 | Nâng cấp trong màn (6) | Sát thương +20%, Tốc độ bắn +15%, Tốc độ chạy +10%, Máu tối đa +20, Hồi máu +30, mở khóa Lưỡi cưa |
@@ -259,7 +274,9 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 8B – Vật phẩm, kho đồ | Xong: 4 trang bị, 3 nguyên liệu, kho đồ, nâng cấp/đột phá/phân rã, LootTable, rơi đồ trong màn, bảng Trang bị, save v4 |
 | 8C – Vũ khí meta | Xong: 5 vũ khí chính, cấp/sao/mảnh, xuyên/nổ/đẩy lùi/tầm, bảng Vũ khí, quà thắng lần đầu, save v5 |
 | 9 – Hub và level tài khoản | Xong: AccountService, Hub 5 tab, chọn màn + lực chiến đề xuất, popup lên cấp, chấm đỏ, tiền bay, Safe Area |
-| 10 – Nội dung và cân bằng | **Tiếp theo** |
+| 10A – Công cụ dữ liệu + Chương 1 | Xong: CSV + nhập/xuất, mô phỏng tiến trình, ChapterData, 10 màn, 4 quái mới, tab Chiến đấu 10 màn |
+| 10B – Chương 2 | **Tiếp theo**: bối cảnh/Tilemap mới, 10 màn, quái biến thể, boss chương 2 |
+| 10C – Chương 3 + cân bằng | Chưa: 10 màn, chơi thử 30 màn bằng tài khoản mới, chỉnh số cuối |
 | 11 – Cửa hàng, IAP, quảng cáo | Chưa |
 | 12 – Giữ chân, analytics, cloud save | Chưa |
 | 13 – Mobile, tối ưu, playtest | Chưa |

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d4052428ee58446a3bd23343f3d231, type: 3}
+  m_Name: Chapter_C1
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.ChapterData
+  id: c1
+  number: 1
+  displayName: "Sa m\u1EA1c"
+  stages:
+  - {fileID: 11400000, guid: 0b6d5636a16abbc4682f907e9c022506, type: 2}
+  - {fileID: 11400000, guid: 8727b27697e68ae428cf3ac9445231b4, type: 2}
+  - {fileID: 11400000, guid: 2f0697bf2a18a6948a6c024c60402eeb, type: 2}
+  - {fileID: 11400000, guid: 901f56b4bd80a9347914bbc5a91899de, type: 2}
+  - {fileID: 11400000, guid: d4cc6728812e4d446accfd27b8b894f8, type: 2}
+  - {fileID: 11400000, guid: 51d0f82ab073fc74cb7fbfddaf4c8637, type: 2}
+  - {fileID: 11400000, guid: 40c60b2ac292a1c4f92fa62ce77eb478, type: 2}
+  - {fileID: 11400000, guid: d3763081d59043e439679e00aa68015f, type: 2}
+  - {fileID: 11400000, guid: 46c03d06b22a8d847a5f71778fd3484f, type: 2}
+  - {fileID: 11400000, guid: 50c3e6d76d1d1354e9b25b372f55c6de, type: 2}

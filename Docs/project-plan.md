@@ -410,10 +410,10 @@ Assets/
 **Mục tiêu:** đủ nội dung cho vài ngày chơi đầu và một nền kinh tế không quá dễ, không quá khó.
 
 **Việc cần làm**
-- [ ] Bảng cân bằng trên Google Sheets: chỉ số quái theo màn, phần thưởng theo màn, chi phí nâng cấp, lực chiến đề xuất.
-- [ ] Công cụ nhập dữ liệu từ bảng (CSV) vào ScriptableObject để không gõ tay hàng trăm asset.
+- [x] Bảng cân bằng trên Google Sheets: _(10A: CSV trong `Docs/Balance/`, sửa bằng Sheets/Excel rồi xuất đè; chi phí nâng cấp vẫn là công thức)_ chỉ số quái theo màn, phần thưởng theo màn, chi phí nâng cấp, lực chiến đề xuất.
+- [x] Công cụ nhập dữ liệu từ bảng (CSV) vào ScriptableObject để không gõ tay hàng trăm asset.
 - [ ] Nội dung: 3 chương × 10 màn, 3 boss chương, 2–3 mini-boss, 8–10 loại quái, 4 vũ khí.
-- [ ] Mô phỏng tiến trình: người không nạp cần chơi lại bao nhiêu lần để qua mỗi boss chương.
+- [x] Mô phỏng tiến trình: người không nạp cần chơi lại bao nhiêu lần để qua mỗi boss chương.
 - [ ] Thiết kế **"tường"** có chủ đích: boss chương là điểm người chơi cần nâng cấp, nhưng farm vẫn vượt qua được.
 - [ ] Chơi thử toàn bộ 30 màn bằng tài khoản mới (không dùng cheat), ghi lại chỗ quá dễ/quá khó.
 - [ ] Menu cheat cho bản dev: cộng tiền, nhảy màn, mở đồ, để test nhanh (tắt hẳn ở bản phát hành).

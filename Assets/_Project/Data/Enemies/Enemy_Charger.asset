@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_Charger
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "K\u1EBB Lao"
+  sprite: {fileID: 661800118727464713, guid: 2af93d14c8c0c0e40ba16a2459e146c2, type: 3}
+  scale: 1.05
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  maxHealth: 28
+  moveSpeed: 2.4
+  contactDamage: 8
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: 8705097c87f30fd44a401224dadc6f66, type: 2}
+  isBoss: 0
+  xpReward: 2
+  loot: {fileID: 11400000, guid: c56e1f7d789d9d6459f7f9e6e94c8985, type: 2}
+  lootChance: 0.03

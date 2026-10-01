@@ -11,8 +11,8 @@ using UnityEngine.UI;
 namespace ArenaSurvival.UI.Hub
 {
     /// <summary>
-    /// Tab Chiến đấu: tên chương, danh sách màn (sao, khóa), chi tiết màn đang chọn với lực chiến đề xuất so với hiện tại, nút vào màn.
-    /// Chọn sẵn màn nên chơi tiếp (màn chưa thắng đầu tiên) để người chơi chỉ cần bấm 1 nút.
+    /// Tab Chiến đấu: chương đang xem (◀ ▶ đổi chương), lưới màn của chương (sao, khóa, dấu boss), chi tiết màn đang chọn với
+    /// lực chiến đề xuất so với hiện tại, nút vào màn. Mở sẵn chương + màn nên chơi tiếp để người chơi chỉ cần bấm 1 nút.
     /// </summary>
     public class BattleTab : MonoBehaviour
     {
@@ -22,6 +22,8 @@ namespace ArenaSurvival.UI.Hub
 
         [Header("UI")]
         [SerializeField] private TMP_Text _chapterText;
+        [SerializeField] private Button _prevChapter;
+        [SerializeField] private Button _nextChapter;
         [SerializeField] private StageNodeView _nodePrefab;
         [SerializeField] private Transform _nodeContainer;
         [SerializeField] private TMP_Text _stageName;
@@ -30,43 +32,46 @@ namespace ArenaSurvival.UI.Hub
         [SerializeField] private Button _playButton;
         [SerializeField] private TMP_Text _playLabel;
 
-        public StageCatalog Catalog => _catalog;
-
         private static readonly Color Enough = new Color(0.45f, 0.85f, 0.5f);
         private static readonly Color NotEnough = new Color(0.95f, 0.45f, 0.38f);
 
         private readonly List<StageNodeView> _nodes = new List<StageNodeView>();
         private StageData _selected;
+        private int _chapterIndex = -1;
         private Action<StageNodeView> _onNodeClicked;
+
+        public StageCatalog Catalog => _catalog;
 
         private void Awake()
         {
             _onNodeClicked = node => Select(node.Stage);
             _playButton.onClick.AddListener(HandlePlay);
+            if (_prevChapter != null) _prevChapter.onClick.AddListener(PrevChapter);
+            if (_nextChapter != null) _nextChapter.onClick.AddListener(NextChapter);
         }
 
-        private void OnDestroy() => _playButton.onClick.RemoveListener(HandlePlay);
+        private void OnDestroy()
+        {
+            _playButton.onClick.RemoveListener(HandlePlay);
+            if (_prevChapter != null) _prevChapter.onClick.RemoveListener(PrevChapter);
+            if (_nextChapter != null) _nextChapter.onClick.RemoveListener(NextChapter);
+        }
 
         private void OnEnable()
         {
-            BuildOnce();
-            if (_selected == null) _selected = GameServices.StageProgress.NextStage(_catalog);
+            if (_selected == null)
+            {
+                _selected = GameServices.StageProgress.NextStage(_catalog);
+                _chapterIndex = Mathf.Max(0, _catalog.IndexOfChapter(_catalog.ChapterOf(_selected)));
+            }
             Refresh();
         }
 
-        private void BuildOnce()
-        {
-            if (_nodes.Count > 0 || _catalog == null || _catalog.stages == null) return;
-            foreach (StageData stage in _catalog.stages)
-            {
-                if (stage == null) continue;
-                StageNodeView node = Instantiate(_nodePrefab, _nodeContainer);
-                node.OnClicked += _onNodeClicked;
-                _nodes.Add(node);
-            }
-            // Phase 10 thêm chương 2–3: tên chương sẽ lấy từ ChapterData.
-            if (_chapterText != null) _chapterText.text = "CHƯƠNG 1 · SA MẠC";
-        }
+        private ChapterData CurrentChapter =>
+            _catalog.chapters != null && _chapterIndex >= 0 && _chapterIndex < _catalog.chapters.Length ? _catalog.chapters[_chapterIndex] : null;
+
+        /// <summary>Màn của chương đang xem; catalog chưa chia chương (dữ liệu cũ) thì coi cả danh sách là 1 chương.</summary>
+        private StageData[] CurrentStages => CurrentChapter != null ? CurrentChapter.stages : _catalog.stages;
 
         private void Select(StageData stage)
         {
@@ -74,14 +79,47 @@ namespace ArenaSurvival.UI.Hub
             Refresh();
         }
 
+        private void PrevChapter() => ShowChapter(_chapterIndex - 1);
+        private void NextChapter() => ShowChapter(_chapterIndex + 1);
+
+        private void ShowChapter(int index)
+        {
+            if (_catalog.chapters == null || index < 0 || index >= _catalog.chapters.Length) return;
+            _chapterIndex = index;
+            // Đổi chương: chọn màn nên chơi tiếp nếu nó thuộc chương này, không thì màn đầu chương.
+            StageData next = GameServices.StageProgress.NextStage(_catalog);
+            _selected = Array.IndexOf(CurrentStages, next) >= 0 ? next : CurrentStages[0];
+            Refresh();
+        }
+
         private void Refresh()
         {
+            StageData[] stages = CurrentStages ?? Array.Empty<StageData>();
+            ChapterData chapter = CurrentChapter;
+            // Ô màn tạo thêm khi thiếu, ẩn khi thừa — các chương có số màn khác nhau dùng chung 1 lưới.
+            while (_nodes.Count < stages.Length)
+            {
+                StageNodeView node = Instantiate(_nodePrefab, _nodeContainer);
+                node.OnClicked += _onNodeClicked;
+                _nodes.Add(node);
+            }
+
             StageProgressService progress = GameServices.StageProgress;
             for (int i = 0; i < _nodes.Count; i++)
             {
-                StageData stage = _catalog.stages[i];
-                _nodes[i].Show(stage, progress.IsUnlocked(_catalog, stage), progress.GetStars(stage.id), stage == _selected);
+                bool used = i < stages.Length && stages[i] != null;
+                _nodes[i].gameObject.SetActive(used);
+                if (!used) continue;
+                StageData stage = stages[i];
+                bool chapterBoss = stage.boss != null && i == stages.Length - 1;
+                _nodes[i].Show(stage, progress.IsUnlocked(_catalog, stage), progress.GetStars(stage.id), stage == _selected, chapterBoss);
             }
+
+            int chapters = _catalog.chapters != null ? _catalog.chapters.Length : 0;
+            if (_chapterText != null)
+                _chapterText.text = chapter != null ? $"CHƯƠNG {chapter.number} · {chapter.displayName.ToUpperInvariant()}" : "CHƯƠNG 1";
+            if (_prevChapter != null) _prevChapter.gameObject.SetActive(chapters > 1 && _chapterIndex > 0);
+            if (_nextChapter != null) _nextChapter.gameObject.SetActive(chapters > 1 && _chapterIndex < chapters - 1);
             if (_selected == null) return;
 
             bool unlocked = progress.IsUnlocked(_catalog, _selected);

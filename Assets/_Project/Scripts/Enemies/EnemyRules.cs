@@ -28,6 +28,16 @@ namespace ArenaSurvival.Enemies
         /// Pha sâu nhất mà % máu hiện tại đã chạm tới (máu ≤ ngưỡng của pha). Chỉ tiến, không lùi: boss đã nổi giận
         /// thì không quay về pha dễ dù sau này có cơ chế hồi máu.
         /// </summary>
+        /// <summary>Lượng máu Healer hồi cho 1 quái: phần trăm máu tối đa nhưng không vượt phần còn thiếu; quái đã chết thì 0.</summary>
+        public static float HealAmount(float maxHealth, float currentHealth, float fraction)
+        {
+            if (currentHealth <= 0f) return 0f;
+            return Mathf.Max(0f, Mathf.Min(maxHealth * fraction, maxHealth - currentHealth));
+        }
+
+        /// <summary>Player có trúng vụ nổ của Kamikaze không (tính cả đúng mép bán kính).</summary>
+        public static bool KamikazeHit(float distance, float radius) => distance <= radius;
+
         public static int PhaseForHealth(float[] thresholds, float hpFraction, int current)
         {
             if (thresholds == null || thresholds.Length == 0) return current;

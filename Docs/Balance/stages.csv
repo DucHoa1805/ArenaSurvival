@@ -1,0 +1,11 @@
+﻿chapter,chapterName,number,id,displayName,waves,eliteEnemy,eliteCount,eliteHealth,eliteLoot,boss,bossDelay,targetTime,baseGold,baseXp,recommendedPower,bossLoot,victoryLoot,firstClearShard,firstClearAmount
+c1,Sa mạc,1,c1_s01,1-1,Wave_C1_01a;Wave_C1_01b;Wave_C1_01c,Enemy_Basic,3,4,Loot_Elite,,1.5,195,100,20,110,,Loot_StageClear,,
+c1,Sa mạc,2,c1_s02,1-2,Wave_C1_02a;Wave_C1_02b;Wave_C1_02c,Enemy_Fast,4,4,Loot_Elite,,1.5,195,100,20,148,,Loot_StageClear,,
+c1,Sa mạc,3,c1_s03,1-3,Wave_C1_03a;Wave_C1_03b;Wave_C1_03c,Enemy_Tank,2,4,Loot_Elite,,1.5,225,100,20,188,,Loot_StageClear,weapon_shotgun,10
+c1,Sa mạc,4,c1_s04,1-4,Wave_C1_04a;Wave_C1_04b;Wave_C1_04c,Enemy_Charger,3,4,Loot_Elite,,1.5,225,100,20,232,,Loot_StageClear,,
+c1,Sa mạc,5,c1_s05,1-5,Wave_C1_05a;Wave_C1_05b;Wave_C1_05c,Enemy_Tank,2,5,Loot_Elite,Boss_MiniTank,1.5,240,100,20,305,Loot_MiniBoss,Loot_StageClear,weapon_machinegun,10
+c1,Sa mạc,6,c1_s06,1-6,Wave_C1_06a;Wave_C1_06b;Wave_C1_06c,Enemy_Kamikaze,4,3,Loot_Elite,,1.5,230,100,20,318,,Loot_StageClear,,
+c1,Sa mạc,7,c1_s07,1-7,Wave_C1_07a;Wave_C1_07b;Wave_C1_07c,Enemy_Splitter,3,4,Loot_Elite,,1.5,230,100,20,358,,Loot_StageClear,,
+c1,Sa mạc,8,c1_s08,1-8,Wave_C1_08a;Wave_C1_08b;Wave_C1_08c,Enemy_Tank,3,5,Loot_Elite,,1.5,230,100,20,395,,Loot_StageClear,,
+c1,Sa mạc,9,c1_s09,1-9,Wave_C1_09a;Wave_C1_09b;Wave_C1_09c,Enemy_Healer,2,4,Loot_Elite,,1.5,230,100,20,435,,Loot_StageClear,,
+c1,Sa mạc,10,c1_s10,1-10,Wave_C1_10a;Wave_C1_10b;Wave_C1_10c,Enemy_Fast,3,3,Loot_Elite,Boss_Warlord,1.5,270,100,20,575,Loot_Boss,Loot_StageClear,weapon_grenade,10

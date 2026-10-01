@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9452ebdbfe3c48d8b14e53335f89ff1d, type: 3}
-  m_Name: Wave_02
-  m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Enemies.WaveData
+  m_Name: Wave_C1_09b
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.WaveData
   duration: 60
-  spawnInterval: 1.2
+  spawnInterval: 0.95
   enemyTypes:
   - {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
-  - {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
-  - {fileID: 11400000, guid: 6be0bf6fd78eab3498608794e9172563, type: 2}
+  - {fileID: 11400000, guid: 6c950ab8c39888c48962e05925ad13a5, type: 2}
+  - {fileID: 11400000, guid: ff9173de7a76aa1458219085ef0d22e8, type: 2}
   - {fileID: 11400000, guid: bcbbdd80f86f4274f8c7825a912baeba, type: 2}

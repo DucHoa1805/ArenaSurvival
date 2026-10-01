@@ -16,6 +16,8 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private PooledVfx _levelUpPrefab;
         [Tooltip("Không bắt buộc: hiệu ứng nổ của đạn Phóng lựu (phóng to theo bán kính nổ).")]
         [SerializeField] private PooledVfx _explosionPrefab;
+        [Tooltip("Không bắt buộc: vòng sáng xanh khi Healer hồi máu cho quái (phóng to theo bán kính).")]
+        [SerializeField] private PooledVfx _healPulsePrefab;
         [Tooltip("Bán kính nổ mà prefab hiệu ứng nổ trông vừa khớp ở scale 1.")]
         [SerializeField] private float _explosionPrefabRadius = 1f;
         [Tooltip("Không bắt buộc: chữ \"CẤP n!\" bay lên trên đầu Player khi chọn xong nâng cấp.")]
@@ -46,6 +48,8 @@ namespace ArenaSurvival.Vfx
         private ObjectPool<PooledVfx> _levelUpPool;
         private ObjectPool<FloatingText> _damageNumberPool;
         private ObjectPool<PooledVfx> _explosionPool;
+        private ObjectPool<PooledVfx> _healPool;
+        private System.Action<PooledVfx> _releaseHeal;
         private System.Action<PooledVfx> _releaseExplosion;
         // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
         private System.Action<PooledVfx> _releaseHit;
@@ -77,6 +81,13 @@ namespace ArenaSurvival.Vfx
                 _releaseExplosion = _explosionPool.Release;
             }
 
+            if (_healPulsePrefab != null)
+            {
+                // Healer hồi mỗi 4 s; vài con cùng lúc là nhiều — vượt giới hạn thì bỏ qua hiệu ứng.
+                _healPool = new ObjectPool<PooledVfx>(_healPulsePrefab, 6, transform, 6);
+                _releaseHeal = _healPool.Release;
+            }
+
             if (_damageNumberPrefab != null)
             {
                 _damageNumberPool = new ObjectPool<FloatingText>(
@@ -93,6 +104,7 @@ namespace ArenaSurvival.Vfx
             GameEvents.OnLevelUp += HandleLevelUp;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
             GameEvents.OnExplosion += HandleExplosion;
+            GameEvents.OnEnemyHealPulse += HandleHealPulse;
         }
 
         private void OnDisable()
@@ -103,6 +115,7 @@ namespace ArenaSurvival.Vfx
             GameEvents.OnLevelUp -= HandleLevelUp;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
             GameEvents.OnExplosion -= HandleExplosion;
+            GameEvents.OnEnemyHealPulse -= HandleHealPulse;
         }
 
         private void HandleLevelUp(int newLevel) => _currentLevel = newLevel;
@@ -116,6 +129,13 @@ namespace ArenaSurvival.Vfx
             if (_explosionPool == null || !_explosionPool.TryGet(position, Quaternion.identity, out PooledVfx vfx)) return;
             vfx.OnReturnToPool = _releaseExplosion;
             // Đặt lại scale mỗi lần lấy từ pool: nâng sao Phóng lựu làm bán kính nổ to hơn.
+            vfx.transform.localScale = Vector3.one * (radius / Mathf.Max(0.01f, _explosionPrefabRadius));
+        }
+
+        private void HandleHealPulse(Vector3 position, float radius)
+        {
+            if (_healPool == null || !_healPool.TryGet(position, Quaternion.identity, out PooledVfx vfx)) return;
+            vfx.OnReturnToPool = _releaseHeal;
             vfx.transform.localScale = Vector3.one * (radius / Mathf.Max(0.01f, _explosionPrefabRadius));
         }
 

@@ -23,3 +23,5 @@ MonoBehaviour:
   behaviour: {fileID: 11400000, guid: 8d76e126bd45d3146883887ce4eb4e49, type: 2}
   isBoss: 1
   xpReward: 15
+  loot: {fileID: 0}
+  lootChance: 0

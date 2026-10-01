@@ -44,6 +44,7 @@ namespace ArenaSurvival.Enemies
 
         public float MoveSpeed => Data != null ? Data.moveSpeed : 0f;
         public float ProjectileDamage => Data != null ? Data.projectileDamage * Modifiers.damage : 0f;
+        public float ContactDamage => Data != null ? Data.contactDamage * Modifiers.damage : 0f;
         public float HealthFraction => Enemy.HealthFraction;
 
         /// <summary>Di chuyển qua Rigidbody (đồng bộ bước vật lý), giữ trong sân: quái không va chạm tường nên tự kẹp vị trí.</summary>

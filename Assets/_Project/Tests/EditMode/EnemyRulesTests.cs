@@ -70,5 +70,22 @@ namespace ArenaSurvival.Tests
             Assert.AreEqual(0, EnemyRules.PhaseForHealth(new float[0], 0.1f, 0));
             Assert.AreEqual(0, EnemyRules.PhaseForHealth(null, 0.1f, 0));
         }
+
+        [Test]
+        public void HealAmount_NeverExceedsMissingHealth()
+        {
+            Assert.AreEqual(20f, EnemyRules.HealAmount(100f, 50f, 0.2f), 1e-4);
+            Assert.AreEqual(5f, EnemyRules.HealAmount(100f, 95f, 0.2f), 1e-4, "chỉ hồi phần còn thiếu");
+            Assert.AreEqual(0f, EnemyRules.HealAmount(100f, 100f, 0.2f), 1e-4);
+            Assert.AreEqual(0f, EnemyRules.HealAmount(100f, 0f, 0.2f), 1e-4, "quái đã chết không hồi");
+        }
+
+        [Test]
+        public void KamikazeHit_InsideRadiusOnly()
+        {
+            Assert.IsTrue(EnemyRules.KamikazeHit(1.7f, 1.8f));
+            Assert.IsTrue(EnemyRules.KamikazeHit(1.8f, 1.8f));
+            Assert.IsFalse(EnemyRules.KamikazeHit(1.81f, 1.8f));
+        }
     }
 }

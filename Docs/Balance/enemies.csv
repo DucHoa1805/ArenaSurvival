@@ -1,0 +1,12 @@
+﻿id,displayName,sprite,behaviour,maxHealth,moveSpeed,contactDamage,projectileDamage,xpReward,scale,tint,isBoss,loot,lootChance
+Enemy_Basic,Basic Enemy,Kenney-TopDownShooter/PNG/Zombie 1/zoimbie1_hold.png,Behaviour_Chase,20,2,5,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
+Enemy_Fast,Fast Enemy,Kenney-TopDownShooter/PNG/Robot 1/robot1_hold.png,Behaviour_Chase,10,4,3,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
+Enemy_Shooter,Xạ thủ,Kenney-TopDownShooter/PNG/Man Brown/manBrown_gun.png,Behaviour_Shooter,15,2.2,4,6,2,1,#FFFFFFFF,0,Loot_Common,0.03
+Enemy_Tank,Tank Enemy,Kenney-TopDownShooter/PNG/Soldier 1/soldier1_hold.png,Behaviour_Chase,50,1.2,10,6,4,1.5,#FFFFFFFF,0,Loot_Common,0.04
+Boss_MiniTank,Cỗ Máy Gác Cổng,Kenney-TopDownShooter/PNG/Robot 1/robot1_machine.png,BossBehaviour_MiniTank,400,1.4,15,8,15,1.9,#FFD199FF,1,,0
+Boss_Warlord,Thủ Lĩnh Sa Mạc,Kenney-TopDownShooter/PNG/Survivor 1/survivor1_machine.png,BossBehaviour_Warlord,1500,1.2,20,10,40,2.6,#FF9E8CFF,1,,0
+Enemy_Charger,Kẻ Lao,Kenney-TopDownShooter/PNG/Hitman 1/hitman1_hold.png,Behaviour_Charger,28,2.4,8,6,2,1.05,#FFFFFFFF,0,Loot_Common,0.03
+Enemy_Kamikaze,Kẻ Liều Mạng,Kenney-TopDownShooter/PNG/Man Old/manOld_hold.png,Behaviour_Kamikaze,12,3.6,9,6,2,0.95,#FF9A80FF,0,Loot_Common,0.03
+Enemy_Splitter,Kẻ Phân Thân,Kenney-TopDownShooter/PNG/Zombie 1/zoimbie1_stand.png,Behaviour_Splitter,30,1.8,6,6,2,1.25,#A8F0A0FF,0,Loot_Common,0.03
+Enemy_SplitterSmall,Phân Thân Nhỏ,Kenney-TopDownShooter/PNG/Zombie 1/zoimbie1_stand.png,Behaviour_Chase,10,2.8,3,6,1,0.75,#A8F0A0FF,0,,0
+Enemy_Healer,Thầy Thuốc,Kenney-TopDownShooter/PNG/Woman Green/womanGreen_stand.png,Behaviour_Healer,22,2,3,6,3,1,#C8FFD0FF,0,Loot_Common,0.04

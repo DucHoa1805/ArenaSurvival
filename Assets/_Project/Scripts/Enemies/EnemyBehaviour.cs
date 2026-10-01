@@ -14,5 +14,11 @@ namespace ArenaSurvival.Enemies
 
         /// <summary>Gọi trong FixedUpdate.</summary>
         public abstract void Tick(EnemyContext ctx, float dt);
+
+        /// <summary>
+        /// Gọi khi quái chết vì trúng đòn (trước khi trả về pool, vị trí/hệ số còn nguyên). KHÔNG gọi khi nổ theo boss (Despawn):
+        /// quái phân thân nổ theo boss mà còn đẻ con thì màn không bao giờ dọn sạch.
+        /// </summary>
+        public virtual void OnDeath(EnemyContext ctx) { }
     }
 }

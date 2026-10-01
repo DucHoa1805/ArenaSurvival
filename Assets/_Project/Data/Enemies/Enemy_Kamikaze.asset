@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_Kamikaze
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "K\u1EBB Li\u1EC1u M\u1EA1ng"
+  sprite: {fileID: 7815693366047772176, guid: 710b9e4562a020343912446544215324, type: 3}
+  scale: 0.95
+  tint: {r: 1, g: 0.6039216, b: 0.5019608, a: 1}
+  maxHealth: 12
+  moveSpeed: 3.6
+  contactDamage: 9
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: ac7dba87e1768c049ac0c270af89d45d, type: 2}
+  isBoss: 0
+  xpReward: 2
+  loot: {fileID: 11400000, guid: c56e1f7d789d9d6459f7f9e6e94c8985, type: 2}
+  lootChance: 0.03

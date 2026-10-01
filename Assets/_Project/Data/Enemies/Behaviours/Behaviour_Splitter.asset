@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51509ead6b9ad29428076f619b90cc2f, type: 3}
+  m_Name: Behaviour_Splitter
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.SplitterBehaviour
+  _child: {fileID: 11400000, guid: fcfecf4bedce6cf41a8c106e4505d92f, type: 2}
+  _count: 2
+  _spread: 0.4

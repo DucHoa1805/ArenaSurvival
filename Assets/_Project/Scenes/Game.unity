@@ -14988,6 +14988,7 @@ MonoBehaviour:
   _enemyDeathPrefab: {fileID: 6287985307764103710, guid: 9d169c3acd0f6b54091f526790b7857e, type: 3}
   _levelUpPrefab: {fileID: 1117910998595578253, guid: 238d7fc9559844d4a80dd81bddeb2402, type: 3}
   _explosionPrefab: {fileID: 6287985307764103710, guid: 86c9932cf10a3ee49811d70276177de6, type: 3}
+  _healPulsePrefab: {fileID: 6287985307764103710, guid: 164c66714fb430c49b846a5a1b410772, type: 3}
   _explosionPrefabRadius: 0.8
   _levelUpTextPrefab: {fileID: 569529996518482080, guid: d0ed1775d55af034abf1045787bce252, type: 3}
   _damageNumberPrefab: {fileID: 569529996518482080, guid: 6f5d740196a4ff541a09702f989286e8, type: 3}

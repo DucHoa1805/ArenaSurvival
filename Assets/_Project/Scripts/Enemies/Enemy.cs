@@ -193,6 +193,7 @@ namespace ArenaSurvival.Enemies
                 Core.GameEvents.EnemyKilled(_data.xpReward, transform.position);
                 // Trước khi trả về pool: lúc này vị trí, dữ liệu và hệ số của con quái vẫn còn nguyên.
                 _ctx.World?.NotifyKilled(this);
+                Behaviour.OnDeath(_ctx);
             }
 
             OnReturnToPool?.Invoke(this);

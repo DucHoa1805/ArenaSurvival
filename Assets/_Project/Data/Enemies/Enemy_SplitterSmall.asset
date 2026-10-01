@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Enemy_SplitterSmall
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "Ph\xE2n Th\xE2n Nh\u1ECF"
+  sprite: {fileID: -4470850754257821324, guid: d8441d2502c7a4b42aa0dc7e0c9066e2, type: 3}
+  scale: 0.75
+  tint: {r: 0.65882355, g: 0.9411765, b: 0.627451, a: 1}
+  maxHealth: 10
+  moveSpeed: 2.8
+  contactDamage: 3
+  projectileDamage: 6
+  behaviour: {fileID: 11400000, guid: 3c19a325db6feaf49b111d76e8e0b32d, type: 2}
+  isBoss: 0
+  xpReward: 1
+  loot: {fileID: 0}
+  lootChance: 0
