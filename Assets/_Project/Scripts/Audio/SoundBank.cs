@@ -27,6 +27,10 @@ namespace ArenaSurvival.Audio
 
         [Header("Game Flow & UI")]
         public SoundEffect gameOver;
+        [Tooltip("Thắng màn.")]
+        public SoundEffect stageVictory;
+        [Tooltip("Lúc chọn hồi sinh.")]
+        public SoundEffect revive;
         public SoundEffect uiClick;
         [Tooltip("Lúc rê chuột vào nút hoặc thẻ nâng cấp.")]
         public SoundEffect uiHover;

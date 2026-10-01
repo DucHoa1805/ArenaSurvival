@@ -1,4 +1,4 @@
-using ArenaSurvival.Progression;
+using ArenaSurvival.RunUpgrades;
 using NUnit.Framework;
 
 namespace ArenaSurvival.Tests

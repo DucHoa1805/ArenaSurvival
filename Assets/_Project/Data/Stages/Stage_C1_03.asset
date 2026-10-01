@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86dd06594c765f842a8de0b98d07efbb, type: 3}
+  m_Name: Stage_C1_03
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.StageData
+  id: c1_s03
+  displayName: 1-3
+  stageNumber: 3
+  waves:
+  - {fileID: 11400000, guid: 50d0e3bc57b94996830a0403bceed750, type: 2}
+  - {fileID: 11400000, guid: 61ec3f77ce504c96880afbb7a4b459ad, type: 2}
+  - {fileID: 11400000, guid: 207b19722ef044398cad73044fcbdf54, type: 2}
+  finalWave:
+  - enemy: {fileID: 11400000, guid: f8ec106a602426c4b9eb3f419f431cdb, type: 2}
+    count: 4
+    healthMultiplier: 5
+    scaleMultiplier: 1.3
+    tint: {r: 1, g: 0.75, b: 0.45, a: 1}
+  - enemy: {fileID: 11400000, guid: 6be0bf6fd78eab3498608794e9172563, type: 2}
+    count: 6
+    healthMultiplier: 3
+    scaleMultiplier: 1.3
+    tint: {r: 1, g: 0.75, b: 0.45, a: 1}
+  eliteSpawnInterval: 0.6
+  targetTime: 225
+  baseGold: 100
+  baseAccountXp: 20

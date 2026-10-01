@@ -1,0 +1,168 @@
+using ArenaSurvival.Core;
+using ArenaSurvival.Enemies;
+using UnityEngine;
+
+namespace ArenaSurvival.Stages
+{
+    /// <summary>
+    /// Sinh quái theo lệnh của StageSession: đặt đợt hiện tại (sinh đều theo nhịp của đợt), ngừng sinh, hoặc sinh từng
+    /// con cụ thể (quái tinh anh). Không tự biết màn có mấy đợt hay khi nào kết thúc — việc đó là của StageSession,
+    /// nên cùng một spawner dùng được cho màn thường, màn boss (6B) hay chế độ khác sau này.
+    /// </summary>
+    public class WaveSpawner : MonoBehaviour
+    {
+        [Header("Prefab")]
+        [Tooltip("Mọi loại quái dùng chung 1 prefab và 1 pool — khác biệt nằm hoàn toàn trong EnemyData + EnemyModifiers.")]
+        [SerializeField] private Enemy _enemyPrefab;
+
+        [Header("Spawn Area")]
+        [SerializeField] private Camera _targetCamera;
+        [Tooltip("Vùng được phép sinh quái (tọa độ thế giới): phần sân cát bên trong viền đá, có chừa lề. " +
+                 "Quái luôn xuất hiện trong sân nên không bao giờ bị kẹt ngoài bãi cỏ.")]
+        [SerializeField] private Rect _arenaArea = new Rect(-9.1f, -9.1f, 18.2f, 18.2f);
+        [Tooltip("Quái chỉ xuất hiện cách mép màn hình ít nhất bấy nhiêu, để không hiện ra ngay trước mặt người chơi.")]
+        [SerializeField] private float _offscreenMargin = 0.5f;
+
+        [Header("Pooling")]
+        [SerializeField] private int _poolPrewarmCount = 15;
+
+        // Số lần thử bốc ngẫu nhiên 1 điểm trong sân nằm ngoài màn hình trước khi dùng phương án dự phòng.
+        private const int MaxSpawnAttempts = 20;
+
+        private ObjectPool<Enemy> _enemyPool;
+        // Gán sẵn 1 lần: gán thẳng tên hàm vào OnReturnToPool mỗi lần lấy từ pool là mỗi lần tạo 1 delegate mới
+        // (rác GC) — Profiler bắt được đúng chỗ này khi quái đông.
+        private System.Action<Enemy> _releaseEnemy;
+        private readonly Vector2[] _corners = new Vector2[4];
+
+        private WaveData _wave;
+        private EnemyModifiers _waveModifiers = EnemyModifiers.Default;
+        private float _spawnTimer;
+
+        /// <summary>Số quái đang sống trên sân.</summary>
+        public int ActiveCount { get; private set; }
+
+        private void Awake()
+        {
+            if (_targetCamera == null)
+            {
+                _targetCamera = Camera.main;
+            }
+
+            _enemyPool = new ObjectPool<Enemy>(_enemyPrefab, _poolPrewarmCount, transform);
+            _releaseEnemy = ReturnEnemyToPool;
+        }
+
+        /// <summary>Bắt đầu sinh đều quái của đợt này. Hệ số (độ khó theo màn) áp cho mọi con sinh ra trong đợt.</summary>
+        public void SetWave(WaveData wave, EnemyModifiers modifiers)
+        {
+            _wave = wave;
+            _waveModifiers = modifiers;
+            _spawnTimer = 0f;
+        }
+
+        /// <summary>Ngừng sinh theo nhịp (đợt cuối). Quái đang sống vẫn còn trên sân.</summary>
+        public void StopSpawning() => _wave = null;
+
+        /// <summary>Sinh ngay 1 con cụ thể, ví dụ quái tinh anh của đợt cuối.</summary>
+        public Enemy Spawn(EnemyData data, EnemyModifiers modifiers)
+        {
+            Enemy enemy = _enemyPool.Get(GetSpawnPosition(), Quaternion.identity);
+            enemy.Initialize(data, modifiers);
+            enemy.OnReturnToPool = _releaseEnemy;
+            ActiveCount++;
+            return enemy;
+        }
+
+        /// <summary>
+        /// Sinh ngay thêm quái (loại của đợt hiện tại), không theo nhịp. Dùng cho StressTest;
+        /// vẫn đi qua pool như quái thường nên đo được đúng chi phí của game thật.
+        /// </summary>
+        public void SpawnImmediately(int count)
+        {
+            for (int i = 0; i < count; i++) SpawnFromWave();
+        }
+
+        private void Update()
+        {
+            if (_wave == null) return;
+
+            _spawnTimer += Time.deltaTime;
+            if (_spawnTimer >= _wave.spawnInterval)
+            {
+                _spawnTimer = 0f;
+                SpawnFromWave();
+            }
+        }
+
+        private void SpawnFromWave()
+        {
+            if (_wave == null) return;
+
+            EnemyData[] enemyTypes = _wave.enemyTypes;
+            if (enemyTypes == null || enemyTypes.Length == 0) return;
+
+            Spawn(enemyTypes[Random.Range(0, enemyTypes.Length)], _waveModifiers);
+        }
+
+        private void ReturnEnemyToPool(Enemy enemy)
+        {
+            // Release bỏ qua object đã tắt (trả 2 lần); chỉ trừ khi lần trả này thật sự có hiệu lực.
+            if (enemy.gameObject.activeSelf) ActiveCount--;
+            _enemyPool.Release(enemy);
+        }
+
+        /// <summary>
+        /// 1 điểm trong sân nhưng ngoài tầm nhìn camera. Sân (19.2 đơn vị) rộng hơn màn hình theo chiều dọc
+        /// (10 đơn vị) nên luôn còn khoảng trống phía trên hoặc dưới; bốc ngẫu nhiên vài lần là gần như chắc chắn trúng.
+        /// </summary>
+        private Vector2 GetSpawnPosition()
+        {
+            Rect view = GetCameraView(_offscreenMargin);
+
+            for (int i = 0; i < MaxSpawnAttempts; i++)
+            {
+                var candidate = new Vector2(
+                    Random.Range(_arenaArea.xMin, _arenaArea.xMax),
+                    Random.Range(_arenaArea.yMin, _arenaArea.yMax));
+
+                if (!view.Contains(candidate)) return candidate;
+            }
+
+            // Dự phòng (rất hiếm): góc sân xa camera nhất, chấp nhận có thể lọt vào mép màn hình.
+            return GetFarthestCorner(view.center);
+        }
+
+        private Rect GetCameraView(float margin)
+        {
+            float halfHeight = _targetCamera.orthographicSize + margin;
+            float halfWidth = _targetCamera.orthographicSize * _targetCamera.aspect + margin;
+            Vector2 center = _targetCamera.transform.position;
+            return new Rect(center.x - halfWidth, center.y - halfHeight, halfWidth * 2f, halfHeight * 2f);
+        }
+
+        private Vector2 GetFarthestCorner(Vector2 from)
+        {
+            // Mảng tạo sẵn: đợt cuối có thể rơi vào nhánh này nhiều lần liên tiếp, không cấp phát mỗi lần.
+            _corners[0] = new Vector2(_arenaArea.xMin, _arenaArea.yMin);
+            _corners[1] = new Vector2(_arenaArea.xMax, _arenaArea.yMin);
+            _corners[2] = new Vector2(_arenaArea.xMin, _arenaArea.yMax);
+            _corners[3] = new Vector2(_arenaArea.xMax, _arenaArea.yMax);
+
+            Vector2 best = _corners[0];
+            foreach (Vector2 corner in _corners)
+            {
+                if ((corner - from).sqrMagnitude > (best - from).sqrMagnitude) best = corner;
+            }
+
+            return best;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            // Vẽ vùng sinh quái trong Scene view để chỉnh cho khớp với sân.
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(_arenaArea.center, _arenaArea.size);
+        }
+    }
+}

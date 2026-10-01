@@ -2,6 +2,7 @@ using ArenaSurvival.Combat;
 using ArenaSurvival.Core;
 using TMPro;
 using UnityEngine;
+using ArenaSurvival.Stages;
 
 namespace ArenaSurvival.UI
 {
@@ -15,6 +16,7 @@ namespace ArenaSurvival.UI
         [Header("Sources")]
         [SerializeField] private Health _playerHealth;
         [SerializeField] private RunStats _runStats;
+        [SerializeField] private StageSession _session;
 
         [Header("Health")]
         [SerializeField] private RectTransform _healthFill;
@@ -29,7 +31,16 @@ namespace ArenaSurvival.UI
         [SerializeField] private TMP_Text _waveText;
         [SerializeField] private TMP_Text _killText;
 
+        [Header("Stage")]
+        [Tooltip("Phần fill của thanh tiến độ màn (kéo neo phải giống thanh máu).")]
+        [SerializeField] private RectTransform _stageProgressFill;
+        [Tooltip("Banner \"ĐỢT TINH ANH!\" giữa màn hình, tắt sẵn.")]
+        [SerializeField] private RectTransform _finalWaveBanner;
+        [SerializeField] private float _bannerDuration = 2f;
+
         private int _shownSeconds = -1;
+        private CanvasGroup _bannerGroup;
+        private float _bannerTimer = -1f;
 
         private void OnEnable()
         {
@@ -37,7 +48,8 @@ namespace ArenaSurvival.UI
             _runStats.OnKillCountChanged += HandleKillCountChanged;
             GameEvents.OnXpChanged += HandleXpChanged;
             GameEvents.OnLevelUp += HandleLevelUp;
-            GameEvents.OnWaveStarted += HandleWaveStarted;
+            _session.OnWaveStarted += HandleWaveStarted;
+            _session.OnFinalWaveStarted += HandleFinalWaveStarted;
         }
 
         private void OnDisable()
@@ -46,7 +58,17 @@ namespace ArenaSurvival.UI
             _runStats.OnKillCountChanged -= HandleKillCountChanged;
             GameEvents.OnXpChanged -= HandleXpChanged;
             GameEvents.OnLevelUp -= HandleLevelUp;
-            GameEvents.OnWaveStarted -= HandleWaveStarted;
+            _session.OnWaveStarted -= HandleWaveStarted;
+            _session.OnFinalWaveStarted -= HandleFinalWaveStarted;
+        }
+
+        private void Awake()
+        {
+            if (_finalWaveBanner != null)
+            {
+                _bannerGroup = _finalWaveBanner.GetComponent<CanvasGroup>();
+                _finalWaveBanner.gameObject.SetActive(false);
+            }
         }
 
         private void Start()
@@ -59,6 +81,9 @@ namespace ArenaSurvival.UI
 
         private void Update()
         {
+            if (_stageProgressFill != null) SetFill(_stageProgressFill, _session.Progress);
+            UpdateBanner();
+
             // Đồng hồ đổi mỗi frame nhưng chữ chỉ cần đổi mỗi giây.
             int seconds = (int)_runStats.SurvivalTime;
             if (seconds == _shownSeconds) return;
@@ -85,9 +110,37 @@ namespace ArenaSurvival.UI
             _levelText.text = newLevel.ToString();
         }
 
-        private void HandleWaveStarted(int waveNumber)
+        private void HandleWaveStarted(int wave, int total)
         {
-            _waveText.text = $"Wave {waveNumber}";
+            // Đợt cuối không ghi số: "ĐỢT CUỐI" báo rõ hơn là phải dọn sạch sân.
+            string name = _session.Stage != null ? _session.Stage.displayName : "";
+            _waveText.text = _session.IsFinalWave ? $"{name} · ĐỢT CUỐI" : $"{name} · Đợt {wave}/{total}";
+        }
+
+        private void HandleFinalWaveStarted()
+        {
+            if (_finalWaveBanner == null) return;
+            _bannerTimer = 0f;
+            _finalWaveBanner.gameObject.SetActive(true);
+        }
+
+        private void UpdateBanner()
+        {
+            if (_bannerTimer < 0f) return;
+
+            _bannerTimer += Time.deltaTime;
+            float t = _bannerTimer / _bannerDuration;
+            if (t >= 1f)
+            {
+                _bannerTimer = -1f;
+                _finalWaveBanner.gameObject.SetActive(false);
+                return;
+            }
+
+            // Phóng nhanh từ to về cỡ thật trong 15% đầu, giữ, rồi mờ dần ở 25% cuối.
+            float scale = t < 0.15f ? Mathf.Lerp(1.6f, 1f, t / 0.15f) : 1f;
+            _finalWaveBanner.localScale = Vector3.one * scale;
+            if (_bannerGroup != null) _bannerGroup.alpha = t < 0.75f ? 1f : 1f - (t - 0.75f) / 0.25f;
         }
 
         private void HandleKillCountChanged(int killCount)

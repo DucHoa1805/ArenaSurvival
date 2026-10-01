@@ -41,16 +41,6 @@ namespace ArenaSurvival.Core
             StartGame();
         }
 
-        private void OnEnable()
-        {
-            GameEvents.OnPlayerDied += HandlePlayerDied;
-        }
-
-        private void OnDisable()
-        {
-            GameEvents.OnPlayerDied -= HandlePlayerDied;
-        }
-
         public void StartGame()
         {
             SetState(GameState.Playing);
@@ -102,9 +92,31 @@ namespace ArenaSurvival.Core
             Time.timeScale = 1f;
         }
 
-        private void HandlePlayerDied()
+        // Không tự vào GameOver khi Player chết nữa: GameManager không biết còn lượt hồi sinh hay không.
+        // StageSession quyết định rồi gọi một trong các hàm dưới.
+
+        public void BeginRevivePrompt()
         {
-            SetState(GameState.GameOver);
+            if (CurrentState != GameState.Playing) return;
+
+            SetState(GameState.RevivePrompt);
+            Time.timeScale = 0f;
+        }
+
+        public void Revive()
+        {
+            if (CurrentState != GameState.RevivePrompt) return;
+
+            SetState(GameState.Playing);
+            Time.timeScale = 1f;
+        }
+
+        /// <summary>Kết thúc màn: thắng → Victory, thua → GameOver. Gọi được từ Playing, LevelUp hoặc RevivePrompt.</summary>
+        public void EndStage(bool victory)
+        {
+            if (CurrentState == GameState.Victory || CurrentState == GameState.GameOver) return;
+
+            SetState(victory ? GameState.Victory : GameState.GameOver);
             Time.timeScale = 0f;
         }
 

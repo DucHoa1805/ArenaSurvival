@@ -21,7 +21,7 @@ namespace ArenaSurvival.DevTools
         [Tooltip("Bỏ qua bấy nhiêu frame đầu: lúc vừa bù quân số, pool còn đang tạo object mới.")]
         [SerializeField] private int _warmupFrames = 60;
         [Tooltip("Để đếm số quái trung bình trong lúc đo.")]
-        [SerializeField] private Enemies.EnemySpawner _spawner;
+        [SerializeField] private Stages.WaveSpawner _spawner;
 
         private struct Metric
         {

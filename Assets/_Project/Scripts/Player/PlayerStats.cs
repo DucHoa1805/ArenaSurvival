@@ -1,4 +1,5 @@
 using UnityEngine;
+using ArenaSurvival.Weapons;
 
 namespace ArenaSurvival.Player
 {

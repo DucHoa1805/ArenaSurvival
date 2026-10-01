@@ -1,8 +1,10 @@
 using ArenaSurvival.Combat;
 using ArenaSurvival.Enemies;
-using ArenaSurvival.Progression;
+using ArenaSurvival.RunUpgrades;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ArenaSurvival.Weapons;
+using ArenaSurvival.Stages;
 
 namespace ArenaSurvival.DevTools
 {
@@ -15,7 +17,8 @@ namespace ArenaSurvival.DevTools
     /// </summary>
     public class StressTest : MonoBehaviour
     {
-        [SerializeField] private EnemySpawner _spawner;
+        [SerializeField] private WaveSpawner _spawner;
+        [SerializeField] private StageSession _session;
         [SerializeField] private Health _playerHealth;
         [SerializeField] private ExperienceSystem _experience;
 
@@ -67,8 +70,10 @@ namespace ArenaSurvival.DevTools
             // Tắt hệ XP chứ không tự chọn nâng cấp: tự chọn thì vũ khí/chỉ số đổi dần theo thời gian,
             // và lần đo sau không còn cùng điều kiện với lần đo trước.
             _experience.enabled = false;
-            // Spawner tắt Update = ngừng sinh theo wave; quân số do StressTest giữ cố định.
+            // Spawner tắt Update = ngừng sinh theo nhịp đợt; quân số do StressTest giữ cố định.
             _spawner.enabled = false;
+            // Màn không được tự sang đợt cuối hay kết thúc giữa lúc đang đo.
+            _session.PauseProgression(true);
 
             if (_unlockAllWeapons)
             {
@@ -96,6 +101,7 @@ namespace ArenaSurvival.DevTools
             _playerHealth.Invulnerable = false;
             _experience.enabled = true;
             _spawner.enabled = true;
+            _session.PauseProgression(false);
             QualitySettings.vSyncCount = _previousVSync;
             Application.targetFrameRate = _previousFrameRate;
 

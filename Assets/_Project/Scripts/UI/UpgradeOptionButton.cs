@@ -1,5 +1,5 @@
 using System;
-using ArenaSurvival.Progression;
+using ArenaSurvival.RunUpgrades;
 using TMPro;
 using UnityEngine;
 

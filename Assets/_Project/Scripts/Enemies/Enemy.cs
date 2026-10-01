@@ -20,6 +20,7 @@ namespace ArenaSurvival.Enemies
         private SpriteRenderer _spriteRenderer;
         private Transform _playerTransform;
         private float _lastDamageTime = -999f;
+        private float _contactDamage;
 
         private EnemyData _data;
         public EnemyData Data => _data;
@@ -49,17 +50,20 @@ namespace ArenaSurvival.Enemies
         /// <summary>
         /// Gọi ngay sau khi lấy Enemy ra khỏi pool (lúc này object đã active và OnEnable đã chạy),
         /// để cấu hình đúng loại quái (máu, tốc độ, sprite...) theo EnemyData được truyền vào.
-        /// healthMultiplier cho phép spawner làm quái trâu hơn ở các wave sau mà không sửa asset gốc.
+        /// modifiers làm quái trâu hơn theo màn hoặc thành quái tinh anh mà không sửa asset gốc.
         /// </summary>
-        public void Initialize(EnemyData data, float healthMultiplier = 1f)
+        public void Initialize(EnemyData data, EnemyModifiers modifiers)
         {
             _data = data;
-            _health.SetMaxHealth(data.maxHealth * healthMultiplier, healToFull: true);
+            _health.SetMaxHealth(data.maxHealth * modifiers.health, healToFull: true);
+            _contactDamage = data.contactDamage * modifiers.damage;
             _spriteRenderer.sprite = data.sprite;
+            // Đặt lại màu mỗi lần lấy từ pool: con trước có thể là quái tinh anh có màu riêng.
+            _spriteRenderer.color = modifiers.tint;
 
             // Gán lại mỗi lần lấy ra từ pool: object này lần trước có thể là 1 loại quái khác kích thước.
             // Scale transform thì collider cũng to theo, không cần chỉnh riêng.
-            transform.localScale = Vector3.one * data.scale;
+            transform.localScale = Vector3.one * (data.scale * modifiers.scale);
 
             // Quay mặt về phía Player ngay lúc xuất hiện, thay vì giữ hướng của lần dùng trước rồi mới xoay dần.
             if (_playerTransform != null)
@@ -129,7 +133,7 @@ namespace ArenaSurvival.Enemies
 
             if (other.TryGetComponent(out ArenaSurvival.Combat.Health playerHealth))
             {
-                playerHealth.TakeDamage(_data.contactDamage);
+                playerHealth.TakeDamage(_contactDamage);
                 _lastDamageTime = Time.time;
             }
         }

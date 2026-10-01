@@ -1,6 +1,5 @@
 using ArenaSurvival.Core;
-using ArenaSurvival.Save;
-using TMPro;
+using ArenaSurvival.Stages;
 using UnityEngine;
 
 namespace ArenaSurvival.UI
@@ -9,7 +8,8 @@ namespace ArenaSurvival.UI
     {
         [SerializeField] private UnityEngine.UI.Button _playButton;
         [SerializeField] private UnityEngine.UI.Button _quitButton;
-        [SerializeField] private TMP_Text _bestText;
+        [Tooltip("Nút \"Chơi\" vào màn đầu tiên của danh sách này (tạm thời, tới khi có màn chọn màn ở Hub - Phase 9).")]
+        [SerializeField] private StageCatalog _catalog;
 
         [Header("Cài đặt")]
         [SerializeField] private UnityEngine.UI.Button _settingsButton;
@@ -23,14 +23,6 @@ namespace ArenaSurvival.UI
             _settingsButton.onClick.AddListener(OpenSettings);
             _closeSettingsButton.onClick.AddListener(CloseSettings);
             _settingsPanel.SetActive(false);
-        }
-
-        private void Start()
-        {
-            SaveData best = SaveSystem.Load();
-            _bestText.text = best.bestSurvivalTime > 0f
-                ? $"Kỷ lục: {TimeFormatter.ToClock(best.bestSurvivalTime)}  ·  {best.bestKillCount} quái"
-                : "Chưa có kỷ lục";
         }
 
         private void OnDestroy()
@@ -49,6 +41,7 @@ namespace ArenaSurvival.UI
         {
             // Nạp scene là bất đồng bộ: khóa nút để bấm 2 lần không nạp scene Game 2 lần.
             _playButton.interactable = false;
+            StageSelection.Select(_catalog.First);
             SceneLoader.LoadGame();
         }
 

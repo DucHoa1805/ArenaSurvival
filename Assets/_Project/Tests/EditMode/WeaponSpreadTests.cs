@@ -1,5 +1,6 @@
 using ArenaSurvival.Combat;
 using NUnit.Framework;
+using ArenaSurvival.Weapons;
 
 namespace ArenaSurvival.Tests
 {

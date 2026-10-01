@@ -8,7 +8,7 @@ namespace ArenaSurvival.DevTools
 {
     /// <summary>
     /// Chế độ benchmark tự động cho Development build, chạy bằng tham số dòng lệnh:
-    ///   ArenaSurvival.exe -benchmark -enemies 150 -weapons 1 -label baseline -settle 12 -frames 3000
+    ///   ArenaSurvival.exe -benchmark -enemies 150 -weapons 1 -label baseline -settle 12 -frames 3000 [-stage 2]
     /// Tự vào scene Game, bật StressTest, đo bằng PerfRecorder, ghi perf-log.txt rồi thoát.
     ///
     /// Vì sao cần: trong Editor, chính Editor tạo ~200 KB rác mỗi frame (đo cảnh 0 quái vẫn ra như vậy),
@@ -18,6 +18,7 @@ namespace ArenaSurvival.DevTools
     {
         [SerializeField] private StressTest _stressTest;
         [SerializeField] private PerfRecorder _recorder;
+        [SerializeField] private Stages.StageSession _session;
         [Tooltip("Chờ bấy nhiêu giây (thời gian thực) sau khi bật StressTest rồi mới đo, cho quân số và pool ổn định.")]
         [SerializeField] private float _settleSeconds = 3f;
 
@@ -31,6 +32,15 @@ namespace ArenaSurvival.DevTools
             {
                 SceneLoader.LoadGame();
             }
+        }
+
+        private void Awake()
+        {
+            // Chọn màn ở Awake: StageSession đọc StageSelection trong Start, mà mọi Awake chạy trước mọi Start.
+            if (!IsBenchmark) return;
+            int stage = GetIntArg("-stage", 0);
+            Stages.StageData[] stages = _session.Catalog.stages;
+            if (stage >= 1 && stage <= stages.Length) Stages.StageSelection.Select(stages[stage - 1]);
         }
 
         private void Start()

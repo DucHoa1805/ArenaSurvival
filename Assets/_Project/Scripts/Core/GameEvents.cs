@@ -25,7 +25,6 @@ namespace ArenaSurvival.Core
         public static event Action OnUpgradeChosen;             // người chơi vừa chọn xong 1 nâng cấp
         public static event Action OnPlayerDied;
         public static event Action<GameState> OnGameStateChanged;
-        public static event Action<int> OnWaveStarted; // (số thứ tự wave, bắt đầu từ 1)
 
         public static void EnemyKilled(int xpReward, Vector3 position) => OnEnemyKilled?.Invoke(xpReward, position);
         public static void ProjectileHit(Vector3 position) => OnProjectileHit?.Invoke(position);
@@ -38,6 +37,5 @@ namespace ArenaSurvival.Core
         public static void UpgradeChosen() => OnUpgradeChosen?.Invoke();
         public static void PlayerDied() => OnPlayerDied?.Invoke();
         public static void GameStateChanged(GameState newState) => OnGameStateChanged?.Invoke(newState);
-        public static void WaveStarted(int waveNumber) => OnWaveStarted?.Invoke(waveNumber);
     }
 }

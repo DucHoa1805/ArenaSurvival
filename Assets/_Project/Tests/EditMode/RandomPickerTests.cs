@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using ArenaSurvival.Progression;
+using ArenaSurvival.RunUpgrades;
 using NUnit.Framework;
 
 namespace ArenaSurvival.Tests

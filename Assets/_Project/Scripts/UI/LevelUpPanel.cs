@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ArenaSurvival.Progression;
+using ArenaSurvival.RunUpgrades;
 using UnityEngine;
 
 namespace ArenaSurvival.UI

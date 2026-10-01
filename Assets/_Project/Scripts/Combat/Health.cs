@@ -56,6 +56,17 @@ namespace ArenaSurvival.Combat
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
+        /// <summary>
+        /// Hồi sinh sau khi chết (Heal không dùng được vì nó từ chối khi IsDead). fraction là phần máu tối đa
+        /// được hồi lại; luôn còn ít nhất 1 máu để không "hồi sinh" mà vẫn chết.
+        /// </summary>
+        public void Revive(float fraction)
+        {
+            if (!IsDead) return;
+            CurrentHealth = Mathf.Max(1f, _maxHealth * Mathf.Clamp01(fraction));
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
+        }
+
         /// <summary>Dùng khi nâng cấp tăng máu tối đa (Phase 4).</summary>
         public void SetMaxHealth(float newMax, bool healToFull = false)
         {

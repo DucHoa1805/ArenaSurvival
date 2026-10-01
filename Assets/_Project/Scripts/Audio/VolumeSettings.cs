@@ -12,8 +12,8 @@ namespace ArenaSurvival.Audio
     /// <summary>
     /// Đọc/ghi âm lượng người chơi chọn và đổi sang dB cho AudioMixer.
     ///
-    /// Lưu bằng PlayerPrefs chứ không vào save.json: HighScoreTracker đọc save.json một lần lúc vào scene
-    /// rồi ghi đè cả file khi phá kỷ lục, nên âm lượng vừa chỉnh giữa ván sẽ bị bản cũ đè mất.
+    /// Lưu bằng PlayerPrefs chứ không vào file save tiến độ: cài đặt thuộc về thiết bị, không thuộc hồ sơ người chơi
+    /// (cloud save ở Phase 12 không nên kéo âm lượng từ máy khác về), và file save tiến độ có vòng đời ghi riêng.
     /// Vài số lẻ kiểu cài đặt cũng đúng là việc PlayerPrefs sinh ra để làm.
     /// </summary>
     public static class VolumeSettings

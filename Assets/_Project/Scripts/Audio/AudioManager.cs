@@ -31,6 +31,7 @@ namespace ArenaSurvival.Audio
         private readonly Dictionary<SoundEffect, float> _lastPlayTime = new Dictionary<SoundEffect, float>();
         private AudioSource[] _voices;
         private int _nextVoice;
+        private GameState _previousState;
         private float _lastVolumePreviewTime = -1f;
 
         // Kéo slider bắn onValueChanged mỗi frame; giới hạn riêng của uiHover (0.04s) vẫn quá dày cho việc này.
@@ -177,10 +178,12 @@ namespace ArenaSurvival.Audio
 
         private void HandleGameStateChanged(GameState newState)
         {
-            if (newState == GameState.GameOver)
-            {
-                Play(_bank.gameOver);
-            }
+            if (newState == GameState.GameOver) Play(_bank.gameOver);
+            else if (newState == GameState.Victory) Play(_bank.stageVictory);
+            // Từ bảng hồi sinh quay lại chơi = vừa hồi sinh (bỏ cuộc thì đi thẳng sang GameOver).
+            else if (newState == GameState.Playing && _previousState == GameState.RevivePrompt) Play(_bank.revive);
+
+            _previousState = newState;
         }
     }
 }
