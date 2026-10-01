@@ -1,4 +1,5 @@
 using ArenaSurvival.Economy;
+using ArenaSurvival.Items;
 using ArenaSurvival.Save;
 using ArenaSurvival.Stages;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace ArenaSurvival.Meta
         public static EconomyService Economy { get; private set; }
         public static StageProgressService StageProgress { get; private set; }
         public static TalentService Talents { get; private set; }
+        public static InventoryService Inventory { get; private set; }
         public static bool IsInitialized => Profile != null;
 
         // Gán sẵn 1 lần để gỡ được đúng delegate khi khởi tạo lại.
@@ -31,6 +33,7 @@ namespace ArenaSurvival.Meta
             Economy = null;
             StageProgress = null;
             Talents = null;
+            Inventory = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -44,14 +47,25 @@ namespace ArenaSurvival.Meta
             Profile = new ProfileService(new SaveService(savePath ?? SaveService.DefaultPath));
             Profile.Load();
             Economy = new EconomyService(Profile.Profile, Profile.MarkDirty);
-            StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save());
             Talents = new TalentService(Profile.Profile, Economy, () => Profile.Save());
+            Inventory = new InventoryService(Profile.Profile, Economy, LoadItemDatabase(), () => Profile.Save());
+            StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save(), Inventory);
 
             if (_onStageCompleted == null) _onStageCompleted = result => StageProgress.Apply(result);
             StageEvents.OnStageCompleted -= _onStageCompleted;
             StageEvents.OnStageCompleted += _onStageCompleted;
 
             ServicesHost.Create();
+        }
+
+        private static ItemDatabase LoadItemDatabase()
+        {
+            var database = Resources.Load<ItemDatabase>(ItemDatabase.ResourcePath);
+            if (database != null) return database;
+
+            // Thiếu asset thì vẫn chạy được (kho rỗng, mọi món trong save được giữ nguyên nhưng không tính chỉ số).
+            Debug.LogWarning($"GameServices: không tìm thấy Resources/{ItemDatabase.ResourcePath}; kho trang bị tạm thời trống.");
+            return ScriptableObject.CreateInstance<ItemDatabase>();
         }
     }
 }

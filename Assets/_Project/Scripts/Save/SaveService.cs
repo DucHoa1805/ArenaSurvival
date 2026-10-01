@@ -200,6 +200,11 @@ namespace ArenaSurvival.Save
             if (profile.currencies == null) profile.currencies = new System.Collections.Generic.Dictionary<string, long>();
             if (profile.stageStars == null) profile.stageStars = new System.Collections.Generic.Dictionary<string, int>();
             if (profile.talents == null) profile.talents = new System.Collections.Generic.Dictionary<string, int>();
+            if (profile.items == null) profile.items = new System.Collections.Generic.List<OwnedItem>();
+            // Phần tử null trong danh sách (sửa tay hỏng) làm mọi chỗ duyệt kho phải kiểm tra null: bỏ luôn ở đây.
+            profile.items.RemoveAll(item => item == null || string.IsNullOrEmpty(item.uid));
+            if (profile.equipped == null) profile.equipped = new System.Collections.Generic.Dictionary<string, string>();
+            if (profile.nextItemUid < 1) profile.nextItemUid = 1;
             return profile;
         }
     }

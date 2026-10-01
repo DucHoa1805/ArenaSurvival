@@ -108,5 +108,49 @@ namespace ArenaSurvival.Tests
             _economy.Add(CurrencyIds.Gold, 100);
             Assert.AreEqual(long.MaxValue, _economy.GetBalance(CurrencyIds.Gold));
         }
+
+        [Test]
+        public void TrySpendMany_EnoughOfEverything_SpendsAll()
+        {
+            _economy.Add(CurrencyIds.Gold, 100);
+            _economy.Add(CurrencyIds.Leather, 5);
+            var cost = new[] { new CurrencyCost(CurrencyIds.Gold, 60), new CurrencyCost(CurrencyIds.Leather, 5) };
+
+            Assert.IsTrue(_economy.TrySpendMany(cost));
+            Assert.AreEqual(40, _economy.GetBalance(CurrencyIds.Gold));
+            Assert.AreEqual(0, _economy.GetBalance(CurrencyIds.Leather));
+        }
+
+        [Test]
+        public void TrySpendMany_MissingOne_SpendsNothing()
+        {
+            _economy.Add(CurrencyIds.Gold, 100);
+            _economy.Add(CurrencyIds.Leather, 4);
+            int events = 0;
+            _economy.OnCurrencyChanged += (_, __) => events++;
+            var cost = new[] { new CurrencyCost(CurrencyIds.Gold, 60), new CurrencyCost(CurrencyIds.Leather, 5) };
+
+            Assert.IsFalse(_economy.TrySpendMany(cost));
+            Assert.AreEqual(100, _economy.GetBalance(CurrencyIds.Gold), "thiếu da thì vàng cũng không bị trừ");
+            Assert.AreEqual(4, _economy.GetBalance(CurrencyIds.Leather));
+            Assert.AreEqual(0, events);
+        }
+
+        [Test]
+        public void TrySpendMany_SameIdTwice_ChecksTheSum()
+        {
+            _economy.Add(CurrencyIds.Gold, 100);
+            var cost = new[] { new CurrencyCost(CurrencyIds.Gold, 60), new CurrencyCost(CurrencyIds.Gold, 60) };
+            Assert.IsFalse(_economy.TrySpendMany(cost));
+            Assert.AreEqual(100, _economy.GetBalance(CurrencyIds.Gold));
+        }
+
+        [Test]
+        public void TrySpendMany_NegativeAmount_Rejected()
+        {
+            _economy.Add(CurrencyIds.Gold, 100);
+            Assert.IsFalse(_economy.TrySpendMany(new[] { new CurrencyCost(CurrencyIds.Gold, -10) }));
+            Assert.AreEqual(100, _economy.GetBalance(CurrencyIds.Gold));
+        }
     }
 }

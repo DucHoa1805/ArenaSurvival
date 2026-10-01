@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84db8f96206bae84392c681f6fa29c74, type: 3}
+  m_Name: ItemDatabase
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Items.ItemDatabase
+  items:
+  - {fileID: 11400000, guid: b2fb201e7148745408a7c12f437e01a1, type: 2}
+  - {fileID: 11400000, guid: 89101ca4ca4845745bc791bc2da3661d, type: 2}
+  - {fileID: 11400000, guid: 59f3750e734bf16408e4034b4afac6a1, type: 2}
+  - {fileID: 11400000, guid: 058013227ec789a43819eede6036f98a, type: 2}
+  materials:
+  - {fileID: 11400000, guid: 60ec63efb3343f74a95dd98099fd65e9, type: 2}
+  - {fileID: 11400000, guid: 1eaaf5cd021b5794ebc74a89166c60bd, type: 2}
+  - {fileID: 11400000, guid: feb5fd2de384a0e48a5a25273cfd28de, type: 2}

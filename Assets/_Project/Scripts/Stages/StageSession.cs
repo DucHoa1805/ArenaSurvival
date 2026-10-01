@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using ArenaSurvival.Combat;
 using ArenaSurvival.Core;
 using ArenaSurvival.Enemies;
+using ArenaSurvival.Loot;
+using ArenaSurvival.Meta;
 using UnityEngine;
 
 namespace ArenaSurvival.Stages
@@ -22,6 +24,8 @@ namespace ArenaSurvival.Stages
         [SerializeField] private WaveSpawner _spawner;
         [SerializeField] private RunStats _runStats;
         [SerializeField] private Health _playerHealth;
+        [Tooltip("Không bắt buộc: không có thì màn không rơi đồ (scene test cũ vẫn chạy).")]
+        [SerializeField] private LootDropper _lootDropper;
 
         [Header("Hồi sinh")]
         [SerializeField, Range(0.1f, 1f)] private float _reviveHealthFraction = 0.5f;
@@ -151,6 +155,8 @@ namespace ArenaSurvival.Stages
                         damage = _difficulty,
                         scale = group.scaleMultiplier,
                         tint = group.tint,
+                        loot = group.loot,
+                        lootChance = 1f,
                     };
                     for (int i = 0; i < group.count; i++) _eliteQueue.Add((group.enemy, mods));
                 }
@@ -205,7 +211,10 @@ namespace ArenaSurvival.Stages
         {
             _bossSpawned = true;
             // Boss mạnh theo độ khó của màn như mọi quái, giữ màu và kích thước gốc của nó.
-            _boss = _spawner.Spawn(Stage.boss, EnemyModifiers.ForDifficulty(_difficulty));
+            EnemyModifiers bossMods = EnemyModifiers.ForDifficulty(_difficulty);
+            bossMods.loot = Stage.bossLoot;
+            bossMods.lootChance = 1f;
+            _boss = _spawner.Spawn(Stage.boss, bossMods);
             if (_onBossDied == null) _onBossDied = HandleBossDied;
             _boss.Health.OnDied += _onBossDied;
             OnBossSpawned?.Invoke(_boss);
@@ -300,12 +309,30 @@ namespace ArenaSurvival.Stages
                 gold = gold,
                 accountXp = xp,
             };
+            FillLoot(Result, victory);
 
             // Phát kết quả ra ngoài TRƯỚC khi đổi trạng thái: tầng meta áp thưởng + lưu ngay, nên màn kết quả
             // (hiện khi trạng thái đổi) đã đọc được số thực nhận, và tắt app lúc này cũng không mất thưởng.
             StageEvents.RaiseStageCompleted(Result);
             GameManager.Instance.EndStage(victory);
             OnStageEnded?.Invoke(Result);
+        }
+
+        /// <summary>
+        /// Đồ đã nhặt + thưởng thắng màn. Chỉ GHI vào StageResult; giữ gì, mất gì là việc của tầng meta (StageProgressService).
+        /// </summary>
+        private void FillLoot(StageResult result, bool victory)
+        {
+            if (_lootDropper == null) return;
+
+            // Thắng: đồ còn nằm trên sân coi như nhặt hết. Thua: bỏ lại.
+            if (victory) _lootDropper.CollectAll();
+            result.collected.AddRange(_lootDropper.Collected);
+
+            if (!victory || Stage.victoryLoot == null) return;
+            bool firstClear = GameServices.StageProgress == null || !GameServices.StageProgress.IsCleared(Stage.id);
+            int rolls = firstClear ? 2 : 1;
+            for (int i = 0; i < rolls; i++) LootRules.Roll(Stage.victoryLoot, LootDropper.UnityRandom, result.bonusLoot);
         }
 
         /// <summary>StressTest dùng để màn không tự chuyển đợt hay kết thúc trong lúc đo.</summary>

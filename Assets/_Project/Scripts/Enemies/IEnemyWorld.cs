@@ -11,5 +11,7 @@ namespace ArenaSurvival.Enemies
         Enemy Summon(EnemyData data, EnemyModifiers modifiers, Vector2 position);
         int CountAlive(EnemyData data);
         Vector2 ClampToArena(Vector2 position);
+        /// <summary>Quái chết vì trúng đòn (không gọi khi nổ theo boss) — để rơi đồ theo bảng của chính con đó.</summary>
+        void NotifyKilled(Enemy enemy);
     }
 }

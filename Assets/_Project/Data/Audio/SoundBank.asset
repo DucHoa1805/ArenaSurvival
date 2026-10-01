@@ -64,6 +64,19 @@ MonoBehaviour:
     volume: 0.75
     minInterval: 0.1
     pitchVariation: 0
+  materialPickup:
+    clips:
+    - {fileID: 8300000, guid: 9aa1016157960f041aeb3f4a2d2499b5, type: 3}
+    - {fileID: 8300000, guid: b0109dc8159d1084b8f6277fa21344db, type: 3}
+    volume: 0.5
+    minInterval: 0.05
+    pitchVariation: 0.08
+  itemPickup:
+    clips:
+    - {fileID: 8300000, guid: a8322d56ba60cba409e60d1fe9b2f198, type: 3}
+    volume: 0.6
+    minInterval: 0.1
+    pitchVariation: 0
   gameOver:
     clips:
     - {fileID: 8300000, guid: 5c19e1c333416c54aa6745c5f502bbd0, type: 3}

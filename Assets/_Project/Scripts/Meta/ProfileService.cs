@@ -42,6 +42,9 @@ namespace ArenaSurvival.Meta
             Profile.currencies.Clear();
             Profile.stageStars.Clear();
             Profile.talents.Clear();
+            Profile.items.Clear();
+            Profile.equipped.Clear();
+            Profile.nextItemUid = 1;
             Profile.tampered = false;
             Save();
         }

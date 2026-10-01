@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using ArenaSurvival.Economy;
+using ArenaSurvival.Loot;
 using ArenaSurvival.Stages;
 using UnityEngine;
 
@@ -14,15 +16,18 @@ namespace ArenaSurvival.Meta
         private readonly PlayerProfile _profile;
         private readonly EconomyService _economy;
         private readonly Action _save;
+        private readonly InventoryService _inventory;
 
         /// <summary>Lần áp gần nhất — màn kết quả đọc để hiện số thực nhận.</summary>
         public StageGrant LastGrant { get; private set; }
 
-        public StageProgressService(PlayerProfile profile, EconomyService economy, Action save)
+        /// <param name="inventory">Null được (test chỉ về thưởng/sao): khi đó trang bị trong kết quả bị bỏ qua.</param>
+        public StageProgressService(PlayerProfile profile, EconomyService economy, Action save, InventoryService inventory = null)
         {
             _profile = profile;
             _economy = economy;
             _save = save;
+            _inventory = inventory;
         }
 
         public StageGrant Apply(StageResult result)
@@ -50,9 +55,42 @@ namespace ArenaSurvival.Meta
             if (result.victory) _profile.stageStars[result.stageId] = Mathf.Max(starsBefore, result.starCount);
             grant.starsAfter = GetStars(result.stageId);
 
+            ApplyLoot(result.collected, result.victory, grant);
+            // bonusLoot chỉ được tạo khi thắng; vẫn kiểm tra victory để kết quả sai lệch không lọt trang bị khi thua.
+            ApplyLoot(result.bonusLoot, result.victory, grant);
+
             LastGrant = grant;
             _save?.Invoke();
             return grant;
+        }
+
+        private void ApplyLoot(List<LootDrop> drops, bool victory, StageGrant grant)
+        {
+            if (drops == null) return;
+
+            foreach (LootDrop drop in drops)
+            {
+                if (drop.kind == LootKind.Material)
+                {
+                    if (drop.amount <= 0 || string.IsNullOrEmpty(drop.id)) continue;
+                    _economy.Add(drop.id, drop.amount);
+                    grant.materials.TryGetValue(drop.id, out int sum);
+                    grant.materials[drop.id] = sum + drop.amount;
+                    continue;
+                }
+
+                // Thua mất trang bị đã nhặt (quyết định 8B): ghi lại để màn kết quả cho người chơi thấy.
+                if (!victory)
+                {
+                    grant.lostItems.Add(drop);
+                    continue;
+                }
+
+                if (_inventory == null) continue;
+                InventoryService.AddOutcome outcome = _inventory.Add(drop.id, drop.rarity, out OwnedItem item);
+                if (outcome == InventoryService.AddOutcome.Added) grant.newItemUids.Add(item.uid);
+                else if (outcome == InventoryService.AddOutcome.AutoDismantled) grant.autoDismantled++;
+            }
         }
 
         public bool IsCleared(string stageId) => _profile.stageStars.ContainsKey(stageId);

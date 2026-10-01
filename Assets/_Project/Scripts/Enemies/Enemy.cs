@@ -33,6 +33,7 @@ namespace ArenaSurvival.Enemies
 
         private EnemyData _data;
         public EnemyData Data => _data;
+        public EnemyModifiers Modifiers => _ctx.Modifiers;
         public Health Health => _health;
         public float HealthFraction => _health.MaxHealth > 0f ? _health.CurrentHealth / _health.MaxHealth : 0f;
 
@@ -190,6 +191,8 @@ namespace ArenaSurvival.Enemies
             if (_data != null)
             {
                 Core.GameEvents.EnemyKilled(_data.xpReward, transform.position);
+                // Trước khi trả về pool: lúc này vị trí, dữ liệu và hệ số của con quái vẫn còn nguyên.
+                _ctx.World?.NotifyKilled(this);
             }
 
             OnReturnToPool?.Invoke(this);

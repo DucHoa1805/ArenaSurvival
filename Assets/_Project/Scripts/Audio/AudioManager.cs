@@ -118,6 +118,7 @@ namespace ArenaSurvival.Audio
             GameEvents.OnLevelUp += HandleLevelUp;
             GameEvents.OnUpgradeChosen += HandleUpgradeChosen;
             GameEvents.OnGameStateChanged += HandleGameStateChanged;
+            GameEvents.OnLootPicked += HandleLootPicked;
         }
 
         private void OnDisable()
@@ -131,6 +132,7 @@ namespace ArenaSurvival.Audio
             GameEvents.OnLevelUp -= HandleLevelUp;
             GameEvents.OnUpgradeChosen -= HandleUpgradeChosen;
             GameEvents.OnGameStateChanged -= HandleGameStateChanged;
+            GameEvents.OnLootPicked -= HandleLootPicked;
         }
 
         /// <summary>Dùng cho âm thanh không đến từ GameEvents, ví dụ tiếng bấm nút UI.</summary>
@@ -173,6 +175,7 @@ namespace ArenaSurvival.Audio
         private void HandleEnemyKilled(int xpReward, Vector3 position) => Play(_bank.enemyDeath);
         private void HandlePlayerDamaged(float amount) => Play(_bank.playerHurt);
         private void HandleXpGained(int amount) => Play(_bank.xpPickup);
+        private void HandleLootPicked(bool isItem, Vector3 position) => Play(isItem ? _bank.itemPickup : _bank.materialPickup);
         private void HandleLevelUp(int newLevel) => Play(_bank.levelUp);
         private void HandleUpgradeChosen() => Play(_bank.upgradeSelect);
 

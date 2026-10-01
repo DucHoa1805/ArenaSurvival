@@ -36,10 +36,34 @@ namespace ArenaSurvival.Stats
             moveSpeedPercent = a.moveSpeedPercent + b.moveSpeedPercent,
             healthRegen = a.healthRegen + b.healthRegen,
         };
+
+        /// <summary>Nhân mọi trường (hệ số độ hiếm trang bị, chỉ số mỗi cấp × số cấp).</summary>
+        public static StatBlock operator *(StatBlock a, float k) => new StatBlock
+        {
+            maxHealth = a.maxHealth * k,
+            armor = a.armor * k,
+            damagePercent = a.damagePercent * k,
+            moveSpeedPercent = a.moveSpeedPercent * k,
+            healthRegen = a.healthRegen * k,
+        };
     }
 
     public static class StatRules
     {
+        /// <summary>Đọc giá trị 1 trường theo kind (UI liệt kê chỉ số của trang bị mà không viết tay từng trường).</summary>
+        public static float Get(StatBlock stats, StatKind kind)
+        {
+            switch (kind)
+            {
+                case StatKind.MaxHealth: return stats.maxHealth;
+                case StatKind.Armor: return stats.armor;
+                case StatKind.DamagePercent: return stats.damagePercent;
+                case StatKind.MoveSpeedPercent: return stats.moveSpeedPercent;
+                case StatKind.HealthRegen: return stats.healthRegen;
+                default: return 0f;
+            }
+        }
+
         /// <summary>Cộng value vào đúng trường theo kind.</summary>
         public static StatBlock Add(StatBlock stats, StatKind kind, float value)
         {

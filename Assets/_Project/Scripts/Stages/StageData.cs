@@ -29,12 +29,16 @@ namespace ArenaSurvival.Stages
         public EnemyData boss;
         [Tooltip("Boss xuất hiện sau khi rải xong quái tinh anh bấy nhiêu giây.")]
         [Min(0f)] public float bossDelay = 1.5f;
+        [Tooltip("Bảng rơi đồ của boss (luôn rơi khi boss chết).")]
+        public Loot.LootTable bossLoot;
 
         [Header("Đánh giá & phần thưởng")]
         [Tooltip("Thắng trong thời gian này (giây) thì đạt sao thứ 3.")]
         [Min(1f)] public float targetTime = 210f;
         [Min(0)] public int baseGold = 100;
         [Min(0)] public int baseAccountXp = 20;
+        [Tooltip("Quay khi thắng màn: lần thắng đầu quay 2 lần, chơi lại 1 lần.")]
+        public Loot.LootTable victoryLoot;
 
         /// <summary>Tổng thời gian các đợt thường, dùng tính tiến độ màn.</summary>
         public float PlannedDuration
@@ -62,5 +66,7 @@ namespace ArenaSurvival.Stages
         [Min(0.1f)] public float healthMultiplier = 5f;
         [Min(0.1f)] public float scaleMultiplier = 1.3f;
         public Color tint = new Color(1f, 0.75f, 0.45f, 1f);
+        [Tooltip("Bảng rơi đồ của nhóm tinh anh (mỗi con chắc chắn quay 1 lần).")]
+        public Loot.LootTable loot;
     }
 }

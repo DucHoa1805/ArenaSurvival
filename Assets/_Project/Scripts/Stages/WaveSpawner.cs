@@ -46,6 +46,9 @@ namespace ArenaSurvival.Stages
         private EnemyModifiers _waveModifiers = EnemyModifiers.Default;
         private float _spawnTimer;
 
+        /// <summary>Quái chết vì trúng đòn (LootDropper nghe để rơi đồ). Không phát khi DespawnAll.</summary>
+        public event System.Action<Enemy> OnEnemyKilled;
+
         /// <summary>Số quái đang sống trên sân.</summary>
         public int ActiveCount => _alive.Count;
 
@@ -101,6 +104,8 @@ namespace ArenaSurvival.Stages
         public Vector2 ClampToArena(Vector2 position) => new Vector2(
             Mathf.Clamp(position.x, _arenaArea.xMin, _arenaArea.xMax),
             Mathf.Clamp(position.y, _arenaArea.yMin, _arenaArea.yMax));
+
+        public void NotifyKilled(Enemy enemy) => OnEnemyKilled?.Invoke(enemy);
 
         /// <summary>Mọi quái còn sống nổ ngay, không rơi XP (khi boss chết).</summary>
         public void DespawnAll()

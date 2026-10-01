@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-01, sau Phase 8A (chỉ số nhân vật, Talent, lực chiến, giáp, hồi máu; save v3).
+Cập nhật lần cuối: 2026-10-01, sau Phase 8B (trang bị, nguyên liệu, kho đồ, nâng cấp/đột phá/phân rã, rơi đồ; save v4).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -52,7 +52,7 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 8A (chỉ số nhân vật, Tal
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 131/131 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 174/174 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -70,6 +70,9 @@ Assets/_Project/
 │   ├── Player/         PlayerController, PlayerStats, PlayerDeathHandler, PlayerLoadout (áp chỉ số meta khi vào màn), PlayerControls.inputactions
 │   ├── Combat/         Health (+giáp), HealthRegen, CombatRules (hàm thuần: công thức giáp), Projectile
 │   ├── Stats/          StatKind, StatBlock (+StatRules), HeroBaseStats (SO)
+│   ├── Items/          Rarity/EquipSlot (+EquipSlotIds), ItemData, MaterialData, ItemDatabase (Resources), EquipmentRules (hàm thuần),
+│   │                   RarityColors
+│   ├── Loot/           LootDrop, LootTable, LootRules (hàm thuần), LootDropper (rơi đồ trong màn, gom đồ đã nhặt), LootPickup
 │   ├── Weapons/        PlayerWeapon, OrbitWeapon, SawBladeRig, WeaponDefinition/IWeapon, WeaponData, OrbitWeaponData
 │   ├── Enemies/        Enemy (lõi), EnemyData, EnemyModifiers, EnemyContext (trạng thái mỗi con), IEnemyWorld, EnemyRules (hàm thuần),
 │   │                   EnemyBehaviour → ChaseBehaviour, KeepDistanceShooterBehaviour, BossBehaviour (+BossPhase);
@@ -78,26 +81,30 @@ Assets/_Project/
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData,
 │   │                   UpgradeManager, RandomPicker
-│   ├── Save/           SaveService (tmp → File.Replace + .bak, HMAC, khôi phục), SaveSecurity (HMAC-SHA256), SaveMigrations (JObject, v1→v2→v3)
+│   ├── Save/           SaveService (tmp → File.Replace + .bak, HMAC, khôi phục), SaveSecurity (HMAC-SHA256), SaveMigrations (JObject, v1→v2→v3→v4)
 │   ├── Meta/           PlayerProfile, ProfileService, StageProgressService (+Rules, StageGrant), GameServices (static), ServicesHost, BootLoader,
-│   │                   TalentData, TalentCatalog, TalentRules (giá), TalentService, StatCalculator (chỉ số cuối + lực chiến)
-│   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ), CurrencyIds
+│   │                   TalentData, TalentCatalog, TalentRules (giá), TalentService, StatCalculator (chỉ số cuối + lực chiến),
+│   │                   OwnedItem, InventoryService (kho đồ), LoadoutStats (gốc + Talent + trang bị)
+│   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ VÀ nguyên liệu; TrySpendMany, CanAfford), CurrencyIds, CurrencyCost
 │   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, BossHealthBar, MainMenu,
-│   │                   TalentPanel, TalentRow, TimeFormatter, UiHoverScale, VolumeSlider (tách thư mục con khi có Hub ở Phase 9)
+│   │                   TalentPanel, TalentRow, EquipmentPanel, ItemDetailPopup, ItemSlotView, ItemTextFormatter, LootRowView,
+│   │                   TimeFormatter, UiHoverScale, VolumeSlider (tách thư mục con khi có Hub ở Phase 9)
 │   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
 │   ├── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
 │   └── DevTools/       StressTest (F9), PerfRecorder (F10), BenchmarkRunner, DevMenu (F1: xem hồ sơ, +vàng/kim cương, mở khóa màn,
-│                       xóa hồ sơ, tới đợt cuối, thắng ngay, bất tử). Chỉ Editor/Development build; tự tạo, sống xuyên scene
+│                       xóa hồ sơ, +nguyên liệu, nhận trang bị ngẫu nhiên, tới đợt cuối, thắng ngay, bất tử). Chỉ Editor/Development build; tự tạo, sống xuyên scene
 ├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread,
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress,
-│                       StatRules, TalentService (+ migration v3)
+│                       StatRules, TalentService (+ migration v3), EquipmentRules, LootRules, InventoryService (+ migration v4),
+│                       StageLootApply
+├── Resources/        ItemDatabase.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, sẽ thành Hub ở Phase 9), Game.unity (2)
 ├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
 ├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
 │                       Stages/ (Wave_*, Stage_C1_01..03, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
-│                       Talents/ (Talent_*, TalentCatalog_Main)
+│                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*)
 ├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss), Projectile, EnemyProjectile, XpOrb, AudioManager, Arena, Vfx/*,
-│                       UI/VolumeSettings, UI/TalentPanel, UI/TalentRow
+│                       LootPickup, UI/VolumeSettings, UI/TalentPanel, UI/TalentRow, UI/EquipmentPanel, UI/ItemSlot, UI/ItemSlotSmall
 ├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
 └── Audio/              MainMixer.mixer (Master/Music/SFX), UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
 ```
@@ -152,13 +159,25 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   đầu ×2, chơi lại ×0.5, sao chỉ tăng, lưu ngay) → rồi mới `GameManager.EndStage` (màn kết quả đọc `LastGrant`). Mở khóa màn tuần tự;
   nút Chơi ở menu vào màn chưa thắng đầu tiên. Volume vẫn ở PlayerPrefs (cài đặt thiết bị).
 - **Chỉ số & Talent (Phase 8A)**: chỉ số meta là `StatBlock` (máu, giáp, % sát thương, % tốc chạy, hồi máu/giây).
-  `StatCalculator.Compute(heroBase, catalog, levelOf)` cộng gốc + Talent; sau này trang bị (8B) cộng thêm vào đây, không chỗ nào khác.
+  `StatCalculator.Compute(heroBase, catalog, levelOf)` cộng gốc + Talent; overload có tham số trang bị (8B) cộng thêm tổng chỉ số đồ đang mặc.
   `PlayerLoadout` (trên prefab Player) tính 1 lần trong `Awake` rồi đặt vào `Health` (máu tối đa, `Armor`), `PlayerStats.SetBaseMultipliers`
   (hệ số gốc, nâng cấp trong màn vẫn nhân chồng lên) và `HealthRegen`. Giáp: `sát thương × 100 / (100 + giáp)`.
   Lực chiến = máu×1 + giáp×6 + %st×12 + %tốc×4 + hồi×40 (chỉ để hiển thị). Talent: giá `floor(gốc × 1.12^cấp)`, nâng qua
   `TalentService.TryUpgrade` (trừ vàng bằng `EconomyService`, lưu ngay, phát `OnTalentChanged`). Cấp lưu trong `PlayerProfile.talents`
   theo `id` (đừng đổi id của Talent đã phát hành). Talent mới = 1 asset + thêm vào `TalentCatalog_Main`; chỉ số mới = thêm `StatKind`.
   Bảng Talent là prefab độc lập `UI/TalentPanel` (mở từ nút "Nâng cấp" ở menu chính), Phase 9 đặt lại vào Hub.
+- **Trang bị & rơi đồ (Phase 8B)**: mỗi lần rơi là 1 món riêng (`OwnedItem {uid, id, rarity, level, ascension}`, uid = "i" + bộ đếm);
+  độ hiếm quay theo từng món (1 `ItemData` ra được 4 độ hiếm). 2 ô: Giáp, Phụ kiện (Vũ khí ở 8C); khóa ô trong save là chuỗi
+  `EquipSlotIds`, giá trị số của `Rarity` **không đổi**. Nguyên liệu (`ore`, `leather`, `boss_core`) là tiền tệ phụ trong `EconomyService`.
+  Công thức (`EquipmentRules`): chỉ số ×1/1.5/2.2/3.2 theo độ hiếm, trần cấp 10/20/30/40, đột phá mỗi 10 cấp (lõi boss),
+  nâng cấp `floor(100 × 1.15^(cấp−1) × 1/1.2/1.5/2)` vàng + `1 + cấp/2` da, phân rã = nguyên liệu gốc + 70% đã chi, kho 100 món
+  (đầy thì đồ mới tự phân rã). `InventoryService.Add` không tự lưu (áp thưởng hàng loạt), thao tác của người chơi lưu ngay.
+  Món có id không còn trong `ItemDatabase` bị bỏ qua khi tính chỉ số nhưng **giữ trong save**.
+  Rơi đồ (phương án A): quái chết → `Enemy.HandleDied` → `IEnemyWorld.NotifyKilled` → `WaveSpawner.OnEnemyKilled` → `LootDropper`
+  quay bảng (`EnemyModifiers.loot` của tinh anh/boss thắng `EnemyData.loot`) → `LootPickup` (pool) → nhặt thì ghi vào `Collected`.
+  `DespawnAll` (nổ theo boss) không rơi đồ. Hết màn: thắng thì gom hết pickup + quay `StageData.victoryLoot` (thắng lần đầu 2 lần) vào
+  `StageResult.bonusLoot`; `StageProgressService.Apply` cộng nguyên liệu luôn, trang bị chỉ khi thắng (thua → `StageGrant.lostItems`).
+  Màn kết quả đọc `StageGrant` (hàng "Vật phẩm nhận được", đồ mất hiện mờ). Bảng Trang bị là prefab `UI/EquipmentPanel` (nút "Trang bị").
 - **Âm thanh**: `AudioManager` sống xuyên scene (DontDestroyOnLoad), 10 AudioSource xoay vòng, lệch cao độ ngẫu nhiên, giới hạn tần suất.
   Âm lượng qua `MainMixer` (exposed `MasterVolume/MusicVolume/SFXVolume`), lưu bằng **PlayerPrefs** (cài đặt thuộc thiết bị,
   không thuộc hồ sơ người chơi). Tiếng thắng màn / hồi sinh phát theo `OnGameStateChanged`.
@@ -195,11 +214,14 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | Nâng cấp trong màn (8) | Sát thương +20%, Tốc độ bắn +15%, Tốc độ chạy +10%, Máu tối đa +20, Hồi máu +30, 3 nâng cấp mở khóa vũ khí |
 | XP trong màn | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
 | Màn chơi | Đấu trường Tilemap: sân cát 30×30 ô, viền đá, đường đất, bãi cỏ, bụi cây |
-| UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!" / "BOSS XUẤT HIỆN!" / "BOSS NỔI GIẬN!"), thanh máu boss (tên + vạch ngưỡng pha), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), menu chính + bảng Cài đặt + bảng Nâng cấp (Talent, lực chiến) |
+| UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!" / "BOSS XUẤT HIỆN!" / "BOSS NỔI GIẬN!"), thanh máu boss (tên + vạch ngưỡng pha), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), menu chính + bảng Cài đặt + bảng Nâng cấp (Talent, lực chiến) + bảng Trang bị (kho, chi tiết, nâng cấp/đột phá/phân rã), hàng vật phẩm ở màn kết quả |
+| Trang bị (4) | Áo Da (máu 20, giáp 3), Giáp Sắt (máu 10, giáp 6), Nhẫn Sức Mạnh (+4% sát thương), Bùa Gió (+3% tốc chạy, +0.2 hồi máu); 4 độ hiếm |
+| Nguyên liệu (3) | Quặng (chưa dùng, để dành 8C), Da (nâng giáp/phụ kiện), Lõi boss (đột phá) |
+| Rơi đồ | Quái thường 2–4% (1 da/quặng), tinh anh (2–4 da, 15% trang bị), mini-boss/boss (lõi + 1 trang bị Hiếm+), thắng màn (3–6 da, 25% trang bị) |
 | Talent (5) | Máu +10/cấp (50 cấp, giá 100), Giáp +2 (50, 150), Sát thương +3% (50, 150), Tốc chạy +1% (20, 200), Hồi máu +0.2/s (25, 200); giá ×1.12 mỗi cấp |
 | Hiệu ứng | Trúng đạn, quái chết, lên cấp, nháy đỏ khi trúng đòn, rung camera, số sát thương (gộp 0.2s) |
 | Hoạt ảnh | Bằng code: thở khi đứng, lắc + co giãn theo bước khi chạy, quái phóng to lúc xuất hiện |
-| Âm thanh | Bắn, trúng, quái chết, bị đánh, nhặt XP, lên cấp, chọn nâng cấp, rê/bấm nút, Game Over, nhạc nền |
+| Âm thanh | Bắn, trúng, quái chết, bị đánh, nhặt XP, nhặt nguyên liệu/trang bị, lên cấp, chọn nâng cấp, rê/bấm nút, Game Over, nhạc nền |
 
 ## Tiến độ (theo `Docs/project-plan.md`)
 
@@ -210,8 +232,8 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 6B – Boss | Xong: hệ hành vi quái (SO), Xạ thủ, đạn của quái, mini-boss, boss 3 pha, thanh máu boss |
 | 7 – Hồ sơ người chơi, save v2, tiền tệ | Xong: PlayerProfile, SaveService (tmp/bak/HMAC/migration), EconomyService, tiến độ màn, scene Boot |
 | 8A – Chỉ số, Talent, lực chiến | Xong: StatBlock, StatCalculator, 5 Talent, giáp, hồi máu, PlayerLoadout, bảng Talent, save v3 |
-| 8B – Vật phẩm, kho đồ | **Tiếp theo**: ItemData/ItemDatabase, InventoryService, nâng cấp/đột phá, nguyên liệu, LootTable |
-| 8C – Vũ khí meta | Chưa: mảnh vũ khí, nâng cấp vũ khí ngoài màn |
+| 8B – Vật phẩm, kho đồ | Xong: 4 trang bị, 3 nguyên liệu, kho đồ, nâng cấp/đột phá/phân rã, LootTable, rơi đồ trong màn, bảng Trang bị, save v4 |
+| 8C – Vũ khí meta | **Tiếp theo**: ô Vũ khí, mảnh vũ khí + sao, nâng vũ khí bằng quặng, cách bắn khác nhau |
 | 9 – Hub và level tài khoản | Chưa |
 | 10 – Nội dung và cân bằng | Chưa |
 | 11 – Cửa hàng, IAP, quảng cáo | Chưa |
@@ -233,5 +255,7 @@ Tính năng cũ **giữ chạy cho tới khi có thứ thay thế**: MainMenu (�
 - Ba font asset TMP mỗi file khoảng 4 MB (atlas 1024 động) và tự thay đổi khi gặp ký tự mới lúc chạy; commit cùng lúc là được.
 - Mỗi lần build, Unity tự ghi lại vài file cài đặt (`UniversalRP.asset`, `UniversalRenderPipelineGlobalSettings.asset`,
   `ProjectSettings.asset`): commit riêng dạng `chore`.
+- Test chạy bằng unity-cli khi scene đang dirty: Test Runner hiện hộp thoại hỏi lưu và mọi lệnh CLI treo (timeout 30 s) tới khi
+  người dùng bấm trong Editor. Luôn để scene sạch trước `run_tests`; sau khi thoát Play hãy kiểm tra `isDirty`.
 - Icon nâng cấp Súng máy dùng sprite súng Kenney khá nhỏ (33×10 px), phóng to hơi mờ.
 - Âm thanh được chọn bằng cách đo độ dài và độ to bằng ffmpeg; cần người nghe thật để tinh chỉnh (`Data/Audio/SoundBank.asset`).

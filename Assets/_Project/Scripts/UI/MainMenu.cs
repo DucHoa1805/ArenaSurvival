@@ -28,6 +28,11 @@ namespace ArenaSurvival.UI
         [Tooltip("Prefab TalentPanel trong scene, tắt sẵn; tự đóng bằng nút Đóng của nó.")]
         [SerializeField] private GameObject _talentPanel;
 
+        [Header("Trang bị")]
+        [SerializeField] private UnityEngine.UI.Button _equipmentButton;
+        [Tooltip("Prefab EquipmentPanel trong scene, tắt sẵn; tự đóng bằng nút Đóng của nó.")]
+        [SerializeField] private GameObject _equipmentPanel;
+
         [Header("Cài đặt")]
         [SerializeField] private UnityEngine.UI.Button _settingsButton;
         [SerializeField] private GameObject _settingsPanel;
@@ -42,9 +47,12 @@ namespace ArenaSurvival.UI
             _settingsPanel.SetActive(false);
             if (_talentButton != null) _talentButton.onClick.AddListener(OpenTalents);
             if (_talentPanel != null) _talentPanel.SetActive(false);
+            if (_equipmentButton != null) _equipmentButton.onClick.AddListener(OpenEquipment);
+            if (_equipmentPanel != null) _equipmentPanel.SetActive(false);
         }
 
         private void OpenTalents() => _talentPanel.SetActive(true);
+        private void OpenEquipment() => _equipmentPanel.SetActive(true);
 
         private void Start()
         {
@@ -72,6 +80,7 @@ namespace ArenaSurvival.UI
             _settingsButton.onClick.RemoveListener(OpenSettings);
             _closeSettingsButton.onClick.RemoveListener(CloseSettings);
             if (_talentButton != null) _talentButton.onClick.RemoveListener(OpenTalents);
+            if (_equipmentButton != null) _equipmentButton.onClick.RemoveListener(OpenEquipment);
         }
 
         // Tắt bảng là đủ để lưu: VolumeSlider tự ghi xuống đĩa trong OnDisable.

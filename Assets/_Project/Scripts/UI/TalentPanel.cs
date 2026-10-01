@@ -83,9 +83,7 @@ namespace ArenaSurvival.UI
             if (_goldText != null) _goldText.SetText("{0}", GameServices.Economy.GetBalance(CurrencyIds.Gold));
             if (_powerText != null)
             {
-                StatBlock heroBase = _heroBase != null ? _heroBase.baseStats : new StatBlock { maxHealth = 100f };
-                StatBlock stats = StatCalculator.Compute(heroBase, _catalog, GameServices.Talents.GetLevel);
-                _powerText.SetText("Lực chiến: {0}", StatCalculator.Power(stats));
+                _powerText.SetText("Lực chiến: {0}", StatCalculator.Power(LoadoutStats.Compute(_heroBase, _catalog)));
             }
         }
     }

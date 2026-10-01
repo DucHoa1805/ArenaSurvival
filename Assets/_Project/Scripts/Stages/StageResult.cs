@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using ArenaSurvival.Loot;
 
 namespace ArenaSurvival.Stages
 {
@@ -19,5 +21,10 @@ namespace ArenaSurvival.Stages
         public bool usedRevive;
         public int gold;
         public int accountXp;
+
+        /// <summary>Đồ đã nhặt trên sân (8B). Tầng meta quyết định giữ gì: nguyên liệu luôn giữ, trang bị chỉ giữ khi thắng.</summary>
+        public List<LootDrop> collected = new List<LootDrop>();
+        /// <summary>Thưởng quay từ bảng thắng màn (chỉ có khi thắng).</summary>
+        public List<LootDrop> bonusLoot = new List<LootDrop>();
     }
 }

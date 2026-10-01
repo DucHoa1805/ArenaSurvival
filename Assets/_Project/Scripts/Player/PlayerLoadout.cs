@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ArenaSurvival.Player
 {
     /// <summary>
-    /// CỬA DUY NHẤT đưa sức mạnh ngoài trận (Talent; 8B thêm trang bị) vào nhân vật trong trận. Chỉ đọc hồ sơ, không ghi gì.
+    /// CỬA DUY NHẤT đưa sức mạnh ngoài trận (Talent, trang bị) vào nhân vật trong trận. Chỉ đọc hồ sơ, không ghi gì.
     /// Gom về một chỗ để khi thêm nguồn chỉ số mới chỉ phải sửa StatCalculator, không phải đi sửa Health/PlayerStats/vũ khí.
     /// </summary>
     [RequireComponent(typeof(Health))]
@@ -23,10 +23,7 @@ namespace ArenaSurvival.Player
 
         private void Awake()
         {
-            StatBlock heroBase = _heroBase != null ? _heroBase.baseStats : new StatBlock { maxHealth = 100f };
-            Stats = GameServices.Talents != null
-                ? StatCalculator.Compute(heroBase, _talents, GameServices.Talents.GetLevel)
-                : heroBase;
+            Stats = LoadoutStats.Compute(_heroBase, _talents);
 
             var health = GetComponent<Health>();
             health.SetMaxHealth(Mathf.Max(1f, Stats.maxHealth), healToFull: true);

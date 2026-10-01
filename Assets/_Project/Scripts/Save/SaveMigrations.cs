@@ -16,6 +16,7 @@ namespace ArenaSurvival.Save
         {
             V1ToV2,
             V2ToV3,
+            V3ToV4,
         };
 
         public static JObject Migrate(JObject data, int fromVersion)
@@ -51,6 +52,16 @@ namespace ArenaSurvival.Save
             if (v2["talents"] == null) v2["talents"] = new JObject();
             v2["saveVersion"] = 3;
             return v2;
+        }
+
+        /// <summary>v4 (Phase 8B) thêm kho trang bị. Nguyên liệu nằm trong currencies nên không cần thêm gì cho chúng.</summary>
+        private static JObject V3ToV4(JObject v3)
+        {
+            if (v3["items"] == null) v3["items"] = new JArray();
+            if (v3["equipped"] == null) v3["equipped"] = new JObject();
+            if (v3["nextItemUid"] == null) v3["nextItemUid"] = 1;
+            v3["saveVersion"] = 4;
+            return v3;
         }
     }
 }

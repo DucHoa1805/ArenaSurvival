@@ -16,6 +16,7 @@ Cập nhật: 2026-10-01
 | LiberationSans (font mặc định của TextMesh Pro) | `Assets/TextMesh Pro/` | Cần kiểm tra | Đi kèm package TextMesh Pro | ⚠ Ghi chú lại; game hiện dùng Bungee/Chakra Petch, LiberationSans chỉ là font dự phòng |
 | Sprite UI và icon nâng cấp | `Assets/_Project/Art/UI/` | Tự làm trong dự án | — | ⚠ Người dùng xác nhận |
 | Icon ngôi sao, đồng vàng, khiên (`icon_star.png`, `icon_coin.png`, `icon_shield.png`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 6A và 8A) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
+| Icon trang bị, nguyên liệu, vòng sáng pickup (`icon_armor_leather`, `icon_armor_iron`, `icon_ring_power`, `icon_charm_wind`, `icon_ore`, `icon_leather`, `icon_boss_core`, `pickup_glow`) | `Assets/_Project/Art/UI/` | Tự làm (vẽ bằng script trong Unity, Phase 8B) | Tạo trong phiên làm việc 2026-10-01 | ✅ Tự làm |
 | XP orb, đạn, lưỡi cưa, VFX | `Assets/_Project/Art/Pickups/`, `Projectiles/`, `Weapons/`, `Vfx/` | Tự làm trong dự án | — | ⚠ Người dùng xác nhận |
 
 ## Quy tắc khi thêm asset mới

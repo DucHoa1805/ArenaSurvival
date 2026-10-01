@@ -34,5 +34,9 @@ namespace ArenaSurvival.Enemies
 
         [Header("Reward")]
         public int xpReward = 1;
+        [Tooltip("Bảng rơi đồ khi chết (để trống = không rơi gì ngoài XP). Tinh anh/boss dùng bảng riêng của màn.")]
+        public Loot.LootTable loot;
+        [Tooltip("Xác suất quay bảng rơi đồ mỗi lần chết.")]
+        [Range(0f, 1f)] public float lootChance;
     }
 }

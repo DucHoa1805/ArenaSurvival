@@ -31,6 +31,10 @@ namespace ArenaSurvival.Meta
             return total;
         }
 
+        /// <summary>Gốc + Talent + trang bị (tổng chỉ số các món đang mặc, 8B).</summary>
+        public static StatBlock Compute(StatBlock heroBase, TalentCatalog talents, Func<string, int> levelOf, StatBlock equipment) =>
+            Compute(heroBase, talents, levelOf) + equipment;
+
         /// <summary>Lực chiến: tổng có trọng số, để người chơi so sức mạnh bằng 1 con số (plan A4).</summary>
         public static int Power(StatBlock s) => Mathf.RoundToInt(
             s.maxHealth * PowerPerHealth +

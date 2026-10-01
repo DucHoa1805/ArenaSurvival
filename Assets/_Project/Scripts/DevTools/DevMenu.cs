@@ -2,6 +2,7 @@ using System.IO;
 using ArenaSurvival.Combat;
 using ArenaSurvival.Core;
 using ArenaSurvival.Economy;
+using ArenaSurvival.Items;
 using ArenaSurvival.Meta;
 using ArenaSurvival.Stages;
 using UnityEngine;
@@ -117,6 +118,16 @@ namespace ArenaSurvival.DevTools
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
+                if (GUILayout.Button("+50 mỗi nguyên liệu"))
+                {
+                    GameServices.Economy.Add(CurrencyIds.Leather, 50);
+                    GameServices.Economy.Add(CurrencyIds.Ore, 50);
+                    GameServices.Economy.Add(CurrencyIds.BossCore, 50);
+                }
+                if (GUILayout.Button("Nhận 1 trang bị ngẫu nhiên")) GiveRandomItem();
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Mở khóa hết màn")) UnlockAllStages();
                 if (GUILayout.Button("Lưu ngay")) GameServices.Profile.Save();
                 GUILayout.EndHorizontal();
@@ -135,6 +146,16 @@ namespace ArenaSurvival.DevTools
                 }
                 GUI.color = Color.white;
                 GUILayout.EndHorizontal();
+            }
+
+            private static void GiveRandomItem()
+            {
+                ItemDatabase db = GameServices.Inventory.Database;
+                if (db.items == null || db.items.Length == 0) return;
+                ItemData data = db.items[Random.Range(0, db.items.Length)];
+                // Lưu ngay: Add không tự lưu (vốn dành cho áp thưởng hàng loạt cuối màn).
+                GameServices.Inventory.Add(data.id, (Rarity)Random.Range(0, 4), out _);
+                GameServices.Profile.Save();
             }
 
             private static void DrawGameActions()

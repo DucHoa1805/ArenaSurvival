@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2e057641171ef443a04331372c10cf8, type: 3}
+  m_Name: Item_ArmorLeather
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Items.ItemData
+  id: armor_leather
+  displayName: "\xC1o Da"
+  icon: {fileID: 21300000, guid: 05749e2316740b3469d70ceb8cf7a728, type: 3}
+  slot: 0
+  baseStats:
+    maxHealth: 20
+    armor: 3
+    damagePercent: 0
+    moveSpeedPercent: 0
+    healthRegen: 0
+  statsPerLevel:
+    maxHealth: 4
+    armor: 0.6
+    damagePercent: 0
+    moveSpeedPercent: 0
+    healthRegen: 0
+  upgradeMaterial: {fileID: 11400000, guid: 1eaaf5cd021b5794ebc74a89166c60bd, type: 2}

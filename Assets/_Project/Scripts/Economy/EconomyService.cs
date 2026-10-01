@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ArenaSurvival.Meta;
 
 namespace ArenaSurvival.Economy
@@ -46,6 +47,41 @@ namespace ArenaSurvival.Economy
             if (current < amount) return false;
 
             SetBalance(currencyId, current - amount);
+            return true;
+        }
+
+        /// <summary>
+        /// Trừ nhiều loại cùng lúc (vàng + nguyên liệu khi nâng đồ): kiểm tra ĐỦ TẤT CẢ rồi mới trừ, để không bao giờ có cảnh
+        /// trừ vàng xong mới phát hiện thiếu da. Thiếu 1 thứ / số âm → false, không thay đổi gì. Dòng amount = 0 bỏ qua.
+        /// </summary>
+        public bool TrySpendMany(IReadOnlyList<CurrencyCost> costs)
+        {
+            if (!CanAfford(costs)) return false;
+
+            for (int i = 0; i < costs.Count; i++)
+            {
+                if (costs[i].amount > 0) SetBalance(costs[i].id, GetBalance(costs[i].id) - costs[i].amount);
+            }
+            return true;
+        }
+
+        /// <summary>Đủ tất cả chi phí trong danh sách không (UI dùng để làm mờ nút trước khi người chơi bấm).</summary>
+        public bool CanAfford(IReadOnlyList<CurrencyCost> costs)
+        {
+            if (costs == null) return false;
+
+            for (int i = 0; i < costs.Count; i++)
+            {
+                if (costs[i].amount < 0) return false;
+
+                // Cộng dồn các dòng cùng id (danh sách ngắn nên duyệt lồng là đủ, không cấp phát từ điển).
+                long required = 0;
+                for (int j = 0; j < costs.Count; j++)
+                {
+                    if (costs[j].id == costs[i].id) required += costs[j].amount;
+                }
+                if (GetBalance(costs[i].id) < required) return false;
+            }
             return true;
         }
 

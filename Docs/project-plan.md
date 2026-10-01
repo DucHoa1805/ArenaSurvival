@@ -369,17 +369,17 @@ Assets/
 **Mục tiêu:** sức mạnh nhân vật đến từ trang bị và chỉ số gốc, được mang vào màn chơi.
 
 **Việc cần làm**
-- [ ] `ItemData`, `MaterialData`, `ItemDatabase` (tra cứu theo ID).
-- [ ] `InventoryService`: thêm/bớt đồ, mặc/tháo, đếm nguyên liệu.
-- [ ] Nâng cấp trang bị: tốn vàng + nguyên liệu theo `UpgradeCostCurve`; đột phá ở mốc cấp bằng lõi boss.
+- [x] `ItemData`, `MaterialData`, `ItemDatabase` (tra cứu theo ID).
+- [x] `InventoryService`: thêm/bớt đồ, mặc/tháo, đếm nguyên liệu.
+- [x] Nâng cấp trang bị: tốn vàng + nguyên liệu theo `UpgradeCostCurve`; đột phá ở mốc cấp bằng lõi boss. _(8B: công thức trong `EquipmentRules`)_
 - [ ] Mảnh vũ khí: mở khóa khi đủ mảnh, tăng sao bằng mảnh thừa.
 - [x] Talent: Máu, Giáp, Sát thương, Tốc độ chạy, Hồi máu; giá tăng dần.
 - [x] `StatCalculator`: tính chỉ số cuối và **lực chiến**.
-- [x] Truyền chỉ số vào màn: Player và vũ khí đọc chỉ số đã tính khi bắt đầu màn. _(8A: `PlayerLoadout`; trang bị cộng thêm ở 8B)_
+- [x] Truyền chỉ số vào màn: Player và vũ khí đọc chỉ số đã tính khi bắt đầu màn. _(8A: `PlayerLoadout`; 8B: + trang bị qua `LoadoutStats`)_
 - [x] Thêm chỉ số **Giáp** vào hệ thống sát thương (công thức giảm sát thương, Phần D).
-- [ ] `LootTable`: quái, boss, rương rơi đồ theo trọng số; phần thưởng màn sinh từ bảng này.
+- [x] `LootTable`: quái, boss, rương rơi đồ theo trọng số; phần thưởng màn sinh từ bảng này. _(8B: quái, tinh anh, boss, thắng màn; rương ở Phase 11)_
 - [ ] Vũ khí khác nhau về **cách bắn**, không chỉ khác chỉ số (súng lục, shotgun, súng máy, phóng lựu...).
-- [ ] Unit test: công thức chỉ số, chi phí nâng cấp, rơi đồ theo tỷ lệ (chạy 10.000 lần, kiểm tra phân phối).
+- [x] Unit test: công thức chỉ số, chi phí nâng cấp, rơi đồ theo tỷ lệ (chạy 10.000 lần, kiểm tra phân phối).
 
 **Tiêu chí hoàn thành:** nâng vũ khí lên vài cấp thì vào màn bắn mạnh hơn thấy rõ; gom đủ mảnh mở được vũ khí mới; mặc giáp thì nhận ít sát thương hơn.
 
@@ -580,7 +580,7 @@ Một nền kinh tế lành mạnh cần **nguồn vào** (người chơi nhận
 
 **Tiến trình ngoài màn**
 - [ ] Level tài khoản, mở khóa tính năng theo mốc
-- [ ] Trang bị 3 ô: nâng cấp, đột phá, độ hiếm
+- [ ] Trang bị 3 ô: nâng cấp, đột phá, độ hiếm _(8B: 2 ô Giáp/Phụ kiện xong; ô Vũ khí ở 8C)_
 - [ ] Mảnh vũ khí: mở khóa và tăng sao
 - [x] Talent: máu, giáp, sát thương, tốc độ, hồi máu
 - [ ] Hub đầy đủ, chấm đỏ thông báo, màn chọn màn có sao

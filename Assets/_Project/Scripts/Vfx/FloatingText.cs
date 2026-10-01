@@ -17,6 +17,8 @@ namespace ArenaSurvival.Vfx
 
         private TextMeshPro _text;
         private Color _baseColor;
+        // Màu của lần hiện này (mặc định = màu prefab); chữ nhặt đồ dùng màu độ hiếm.
+        private Color _color;
         private Vector3 _start;
         private float _elapsed;
 
@@ -33,6 +35,14 @@ namespace ArenaSurvival.Vfx
         public void Show(string message, Vector3 position)
         {
             _text.text = message;
+            _color = _baseColor;
+            Begin(position);
+        }
+
+        public void Show(string message, Vector3 position, Color color)
+        {
+            _text.text = message;
+            _color = color;
             Begin(position);
         }
 
@@ -43,6 +53,7 @@ namespace ArenaSurvival.Vfx
         public void ShowNumber(int value, Vector3 position)
         {
             _text.SetText("{0}", value);
+            _color = _baseColor;
             Begin(position);
         }
 
@@ -80,7 +91,7 @@ namespace ArenaSurvival.Vfx
             transform.localScale = Vector3.one * scale;
 
             // 40% cuối: mờ dần.
-            Color c = _baseColor;
+            Color c = _color;
             c.a = p < 0.6f ? 1f : 1f - (p - 0.6f) / 0.4f;
             _text.color = c;
         }

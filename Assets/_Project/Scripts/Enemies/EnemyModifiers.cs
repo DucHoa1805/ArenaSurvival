@@ -12,6 +12,9 @@ namespace ArenaSurvival.Enemies
         public float damage;
         public float scale;
         public Color tint;
+        /// <summary>Bảng rơi đồ thay cho bảng của EnemyData (tinh anh, boss). Null = dùng bảng của EnemyData.</summary>
+        public Loot.LootTable loot;
+        public float lootChance;
 
         public static EnemyModifiers Default => new EnemyModifiers { health = 1f, damage = 1f, scale = 1f, tint = Color.white };
 

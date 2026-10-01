@@ -34,6 +34,10 @@ namespace ArenaSurvival.UI
         [Tooltip("Dòng phụ dưới phần thưởng: lần thắng đầu ×2 / chơi lại ×0.5.")]
         [SerializeField] private TMP_Text _bonusText;
 
+        [Header("Vật phẩm")]
+        [Tooltip("Hàng \"Vật phẩm nhận được\" (không bắt buộc).")]
+        [SerializeField] private LootRowView _lootRow;
+
         [Header("Nút")]
         [SerializeField] private Button _nextButton;
         [SerializeField] private Button _retryButton;
@@ -109,6 +113,8 @@ namespace ArenaSurvival.UI
                     : "Chơi lại: thưởng ×0.5";
                 _bonusText.gameObject.SetActive(_bonusText.text.Length > 0);
             }
+
+            if (_lootRow != null) _lootRow.Show(hasGrant ? grant : null);
 
             // Màn cuối danh sách thì không có "Màn tiếp"; thua thì phải chơi lại chứ không được đi tiếp.
             _nextButton.gameObject.SetActive(result.victory && _session.Catalog.GetNext(stage) != null);
