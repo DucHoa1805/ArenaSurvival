@@ -11,6 +11,7 @@ namespace ArenaSurvival.Meta
 
         public PlayerProfile Profile { get; private set; }
         public SaveLoadStatus LastLoadStatus { get; private set; }
+        public string SavePath => _saveService.FilePath;
 
         public ProfileService(SaveService saveService)
         {
@@ -29,6 +30,20 @@ namespace ArenaSurvival.Meta
         }
 
         public void MarkDirty() => _dirty = true;
+
+        /// <summary>
+        /// Về trạng thái mới chơi (menu dev). Xóa TẠI CHỖ chứ không tạo PlayerProfile mới: EconomyService và StageProgressService
+        /// đang giữ tham chiếu tới object này, tạo mới thì chúng vẫn trỏ vào hồ sơ cũ.
+        /// </summary>
+        public void ResetToNew()
+        {
+            Profile.saveVersion = PlayerProfile.CurrentVersion;
+            Profile.accountXp = 0;
+            Profile.currencies.Clear();
+            Profile.stageStars.Clear();
+            Profile.tampered = false;
+            Save();
+        }
 
         public bool Save()
         {

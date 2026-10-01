@@ -47,6 +47,9 @@ namespace ArenaSurvival.Save
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, "save.json");
 
+        /// <summary>Đường dẫn file save chính (menu dev hiển thị / mở thư mục).</summary>
+        public string FilePath => _path;
+
         public SaveService(string path)
         {
             _path = path;

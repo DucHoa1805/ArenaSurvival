@@ -49,8 +49,10 @@ Cập nhật lần cuối: 2026-10-01, sau Phase 7 (hồ sơ người chơi, sav
   (không dùng `eval` inline vì PowerShell 5.1 làm hỏng dấu nháy; trong file `.cs` tránh ký tự `'\\'` khi viết qua heredoc của shell).
 - **Play mode không chạy frame khi Editor không được focus** (`runInBackground: 0` trong Player Settings; bản build cũng vậy).
   Khi test: `editor_play`, rồi eval `UnityEngine.Application.runInBackground = true;`. Chỉ đổi lúc chạy, file cài đặt không đổi.
+- `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
+  hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 110/110 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 112/112 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -82,7 +84,8 @@ Assets/_Project/
 │   │                   TimeFormatter, UiHoverScale, VolumeSlider (tách thư mục con khi có Hub ở Phase 9)
 │   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
 │   ├── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
-│   └── DevTools/       StressTest, PerfRecorder, BenchmarkRunner (chỉ Editor/Development build; menu cheat Phase 10 đặt ở đây)
+│   └── DevTools/       StressTest (F9), PerfRecorder (F10), BenchmarkRunner, DevMenu (F1: xem hồ sơ, +vàng/kim cương, mở khóa màn,
+│                       xóa hồ sơ, tới đợt cuối, thắng ngay, bất tử). Chỉ Editor/Development build; tự tạo, sống xuyên scene
 ├── Tests/EditMode/     assembly ArenaSurvival.Tests.EditMode: XpCurve, RandomPicker, SaveSystem, TimeFormatter, WeaponSpread,
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, sẽ thành Hub ở Phase 9), Game.unity (2)

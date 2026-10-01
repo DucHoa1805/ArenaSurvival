@@ -19,6 +19,9 @@ namespace ArenaSurvival.UI
         [SerializeField] private TMP_Text _goldText;
 
         private StageData _nextStage;
+        private System.Action<string, long> _onCurrencyChanged;
+
+        public StageCatalog Catalog => _catalog;
 
         [Header("Cài đặt")]
         [SerializeField] private UnityEngine.UI.Button _settingsButton;
@@ -40,10 +43,21 @@ namespace ArenaSurvival.UI
             _nextStage = GameServices.StageProgress.NextStage(_catalog);
             if (_playLabel != null && _nextStage != null) _playLabel.text = $"Chơi {_nextStage.displayName}";
             if (_goldText != null) _goldText.SetText("{0}", GameServices.Economy.GetBalance(CurrencyIds.Gold));
+
+            // Số vàng đổi ngay khi ví đổi (menu dev cộng tiền; sau này Hub nhận quà) chứ không chỉ lúc mở menu.
+            _onCurrencyChanged = HandleCurrencyChanged;
+            GameServices.Economy.OnCurrencyChanged += _onCurrencyChanged;
+        }
+
+        private void HandleCurrencyChanged(string currencyId, long balance)
+        {
+            if (currencyId == CurrencyIds.Gold && _goldText != null) _goldText.SetText("{0}", balance);
         }
 
         private void OnDestroy()
         {
+            // Dịch vụ sống lâu hơn scene: không gỡ thì ví giữ tham chiếu tới menu đã bị hủy.
+            if (_onCurrencyChanged != null && GameServices.Economy != null) GameServices.Economy.OnCurrencyChanged -= _onCurrencyChanged;
             _playButton.onClick.RemoveListener(HandlePlayClicked);
             _quitButton.onClick.RemoveListener(HandleQuitClicked);
             _settingsButton.onClick.RemoveListener(OpenSettings);

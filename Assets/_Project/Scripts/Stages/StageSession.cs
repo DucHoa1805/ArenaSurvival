@@ -311,6 +311,23 @@ namespace ArenaSurvival.Stages
         /// <summary>StressTest dùng để màn không tự chuyển đợt hay kết thúc trong lúc đo.</summary>
         public void PauseProgression(bool paused) => _paused = paused;
 
+        /// <summary>
+        /// Chỉ dùng khi test (menu dev): thắng màn ngay — coi như đã rải hết tinh anh và hạ boss, dọn sân (không cho XP),
+        /// rồi để luật kết thúc bình thường tự chạy (chờ 1 s, chỉ khi đang Playing) để test đúng luồng thật.
+        /// </summary>
+        public void DebugWinNow()
+        {
+            if (!Debug.isDebugBuild || _phase != Phase.FinalWave) return;
+            _nextElite = _eliteQueue.Count;
+            if (HasBoss)
+            {
+                _bossSpawned = true;
+                _bossDefeated = true;
+                if (_boss != null && _onBossDied != null) _boss.Health.OnDied -= _onBossDied;
+            }
+            _spawner.DespawnAll();
+        }
+
         /// <summary>Chỉ dùng khi test (Editor / Development build): nhảy thẳng tới đợt tinh anh.</summary>
         public void DebugSkipToFinalWave()
         {
