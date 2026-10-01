@@ -5,7 +5,6 @@ namespace ArenaSurvival.Enemies
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(ArenaSurvival.Combat.Health))]
-    [RequireComponent(typeof(SpriteRenderer))]
     public class Enemy : MonoBehaviour
     {
         [Header("Combat")]
@@ -32,7 +31,9 @@ namespace ArenaSurvival.Enemies
         {
             _rb = GetComponent<Rigidbody2D>();
             _health = GetComponent<ArenaSurvival.Combat.Health>();
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            // Sprite nằm ở object con "Visual" (để SpriteBodyAnimator làm hoạt ảnh mà không đụng vào
+            // transform gốc đang giữ vật lý, hướng mặt và scale theo loại quái).
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         /// <summary>

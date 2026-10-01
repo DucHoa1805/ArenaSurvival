@@ -27,7 +27,7 @@ namespace ArenaSurvival.Vfx
         private void Awake()
         {
             _health = GetComponent<Health>();
-            if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
+            if (_renderer == null) _renderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         private void OnEnable() => _health.OnDamaged += HandleDamaged;

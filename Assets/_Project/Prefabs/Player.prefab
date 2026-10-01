@@ -31,7 +31,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7507145249831177368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8134866167689488960
+--- !u!1 &4532533372720386077
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,50 +39,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7507145249831177368}
-  - component: {fileID: 6020543225162878897}
-  - component: {fileID: 6909105874361848391}
-  - component: {fileID: 8463024446066925757}
-  - component: {fileID: 2763961775194599692}
-  - component: {fileID: 4286960921988771090}
-  - component: {fileID: 3491706075365627868}
-  - component: {fileID: 2602976628328504595}
-  - component: {fileID: 1064305851388248126}
-  - component: {fileID: 4696066669073839423}
-  - component: {fileID: 7356917306387966622}
-  - component: {fileID: 326507814990378938}
-  - component: {fileID: 3102533605996374172}
+  - component: {fileID: 6222393601915305788}
+  - component: {fileID: 7955035394538609058}
+  - component: {fileID: 3921843351279164561}
   m_Layer: 8
-  m_Name: Player
-  m_TagString: Player
+  m_Name: Visual
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7507145249831177368
+--- !u!4 &6222393601915305788
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8134866167689488960}
+  m_GameObject: {fileID: 4532533372720386077}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6316952694449696612}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 7507145249831177368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6020543225162878897
+--- !u!212 &7955035394538609058
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8134866167689488960}
+  m_GameObject: {fileID: 4532533372720386077}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -134,6 +123,71 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &3921843351279164561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4532533372720386077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7115111ad4aad214288b9df24d7dd617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Vfx.SpriteBodyAnimator
+  _breatheAmount: 0.02
+  _breatheFrequency: 0.8
+  _cyclesPerUnit: 0.6
+  _wobbleAngle: 8
+  _stretchAmount: 0.06
+  _fullMotionSpeed: 1
+  _blendTime: 0.12
+  _popOnEnable: 0
+  _popDuration: 0.2
+--- !u!1 &8134866167689488960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7507145249831177368}
+  - component: {fileID: 6909105874361848391}
+  - component: {fileID: 8463024446066925757}
+  - component: {fileID: 2763961775194599692}
+  - component: {fileID: 4286960921988771090}
+  - component: {fileID: 3491706075365627868}
+  - component: {fileID: 2602976628328504595}
+  - component: {fileID: 1064305851388248126}
+  - component: {fileID: 4696066669073839423}
+  - component: {fileID: 7356917306387966622}
+  - component: {fileID: 326507814990378938}
+  - component: {fileID: 3102533605996374172}
+  m_Layer: 8
+  m_Name: Player
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7507145249831177368
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6222393601915305788}
+  - {fileID: 6316952694449696612}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6909105874361848391
 Rigidbody2D:
   serializedVersion: 5
@@ -342,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f41b37da338e7418160ab71003a8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Vfx.HitFlash
-  _renderer: {fileID: 6020543225162878897}
+  _renderer: {fileID: 7955035394538609058}
   _flashColor: {r: 1, g: 0.45, b: 0.45, a: 1}
   _duration: 0.15
   _punchScale: 1.1
