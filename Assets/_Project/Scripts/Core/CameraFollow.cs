@@ -30,9 +30,20 @@ namespace ArenaSurvival.Core
             _noiseSeed = Random.value * 100f;
         }
 
-        private void OnEnable() => GameEvents.OnPlayerDamaged += HandlePlayerDamaged;
+        private void OnEnable()
+        {
+            GameEvents.OnPlayerDamaged += HandlePlayerDamaged;
+            GameEvents.OnUltimateUsed += HandleUltimate;
+        }
 
-        private void OnDisable() => GameEvents.OnPlayerDamaged -= HandlePlayerDamaged;
+        private void OnDisable()
+        {
+            GameEvents.OnPlayerDamaged -= HandlePlayerDamaged;
+            GameEvents.OnUltimateUsed -= HandleUltimate;
+        }
+
+        // Chiêu là khoảnh khắc "đã tay" nhất: rung mạnh 1 nhịp cho người chơi cảm được sức mạnh.
+        private void HandleUltimate(Color color, string name) => _trauma = Mathf.Max(_trauma, 0.75f);
 
         private void HandlePlayerDamaged(float damage)
         {

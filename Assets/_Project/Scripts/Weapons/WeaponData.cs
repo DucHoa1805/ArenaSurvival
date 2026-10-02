@@ -51,5 +51,9 @@ namespace ArenaSurvival.Weapons
         [Header("Hiệu ứng sao")]
         public WeaponStarBonus starBonus3;
         public WeaponStarBonus starBonus5;
+
+        [Header("Chiêu đặc biệt (10E)")]
+        [Tooltip("Dùng khi đầy mana. Trống = vũ khí không có chiêu (nút chiêu ẩn).")]
+        public WeaponUltimate ultimate;
     }
 }

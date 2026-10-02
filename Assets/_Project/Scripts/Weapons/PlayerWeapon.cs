@@ -54,6 +54,43 @@ namespace ArenaSurvival.Weapons
 
         private float _flashTimer;
 
+        // Cường hóa tạm thời từ chiêu (WeaponBuffUltimate). Mặc định = không đổi gì.
+        private float _buffFireRate = 1f;
+        private float _buffExplosionRadius;
+        private float _buffExplosionFraction;
+        private int _buffPierce;
+
+        /// <summary>Sát thương 1 viên hiện tại (gốc × nâng cấp trong màn) — chiêu tính theo bội số của nó.</summary>
+        public float CurrentShotDamage => _stats.damage * (_playerStats != null ? _playerStats.DamageMultiplier : 1f);
+
+        public void SetBuff(float fireRateMultiplier, float explosionRadius, float explosionFraction, int extraPierce)
+        {
+            _buffFireRate = Mathf.Max(1f, fireRateMultiplier);
+            _buffExplosionRadius = explosionRadius;
+            _buffExplosionFraction = explosionFraction;
+            _buffPierce = extraPierce;
+        }
+
+        public void ClearBuff() => SetBuff(1f, 0f, 0f, 0);
+
+        /// <summary>Bắn 1 vòng đạn 360° từ người (chiêu), dùng chung pool đạn của súng nên không cấp phát.</summary>
+        public void FireRing(int count, float offsetDeg, float damage, int extraPierce, float range)
+        {
+            if (!_equipped || _projectilePool == null) return;
+            int pierce = _stats.pierce + _playerStats.ExtraPierce + extraPierce;
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 dir = UltimateRules.RingDirection(i, count, offsetDeg);
+                Projectile projectile = _projectilePool.Get(transform.position, Quaternion.identity);
+                projectile.OnReturnToPool = _releaseProjectile;
+                projectile.Launch(dir, damage, Mathf.Max(8f, _stats.projectileSpeed), range, pierce,
+                    Mathf.Max(_stats.explosionRadius, _buffExplosionRadius), ExplosionFraction, _stats.knockback);
+            }
+            GameEvents.PlayerFired();
+        }
+
+        private float ExplosionFraction => _buffExplosionRadius > _stats.explosionRadius ? _buffExplosionFraction : _stats.explosionDamageFraction;
+
         private void Awake()
         {
             _playerStats = GetComponent<PlayerStats>();
@@ -118,7 +155,7 @@ namespace ArenaSurvival.Weapons
             if (_fireCooldown <= 0f)
             {
                 Fire(direction);
-                _fireCooldown = 1f / Mathf.Max(0.01f, _stats.fireRate * _playerStats.FireRateMultiplier);
+                _fireCooldown = 1f / Mathf.Max(0.01f, _stats.fireRate * _playerStats.FireRateMultiplier * _buffFireRate);
             }
         }
 
@@ -148,7 +185,7 @@ namespace ArenaSurvival.Weapons
             int extra = _playerStats.ExtraProjectiles;
             int count = Mathf.Max(1, _stats.projectileCount) + extra;
             float spread = RunUpgrades.SkillRules.SpreadWithExtra(_stats.spreadAngle, extra);
-            int pierce = _stats.pierce + _playerStats.ExtraPierce;
+            int pierce = _stats.pierce + _playerStats.ExtraPierce + _buffPierce;
 
             for (int i = 0; i < count; i++)
             {
@@ -160,7 +197,7 @@ namespace ArenaSurvival.Weapons
                 Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
                 projectile.OnReturnToPool = _releaseProjectile;
                 projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, pierce,
-                    _stats.explosionRadius, _stats.explosionDamageFraction, _stats.knockback);
+                    Mathf.Max(_stats.explosionRadius, _buffExplosionRadius), ExplosionFraction, _stats.knockback);
             }
 
             if (_muzzleFlash != null)

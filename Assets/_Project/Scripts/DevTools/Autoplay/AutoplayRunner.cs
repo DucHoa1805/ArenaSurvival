@@ -107,6 +107,8 @@ namespace ArenaSurvival.DevTools
             GameManager.PlayingTimeScale = _speed;
             // Quảng cáo giả lập (11A) xong ngay: bot không ngồi chờ đếm ngược.
             Services.FakeAdProvider.Duration = 0f;
+            // Bot không bấm phím: luôn tự dùng chiêu khi đầy mana (10E).
+            Player.PlayerUltimate.ForceAuto = true;
             _onOptions = options => _pendingOptions = options;
             _onStageEnded = HandleStageEnded;
             SceneManager.sceneLoaded += HandleSceneLoaded;

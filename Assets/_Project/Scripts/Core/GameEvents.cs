@@ -31,11 +31,14 @@ namespace ArenaSurvival.Core
         public static event Action<Vector3, float> OnExplosion;
         /// <summary>(tâm, bán kính) — Healer vừa hồi máu cho quái xung quanh. Chỉ cho hiệu ứng.</summary>
         public static event Action<Vector3, float> OnEnemyHealPulse;
+        /// <summary>(màu, tên chiêu) — lóe màn hình, rung camera, chữ lớn trên HUD.</summary>
+        public static event Action<UnityEngine.Color, string> OnUltimateUsed;
 
         public static void EnemyKilled(int xpReward, Vector3 position) => OnEnemyKilled?.Invoke(xpReward, position);
         public static void LootPicked(bool isItem, Vector3 position) => OnLootPicked?.Invoke(isItem, position);
         public static void Explosion(Vector3 position, float radius) => OnExplosion?.Invoke(position, radius);
         public static void EnemyHealPulse(Vector3 position, float radius) => OnEnemyHealPulse?.Invoke(position, radius);
+        public static void UltimateUsed(UnityEngine.Color color, string name) => OnUltimateUsed?.Invoke(color, name);
         public static void ProjectileHit(Vector3 position) => OnProjectileHit?.Invoke(position);
         public static void PlayerFired() => OnPlayerFired?.Invoke();
         public static void PlayerDamaged(float amount) => OnPlayerDamaged?.Invoke(amount);

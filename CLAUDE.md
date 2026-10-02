@@ -53,7 +53,7 @@ Cập nhật lần cuối: 2026-10-02, sau Phase 12B (code nối Unity Gaming Se
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 339/339 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 348/348 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -300,6 +300,13 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   ở màn 21; đàn mở màn 5 con; trần 220 quái (chỉ chặn sinh theo nhịp). Máu Basic 12, Fast 7, Súng lục 2 phát/giây. Thẻ lên cấp nhân
   `SkillRules.StageScale(n) = 1 + 0.03(n−1)` (`PlayerStats.StageScale`, StageSession đặt): thẻ chỉ số hiện số đã nhân (`StatDescription`,
   bỏ qua chữ trong asset), kỹ năng gây sát thương nhân thêm và ghi "Sức mạnh theo màn ×…". Mọi số chỉnh bằng Remote Config (`Docs/ugs-setup.md`).
+- **Chiêu vũ khí + mana (10E C)**: `PlayerUltimate` (trên prefab Player) giữ mana (`UltimateRules`: tối đa 100, +4/giây, +1/quái hạ, dừng khi
+  pause/lên cấp), dùng chiêu `WeaponData.ultimate` bằng nút HUD (`UltimateButton`, vòng mana + đếm ngược), phím Space hoặc tự dùng
+  (PlayerPrefs `auto_ultimate`, công tắc trong prefab `UI/VolumeSettings` → có cả ở Hub và menu tạm dừng; bot `ForceAuto`). Chiêu = asset
+  `WeaponUltimate` (không giữ trạng thái, chạy coroutine `Run(UltimateContext)`), kiểu: `BulletRingUltimate` (Súng lục — Bắn loạn),
+  `WeaponBuffUltimate` (Shotgun — Đạn chùm: đạn nổ 5 s; Súng máy — Cuồng nộ: bắn ×3 4 s; qua `PlayerWeapon.SetBuff/ClearBuff`),
+  `GrenadeRainUltimate` (Phóng lựu — Mưa lựu), `BeamSweepUltimate` (Laser — tia `LineRenderer` dựng sẵn, quét 360°). Sát thương = bội số
+  `PlayerWeapon.CurrentShotDamage`. `GameEvents.UltimateUsed` → `UltimateFlash` (lóe màu + tên chiêu) và rung camera. DevMenu: "Đầy mana".
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.

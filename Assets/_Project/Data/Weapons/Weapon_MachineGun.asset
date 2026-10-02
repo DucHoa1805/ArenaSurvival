@@ -45,3 +45,4 @@ MonoBehaviour:
     explosionRadiusPercent: 0
     knockbackPercent: 0
     text: "Xuy\xEAn th\xEAm 1 qu\xE1i"
+  ultimate: {fileID: 11400000, guid: 9cca31817ab52fb4e9dea1a7131d4c55, type: 2}

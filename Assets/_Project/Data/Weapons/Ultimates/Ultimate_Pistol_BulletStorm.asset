@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe8668c56b1a624491bc7b7514649b7, type: 3}
+  m_Name: Ultimate_Pistol_BulletStorm
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Weapons.BulletRingUltimate
+  displayName: "B\u1EAFn lo\u1EA1n"
+  description: "X\u1EA3 3 v\xF2ng \u0111\u1EA1n ra m\u1ECDi h\u01B0\u1EDBng, m\u1ED7i
+    vi\xEAn xuy\xEAn th\xEAm 2 qu\xE1i."
+  icon: {fileID: 21300000, guid: 86fe71844d48b8c4c82713d6cbe24a74, type: 3}
+  color: {r: 1, g: 0.8352941, b: 0.2901961, a: 1}
+  rings: 3
+  bulletsPerRing: 24
+  interval: 0.22
+  damageMultiplier: 1.5
+  extraPierce: 2
+  range: 9

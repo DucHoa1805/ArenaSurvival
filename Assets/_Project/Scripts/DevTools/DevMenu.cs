@@ -243,6 +243,11 @@ namespace ArenaSurvival.DevTools
                     bool invulnerable = GUILayout.Toggle(health.Invulnerable, " Bất tử");
                     if (invulnerable != health.Invulnerable) health.Invulnerable = invulnerable;
                 }
+                if (player != null && GUILayout.Button("Đầy mana"))
+                {
+                    var ult = player.GetComponent<Player.PlayerUltimate>();
+                    if (ult != null) ult.DebugFillMana();
+                }
                 if (GUILayout.Button("Thắng màn ngay"))
                 {
                     session.DebugSkipToFinalWave();
