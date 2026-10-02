@@ -177,7 +177,7 @@ namespace ArenaSurvival.Tests
                 SaveLoadResult r = new SaveService(path).Load();
 
                 Assert.AreEqual(SaveLoadStatus.Migrated, r.Status);
-                Assert.AreEqual(5, r.Profile.saveVersion);
+                Assert.AreEqual(PlayerProfile.CurrentVersion, r.Profile.saveVersion);
                 Assert.AreEqual(7, r.Profile.currencies["ore"], "dữ liệu cũ giữ nguyên");
                 Assert.AreEqual("i1", r.Profile.equipped[EquipSlotIds.Armor]);
                 Assert.AreEqual(1, r.Profile.weapons[WeaponService.DefaultWeaponId].stars);

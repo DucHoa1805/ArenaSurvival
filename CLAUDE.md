@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-02, sau Phase 10D (bản đồ vô tận, nhân vật chính tự vẽ, hiệu ứng kỹ năng/súng, Sét lan + Drone, độ khó +7.5%/màn).
+Cập nhật lần cuối: 2026-10-02, sau Phase 11A (cửa hàng, IAP và quảng cáo có thưởng — giả lập, kiến trúc sẵn cho SDK thật ở 11B).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -52,7 +52,7 @@ Cập nhật lần cuối: 2026-10-02, sau Phase 10D (bản đồ vô tận, nh�
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 292/292 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 305/305 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -74,7 +74,7 @@ Assets/_Project/
 │   ├── Stats/          StatKind, StatBlock (+StatRules), HeroBaseStats (SO)
 │   ├── Items/          Rarity/EquipSlot (+EquipSlotIds), ItemData, MaterialData, ItemDatabase (Resources), EquipmentRules (hàm thuần),
 │   │                   RarityColors
-│   ├── Loot/           LootDrop, LootTable, LootRules (hàm thuần), LootDropper (rơi đồ trong màn, gom đồ đã nhặt), LootPickup
+│   ├── Loot/           LootDrop, LootTable, LootRules (hàm thuần), LootOdds (+LootOddsRules: tỷ lệ công bố), LootDropper (rơi đồ trong màn, gom đồ đã nhặt), LootPickup
 │   ├── Weapons/        PlayerWeapon (súng chính, Equip theo WeaponStats), OrbitWeapon, SawBladeRig, WeaponDefinition/IWeapon,
 │   │                   WeaponData (+ meta: id, mảnh, hiệu ứng sao, thuộc tính đạn), WeaponRules (+WeaponStats, WeaponStarBonus), OrbitWeaponData
 │   ├── Enemies/        Enemy (lõi), EnemyData, EnemyModifiers, EnemyContext (trạng thái mỗi con), IEnemyWorld, EnemyRules (hàm thuần),
@@ -87,17 +87,21 @@ Assets/_Project/
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData (+maxLevel, mô tả theo cấp),
 │   │                   UpgradeManager (cấp từng kỹ năng), SkillRules (hàm thuần: số theo cấp), RandomPicker
-│   ├── Save/           SaveService (tmp → File.Replace + .bak, HMAC, khôi phục), SaveSecurity (HMAC-SHA256), SaveMigrations (JObject, v1→v2→v3→v4→v5)
+│   ├── Save/           SaveService (tmp → File.Replace + .bak, HMAC, khôi phục), SaveSecurity (HMAC-SHA256), SaveMigrations (JObject, v1→…→v6)
 │   ├── Meta/           PlayerProfile, ProfileService, StageProgressService (+Rules, StageGrant), GameServices (static), ServicesHost, BootLoader,
 │   │                   TalentData, TalentCatalog, TalentRules (giá), TalentService, StatCalculator (chỉ số cuối + lực chiến),
 │   │                   OwnedItem, InventoryService (kho đồ), OwnedWeapon, WeaponService (vũ khí chính), LoadoutStats (chỉ số + lực chiến),
 │   │                   AccountRules, AccountLevelTable (+FeatureIds), AccountService (level tài khoản), RedDotRules, ProgressionSim
 │   ├── Data/           CsvReader, BalanceRows (EnemyRow/WaveRow/StageRow) — đọc bảng cân bằng (hàm thuần)
+│   ├── Shop/           ShopProductData (+ShopContent), ShopCatalog (Resources), ShopRules, ShopService (trao nội dung, mua bằng kim cương, rương),
+│   │                   IStore (+StorePurchase), FakeStore / UnavailableStore, IReceiptValidator (FakeReceiptValidator), IAPService
+│   ├── Services/       AdsService (+IAdProvider), AdRules + AdPlacements, FakeAdProvider / UnavailableAdProvider
 │   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ VÀ nguyên liệu; TrySpendMany, CanAfford), CurrencyIds, CurrencyCost
 │   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, BossHealthBar, SafeAreaFitter,
 │   │                   TalentPanel, TalentRow, EquipmentPanel, ItemDetailPopup, ItemSlotView, ItemTextFormatter, LootRowView, WeaponPanel, WeaponRowView,
 │   │                   TimeFormatter, UiHoverScale, VolumeSlider
-│   │   └── Hub/        HubController, HubTopBar, HubTab, BattleTab, StageNodeView, LevelUpPopup, RewardFly, HubToast
+│   │   ├── Hub/        HubController, HubTopBar, HubTab, BattleTab, StageNodeView, LevelUpPopup, RewardFly, HubToast, ConsentPopup
+│   │   └── Shop/       ShopPanel, ShopCardView, ShopConfirmPopup, ShopResultPopup, ShopOddsPopup
 │   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
 │   ├── Vfx/            VfxSpawner, PooledVfx, FloatingText, HitFlash, DamageNumberSource, SpriteBodyAnimator
 │   └── DevTools/       Autoplay/ (bot tự chơi: AutoplayRunner, AutoplayHub, BotPilot, BotSteering, AutoplayRules), StressTest (F9), PerfRecorder (F10), BenchmarkRunner, DevMenu (F1: xem hồ sơ, +vàng/kim cương, mở khóa màn,
@@ -107,13 +111,13 @@ Assets/_Project/
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress,
 │                       StatRules, TalentService (+ migration v3), EquipmentRules, LootRules, InventoryService (+ migration v4),
 │                       StageLootApply, WeaponRules, WeaponService (+ migration v5), AccountService, RedDotRules, CsvReader,
-│                       BalanceRows, Chapter, ProgressionSim, ArenaLoader, Autoplay, SkillRules
-├── Resources/        ItemDatabase.asset, AccountLevelTable.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
+│                       BalanceRows, Chapter, ProgressionSim, ArenaLoader, Autoplay, SkillRules, GroundRules, Shop (+ MemoryStore, migration v6)
+├── Resources/        ItemDatabase.asset, AccountLevelTable.asset, ShopCatalog.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, chứa Hub — chưa đổi tên scene), Game.unity (2)
 ├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
 ├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
 │                       Stages/ (Waves/Wave_C1..C3_*, Stage_C1..C3_01..10, Chapter_C1/C2/C3, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
-│                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*)
+│                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*, Loot_Chest_*), Shop/ (Shop_*)
 ├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss; con `Telegraph` = tia ngắm), Projectile, EnemyProjectile, XpOrb, AudioManager,
 │                       Ground_Desert/City/Base (nền vô tận 3 chương; Arena/Arena_City/Arena_Base cũ là nguồn lớp tilemap, không còn dùng trong scene),
 │                       Vfx/* (+ArtilleryShell),
@@ -248,6 +252,17 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   trên prefab đạn, `Projectile.Launch` gọi `Clear()` (đạn từ pool). Lưỡi cưa: quầng + vệt, cấp 6 "thức tỉnh" lửa cam (+30%). Vòng điện xoay/nảy,
   cấp 5 vàng; lá chắn lấp lánh + chớp khi chặn. Kỹ năng mới: Sét lan (LineRenderer dựng sẵn), Drone hộ vệ (pool đạn riêng).
   Hiệu ứng dùng chung `Art/Vfx/Vfx_Particle.mat` (URP unlit) — không dùng `Shader.Find` (dễ bị loại khỏi bản build). Độ khó **+7.5%/màn**.
+- **Cửa hàng, IAP, quảng cáo (11A — giả lập)**: luồng IAP `IAPService`: store giao giao dịch → `IReceiptValidator` → `ShopService.Grant`
+  + ghi `transactionId` vào `profile.processedTransactions` → **lưu** → `IStore.Confirm` (giao lại = chỉ xác nhận, không trao trùng; tắt
+  game trước khi lưu = store giao lại lần khởi tạo sau). Gói mua-1-lần (`purchaseLimit == 1`) là non-consumable, khôi phục được.
+  Editor/bản dev dùng `FakeStore` (giao dịch dở dang + gói đã sở hữu trong **PlayerPrefs**, chế độ Success/Fail/Cancel/SuccessNoConfirm ở
+  DevMenu) và `FakeAdProvider` (lớp phủ đếm ngược 3 s, `Duration = 0` cho bot); bản phát hành chưa có SDK dùng `UnavailableStore`/
+  `UnavailableAdProvider`. 11B chỉ thêm `UnityIapStore`, validator thật, `LevelPlayAdProvider`. Quảng cáo: `double_reward` 5, `revive` 3,
+  `free_chest` 2 lượt/ngày UTC; đã mua Xóa quảng cáo → thưởng ngay (vẫn tính lượt). Hồi sinh: quảng cáo hoặc 20 kim cương (1 lần/màn).
+  Màn kết quả: nhân đôi vàng của lượt đó (1 lần). Tỷ lệ rương tính từ `LootTable` (`LootOddsRules`). Save **v6**: `processedTransactions`,
+  `purchaseCounts`, `removeAds`, `adViews`/`adDay`, `consent` (-1 chưa hỏi). Popup quyền riêng tư lần đầu vào Hub + nút trong Cài đặt.
+  `GameServices` có thuộc tính `Shop` trùng tên namespace → trong `Meta/GameServices.cs` viết đầy đủ `ArenaSurvival.Shop.*`.
+  Mỗi MonoBehaviour 1 file cùng tên (nếu không prefab mất script).
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.
@@ -316,7 +331,8 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 10B – Chương 2 | Xong: Arena_City + ArenaLoader (sân theo chương, cả nền Hub), 10 màn, Sniper, 5 biến thể, đòn xoắn ốc, mini-boss + boss mới, bảng rơi C2 |
 | 10C – Chương 3 + cân bằng | Xong: Arena_Base, 10 màn, Lính Khiên, Mưa Pháo, 2 boss, bot tự chơi, kỹ năng có cấp, cân bằng (bot qua 30 màn ~199 phút) |
 | 10D – Bản đồ vô tận + hình ảnh | Xong: nền vô tận theo chunk, bỏ tường/sân giữa, nhân vật tự vẽ + hiệu ứng, Sét lan + Drone, lưỡi cưa thức tỉnh, độ khó +7.5%/màn |
-| 11 – Cửa hàng, IAP, quảng cáo | Chưa |
+| 11A – Cửa hàng, IAP, quảng cáo (giả lập) | Xong: tab Cửa hàng (gói kim cương, khởi đầu, xóa QC, vàng, rương + tỷ lệ), IAPService + FakeStore, AdsService, hồi sinh/nhân đôi bằng QC, consent, save v6 |
+| 11B – SDK thật | **Tiếp theo** (cần tài khoản Google Play Console + điện thoại Android): Unity IAP, xác minh biên lai, LevelPlay, build Android |
 | 12 – Giữ chân, analytics, cloud save | Chưa |
 | 13 – Mobile, tối ưu, playtest | Chưa |
 | 14 – Soft launch | Chưa |
@@ -336,6 +352,9 @@ Scene `MainMenu.unity` giờ là Hub (giữ tên + build index để không ph�
 - Collider của quái là collider cứng (người dùng tự chỉnh); Player mass 10 nên quái chặn đường nhưng không ép được vào góc.
 - Benchmark 300 quái + mọi kỹ năng cấp tối đa (màn 30): Main Thread ~2.0 ms, GC trung bình 5 B/frame (đỉnh ~3 KB, vài frame — chưa tìm nguồn).
 - Sau 10D chưa chạy lại bot (người dùng yêu cầu dừng test): độ khó giảm và kỹ năng mạnh hơn nên game dễ hơn bản bot v13 đã qua.
+- Store giả lưu "đã mua" trong PlayerPrefs của máy: thử mua trong Editor xong nên bấm "Xóa store giả" ở DevMenu, nếu không nút Khôi phục
+  sẽ trao lại gói vào save thật. Popup quảng cáo giả dùng font mặc định của TMP (chỉ bản dev).
+- Gói khởi đầu được khôi phục như non-consumable (cài lại game nhận lại cả vàng/kim cương trong gói) — xem lại khi khai báo trên Google Play.
 - Mảng bê tông/đất là khối chữ nhật lặp theo lưới; muốn mép tự nhiên hơn cần tile chuyển tiếp (asset mới) hoặc RuleTile.
 - Bot chỉ dùng súng tầm ≥ 5 và né theo luật cứng: số liệu bot là mốc so sánh, vẫn cần người chơi thật.
 - Ba font asset TMP mỗi file khoảng 4 MB (atlas 1024 động) và tự thay đổi khi gặp ký tự mới lúc chạy; commit cùng lúc là được.

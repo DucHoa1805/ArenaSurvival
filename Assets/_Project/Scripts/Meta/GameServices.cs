@@ -20,6 +20,9 @@ namespace ArenaSurvival.Meta
         public static InventoryService Inventory { get; private set; }
         public static WeaponService Weapons { get; private set; }
         public static AccountService Account { get; private set; }
+        public static ArenaSurvival.Shop.ShopService Shop { get; private set; }
+        public static ArenaSurvival.Shop.IAPService Iap { get; private set; }
+        public static ArenaSurvival.Services.AdsService Ads { get; private set; }
         public static bool IsInitialized => Profile != null;
 
         /// <summary>
@@ -45,6 +48,9 @@ namespace ArenaSurvival.Meta
             Inventory = null;
             Weapons = null;
             Account = null;
+            Shop = null;
+            Iap = null;
+            Ads = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -64,12 +70,29 @@ namespace ArenaSurvival.Meta
             Weapons = new WeaponService(Profile.Profile, Economy, database, () => Profile.Save());
             Account = new AccountService(Profile.Profile, Economy, LoadAccountTable());
             StageProgress = new StageProgressService(Profile.Profile, Economy, () => Profile.Save(), Inventory, Account);
+            Shop = new ArenaSurvival.Shop.ShopService(Profile.Profile, Economy, Inventory, LoadShopCatalog(), () => Profile.Save());
+            // 11A: store + quảng cáo giả lập trong Editor/bản dev; bản phát hành chưa có SDK thì báo "không khả dụng" (11B gắn SDK thật).
+            bool dev = Application.isEditor || Debug.isDebugBuild;
+            ArenaSurvival.Shop.IStore store = dev ? new ArenaSurvival.Shop.FakeStore() : new ArenaSurvival.Shop.UnavailableStore();
+            Iap = new ArenaSurvival.Shop.IAPService(store, new ArenaSurvival.Shop.FakeReceiptValidator(), Shop, Profile.Profile, () => Profile.Save());
+            ArenaSurvival.Services.IAdProvider ads = dev ? ArenaSurvival.Services.FakeAdProvider.Create() : (ArenaSurvival.Services.IAdProvider)new ArenaSurvival.Services.UnavailableAdProvider();
+            Ads = new ArenaSurvival.Services.AdsService(ads, Profile.Profile, () => Profile.Save());
 
             if (_onStageCompleted == null) _onStageCompleted = result => StageProgress.Apply(result);
             StageEvents.OnStageCompleted -= _onStageCompleted;
             StageEvents.OnStageCompleted += _onStageCompleted;
 
             ServicesHost.Create();
+            // Sau khi mọi dịch vụ sẵn sàng: store có thể giao ngay giao dịch dở dang từ lần chạy trước.
+            Iap.Initialize();
+        }
+
+        private static ArenaSurvival.Shop.ShopCatalog LoadShopCatalog()
+        {
+            var catalog = Resources.Load<ArenaSurvival.Shop.ShopCatalog>(ArenaSurvival.Shop.ShopCatalog.ResourcePath);
+            if (catalog != null) return catalog;
+            Debug.LogWarning($"GameServices: không tìm thấy Resources/{ArenaSurvival.Shop.ShopCatalog.ResourcePath}; cửa hàng trống.");
+            return ScriptableObject.CreateInstance<ArenaSurvival.Shop.ShopCatalog>();
         }
 
         private static AccountLevelTable LoadAccountTable()

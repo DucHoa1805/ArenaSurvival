@@ -105,6 +105,8 @@ namespace ArenaSurvival.DevTools
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = -1;
             GameManager.PlayingTimeScale = _speed;
+            // Quảng cáo giả lập (11A) xong ngay: bot không ngồi chờ đếm ngược.
+            Services.FakeAdProvider.Duration = 0f;
             _onOptions = options => _pendingOptions = options;
             _onStageEnded = HandleStageEnded;
             SceneManager.sceneLoaded += HandleSceneLoaded;

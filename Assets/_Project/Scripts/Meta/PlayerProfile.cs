@@ -9,7 +9,7 @@ namespace ArenaSurvival.Meta
     /// </summary>
     public class PlayerProfile
     {
-        public const int CurrentVersion = 5;
+        public const int CurrentVersion = 6;
 
         public int saveVersion = CurrentVersion;
         public long accountXp;
@@ -27,6 +27,17 @@ namespace ArenaSurvival.Meta
         public Dictionary<string, string> equipped = new Dictionary<string, string>();
         /// <summary>Bộ đếm sinh uid cho món mới: tăng dần nên không bao giờ trùng, kể cả sau khi phân rã.</summary>
         public long nextItemUid = 1;
+        /// <summary>Mã giao dịch IAP đã trao vật phẩm (v6, Phase 11): store giao lại giao dịch cũ thì chỉ xác nhận, không trao lần 2.</summary>
+        public List<string> processedTransactions = new List<string>();
+        /// <summary>id sản phẩm cửa hàng → số lần đã mua (giới hạn mua, thưởng lần đầu).</summary>
+        public Dictionary<string, int> purchaseCounts = new Dictionary<string, int>();
+        /// <summary>Đã mua gói Xóa quảng cáo: phần thưởng quảng cáo nhận ngay không cần xem.</summary>
+        public bool removeAds;
+        /// <summary>Vị trí quảng cáo → số lượt đã xem trong ngày adDay (UTC, yyyyMMdd).</summary>
+        public Dictionary<string, int> adViews = new Dictionary<string, int>();
+        public int adDay;
+        /// <summary>Đồng ý quảng cáo cá nhân hóa: -1 chưa hỏi, 0 không, 1 có. 11B truyền vào SDK quảng cáo.</summary>
+        public int consent = -1;
         /// <summary>Phát hiện file save bị sửa tay. Không phạt, chỉ đánh dấu để analytics (Phase 12) thống kê.</summary>
         public bool tampered;
     }

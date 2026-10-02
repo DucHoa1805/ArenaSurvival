@@ -428,14 +428,14 @@ Assets/
 
 **Việc cần làm**
 - [ ] Tạo tài khoản Google Play Console, tạo ứng dụng, khai báo sản phẩm IAP.
-- [ ] `IAPService` dùng Unity In-App Purchasing: khởi tạo, mua, xử lý thành công/thất bại/hủy.
+- [ ] `IAPService` dùng Unity In-App Purchasing: khởi tạo, mua, xử lý thành công/thất bại/hủy. _(11A: IAPService + FakeStore xong; Unity IAP ở 11B)_
 - [ ] **Xác minh biên lai** trước khi trao vật phẩm (tối thiểu xác minh phía client; tốt hơn là qua máy chủ/Cloud Code).
-- [ ] **Khôi phục giao dịch** (bắt buộc với gói mua một lần như xóa quảng cáo).
-- [ ] Xử lý giao dịch dở dang: mua xong nhưng game tắt trước khi trao đồ thì lần mở sau phải trao bù.
-- [ ] Cửa hàng: gói kim cương, gói khởi đầu, gói xóa quảng cáo, mua vàng/rương bằng kim cương.
-- [ ] Rương: hiển thị tỷ lệ rơi từng loại vật phẩm.
-- [ ] `AdsService` (LevelPlay hoặc AdMob): quảng cáo có thưởng cho x2 thưởng, hồi sinh, rương miễn phí; giới hạn lượt/ngày.
-- [ ] Màn hình xin đồng ý quyền riêng tư (consent) theo yêu cầu của nhà cung cấp quảng cáo.
+- [x] **Khôi phục giao dịch** (bắt buộc với gói mua một lần như xóa quảng cáo). _(luồng xong, thử với store giả)_
+- [x] Xử lý giao dịch dở dang: mua xong nhưng game tắt trước khi trao đồ thì lần mở sau phải trao bù.
+- [x] Cửa hàng: gói kim cương, gói khởi đầu, gói xóa quảng cáo, mua vàng/rương bằng kim cương.
+- [x] Rương: hiển thị tỷ lệ rơi từng loại vật phẩm.
+- [ ] `AdsService` (LevelPlay hoặc AdMob): quảng cáo có thưởng cho x2 thưởng, hồi sinh, rương miễn phí; giới hạn lượt/ngày. _(11A: AdsService + quảng cáo giả lập xong; LevelPlay ở 11B)_
+- [x] Màn hình xin đồng ý quyền riêng tư (consent) theo yêu cầu của nhà cung cấp quảng cáo. _(11B: nối vào LevelPlay/UMP)_
 - [ ] Test mua bằng tài khoản tester nội bộ của Google Play.
 
 **Tiêu chí hoàn thành:** mua thật trên bản test nội bộ nhận đúng vật phẩm, gỡ cài đặt rồi cài lại khôi phục được gói xóa quảng cáo, quảng cáo có thưởng trao đúng phần thưởng.

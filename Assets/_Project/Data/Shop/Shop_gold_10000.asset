@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965f2b33418a6194b9c786dc0224c59d, type: 3}
+  m_Name: Shop_gold_10000
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Shop.ShopProductData
+  id: gold_10000
+  kind: 3
+  displayName: "10000 V\xE0ng"
+  description: "L\u1EE3i h\u01A1n 10%."
+  icon: {fileID: 21300000, guid: 1d53c24da830a9040a6313e972b8bc32, type: 3}
+  storeProductId: 
+  priceLabel: 
+  gemCost: 450
+  contents:
+  - currencyId: gold
+    amount: 10000
+    item: {fileID: 0}
+    rarity: 0
+  chestTable: {fileID: 0}
+  purchaseLimit: 0
+  firstPurchaseMultiplier: 1

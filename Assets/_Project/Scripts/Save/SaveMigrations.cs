@@ -18,6 +18,7 @@ namespace ArenaSurvival.Save
             V2ToV3,
             V3ToV4,
             V4ToV5,
+            V5ToV6,
         };
 
         public static JObject Migrate(JObject data, int fromVersion)
@@ -77,6 +78,19 @@ namespace ArenaSurvival.Save
 
             v4["saveVersion"] = 5;
             return v4;
+        }
+
+        /// <summary>v6 (Phase 11A) thêm dữ liệu cửa hàng/quảng cáo. Người chơi cũ chưa mua gì, chưa được hỏi đồng ý quyền riêng tư.</summary>
+        private static JObject V5ToV6(JObject v5)
+        {
+            if (v5["processedTransactions"] == null) v5["processedTransactions"] = new JArray();
+            if (v5["purchaseCounts"] == null) v5["purchaseCounts"] = new JObject();
+            if (v5["removeAds"] == null) v5["removeAds"] = false;
+            if (v5["adViews"] == null) v5["adViews"] = new JObject();
+            if (v5["adDay"] == null) v5["adDay"] = 0;
+            if (v5["consent"] == null) v5["consent"] = -1;
+            v5["saveVersion"] = 6;
+            return v5;
         }
     }
 }

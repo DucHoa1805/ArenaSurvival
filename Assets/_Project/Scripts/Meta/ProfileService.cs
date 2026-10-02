@@ -47,6 +47,12 @@ namespace ArenaSurvival.Meta
             Profile.nextItemUid = 1;
             Profile.weapons.Clear();
             WeaponService.EnsureDefaults(Profile);
+            Profile.processedTransactions.Clear();
+            Profile.purchaseCounts.Clear();
+            Profile.removeAds = false;
+            Profile.adViews.Clear();
+            Profile.adDay = 0;
+            Profile.consent = -1;
             Profile.tampered = false;
             Save();
         }

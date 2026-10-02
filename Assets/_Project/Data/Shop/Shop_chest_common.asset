@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965f2b33418a6194b9c786dc0224c59d, type: 3}
+  m_Name: Shop_chest_common
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Shop.ShopProductData
+  id: chest_common
+  kind: 4
+  displayName: "R\u01B0\u01A1ng Th\u01B0\u1EDDng"
+  description: "Nguy\xEAn li\u1EC7u + 1 trang b\u1ECB."
+  icon: {fileID: 21300000, guid: ad4a46509337d44439b85ac4a60543c9, type: 3}
+  storeProductId: 
+  priceLabel: 
+  gemCost: 60
+  contents: []
+  chestTable: {fileID: 11400000, guid: 062ea7c640d27d8448bfbaf69f342092, type: 2}
+  purchaseLimit: 0
+  firstPurchaseMultiplier: 1

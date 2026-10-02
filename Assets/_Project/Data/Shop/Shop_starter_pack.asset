@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965f2b33418a6194b9c786dc0224c59d, type: 3}
+  m_Name: Shop_starter_pack
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Shop.ShopProductData
+  id: starter_pack
+  kind: 1
+  displayName: "G\xF3i Kh\u1EDFi \u0110\u1EA7u"
+  description: "300 kim c\u01B0\u01A1ng, 5000 v\xE0ng, 30 m\u1EA3nh Laser v\xE0 1
+    Gi\xE1p S\u1EAFt Hi\u1EBFm. Ch\u1EC9 mua 1 l\u1EA7n."
+  icon: {fileID: 21300000, guid: 3e251c637259a1b4fa19a49b19b50881, type: 3}
+  storeProductId: com.arenasurvival.starter_pack
+  priceLabel: 1,99 $
+  gemCost: 0
+  contents:
+  - currencyId: gem
+    amount: 300
+    item: {fileID: 0}
+    rarity: 0
+  - currencyId: gold
+    amount: 5000
+    item: {fileID: 0}
+    rarity: 0
+  - currencyId: shard_weapon_laser
+    amount: 30
+    item: {fileID: 0}
+    rarity: 0
+  - currencyId: 
+    amount: 0
+    item: {fileID: 11400000, guid: 89101ca4ca4845745bc791bc2da3661d, type: 2}
+    rarity: 1
+  chestTable: {fileID: 0}
+  purchaseLimit: 1
+  firstPurchaseMultiplier: 1

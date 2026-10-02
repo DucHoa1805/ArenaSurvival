@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4f609cf17cbc34dbc9a012d1a3cb4d, type: 3}
+  m_Name: ShopCatalog
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Shop.ShopCatalog
+  offers:
+  - {fileID: 11400000, guid: d4105441b1084854fa942f12e89945a3, type: 2}
+  - {fileID: 11400000, guid: 5be48dca162ace443a9c5aef67e9da66, type: 2}
+  gems:
+  - {fileID: 11400000, guid: 90662ee46b4c00c42b9ee37f5d6b9ded, type: 2}
+  - {fileID: 11400000, guid: 02cdcf935b5e34640bb0a6bd00d5f1cb, type: 2}
+  - {fileID: 11400000, guid: c928f792738da0747b0c9e314aaa1e47, type: 2}
+  - {fileID: 11400000, guid: c369ddfe2809d864ab2e67f4ac8fa3fd, type: 2}
+  - {fileID: 11400000, guid: 7db0a81847be10f4abe56961404a8969, type: 2}
+  chests:
+  - {fileID: 11400000, guid: b682c6761f6a9b342bf6449442433a2e, type: 2}
+  - {fileID: 11400000, guid: f7b5082debbedc346b086040a64547e0, type: 2}
+  gold:
+  - {fileID: 11400000, guid: df6cdea62e97be84780e9965821f0d47, type: 2}
+  - {fileID: 11400000, guid: 4f746a1c5bbfd5347b9d3e4714d0e183, type: 2}

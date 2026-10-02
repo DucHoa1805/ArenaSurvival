@@ -42,6 +42,12 @@ namespace ArenaSurvival.UI
         [SerializeField] private Button _nextButton;
         [SerializeField] private Button _retryButton;
         [SerializeField] private Button _mainMenuButton;
+        [Tooltip("Nhân đôi vàng của lượt này bằng quảng cáo (Phase 11A, không bắt buộc).")]
+        [SerializeField] private Button _doubleButton;
+        [SerializeField] private TMP_Text _doubleLabel;
+
+        private StageGrant _shownGrant;
+        private bool _doubled;
 
         private static readonly Color VictoryColor = new Color(0.949f, 0.710f, 0.267f);
         private static readonly Color DefeatColor = new Color(0.878f, 0.275f, 0.235f);
@@ -56,6 +62,7 @@ namespace ArenaSurvival.UI
             _nextButton.onClick.AddListener(HandleNextClicked);
             _retryButton.onClick.AddListener(HandleRetryClicked);
             _mainMenuButton.onClick.AddListener(HandleMainMenuClicked);
+            if (_doubleButton != null) _doubleButton.onClick.AddListener(HandleDoubleClicked);
         }
 
         private void OnDestroy()
@@ -105,6 +112,9 @@ namespace ArenaSurvival.UI
             StageGrant grant = GameServices.StageProgress?.LastGrant;
             bool hasGrant = grant != null && grant.stageId == result.stageId;
             _goldText.text = $"+{(hasGrant ? grant.gold : result.gold)}";
+            _shownGrant = hasGrant ? grant : null;
+            _doubled = false;
+            RefreshDouble();
             _xpText.text = $"+{(hasGrant ? grant.accountXp : result.accountXp)} XP";
             if (_bonusText != null)
             {
@@ -122,6 +132,41 @@ namespace ArenaSurvival.UI
             // Màn cuối danh sách thì không có "Màn tiếp"; thua thì phải chơi lại chứ không được đi tiếp.
             _nextButton.gameObject.SetActive(result.victory && _session.Catalog.GetNext(stage) != null);
             _content.SetActive(true);
+        }
+
+        private void RefreshDouble()
+        {
+            if (_doubleButton == null) return;
+            bool can = _shownGrant != null && _shownGrant.gold > 0 && !_doubled && GameServices.IsInitialized;
+            _doubleButton.gameObject.SetActive(_shownGrant != null && _shownGrant.gold > 0);
+            _doubleButton.interactable = can && GameServices.Ads.CanShow(Services.AdPlacements.DoubleReward);
+            if (_doubleLabel != null)
+            {
+                int left = GameServices.IsInitialized ? GameServices.Ads.Remaining(Services.AdPlacements.DoubleReward) : 0;
+                _doubleLabel.text = _doubled ? "Đã nhân đôi!" : left > 0 ? $"Nhân đôi vàng ({left})" : "Hết lượt nhân đôi";
+            }
+        }
+
+        /// <summary>
+        /// Xem quảng cáo → cộng thêm đúng số vàng của lượt này qua EconomyService (1 lần mỗi màn). Không đụng XP/sao: chỉ phần vàng
+        /// được nhân, để quảng cáo không làm lệch tiến độ tài khoản.
+        /// </summary>
+        private void HandleDoubleClicked()
+        {
+            if (_shownGrant == null || _doubled) return;
+            StageGrant grant = _shownGrant;
+            _doubleButton.interactable = false;
+            GameServices.Ads.Show(Services.AdPlacements.DoubleReward, ok =>
+            {
+                if (ok && !_doubled)
+                {
+                    _doubled = true;
+                    GameServices.Economy.Add(Economy.CurrencyIds.Gold, grant.gold);
+                    GameServices.Profile.Save();
+                    _goldText.text = $"+{grant.gold * 2}";
+                }
+                RefreshDouble();
+            });
         }
 
         private void HandleNextClicked()

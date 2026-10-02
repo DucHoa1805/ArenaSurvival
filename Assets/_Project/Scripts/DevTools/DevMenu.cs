@@ -157,6 +157,19 @@ namespace ArenaSurvival.DevTools
                 }
                 GUI.color = Color.white;
                 GUILayout.EndHorizontal();
+
+                // Cửa hàng giả lập (11A): chọn kết quả giao dịch kế tiếp để thử cả nhánh lỗi/hủy/tắt game giữa chừng.
+                GUILayout.Label($"<b>Cửa hàng giả</b>: kết quả = {Shop.FakeStore.Mode}  ·  giao dịch dở dang: {Shop.FakeStore.PendingCount}" +
+                                $"  ·  xóa QC: {GameServices.Shop.RemoveAdsOwned}", Rich());
+                GUILayout.BeginHorizontal();
+                foreach (Shop.FakeStoreMode mode in System.Enum.GetValues(typeof(Shop.FakeStoreMode)))
+                    if (GUILayout.Button(mode.ToString())) Shop.FakeStore.Mode = mode;
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Giao lại giao dịch dở dang")) GameServices.Iap.Initialize();
+                if (GUILayout.Button("Xóa store giả")) Shop.FakeStore.ClearAll();
+                if (GUILayout.Button("Đặt lại lượt QC hôm nay")) { GameServices.Profile.Profile.adViews.Clear(); GameServices.Profile.Save(); }
+                GUILayout.EndHorizontal();
             }
 
             private static void GiveRandomItem()
