@@ -7,8 +7,9 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Kế hoạch: `Docs/project-plan.md` (Phase 0–14, kinh tế, pháp lý). **Đọc trước khi làm phase mới.**
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
+- Cài đặt Unity Gaming Services (môi trường, khóa Remote Config, sự kiện Analytics): `Docs/ugs-setup.md`.
 
-Cập nhật lần cuối: 2026-10-02, sau Phase 12A (nhiệm vụ ngày, quà đăng nhập 7 ngày, analytics, Remote Config, đồng hồ chống chỉnh giờ — bản cục bộ, UGS ở 12B).
+Cập nhật lần cuối: 2026-10-02, sau Phase 12B (code nối Unity Gaming Services: đăng nhập ẩn danh, Cloud Save, Remote Config, Analytics, giờ máy chủ — chờ bật dashboard để thử kết nối thật).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -52,7 +53,7 @@ Cập nhật lần cuối: 2026-10-02, sau Phase 12A (nhiệm vụ ngày, quà �
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 329/329 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 339/339 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -98,14 +99,15 @@ Assets/_Project/
 │   │                   IStore (+StorePurchase), FakeStore / UnavailableStore, IReceiptValidator (FakeReceiptValidator), IAPService
 │   ├── Services/       AdsService (+IAdProvider), AdRules + AdPlacements, FakeAdProvider / UnavailableAdProvider,
 │   │                   GameClock (+ITimeSource, ClockRules), AnalyticsService (+IAnalyticsSink, Local/Null sink), AnalyticsTracker,
-│   │                   RemoteConfigService (+IRemoteConfigProvider, File/Null provider)
+│   │                   RemoteConfigService (+IRemoteConfigProvider, File/Null provider), CloudSaveRules (+CloudSummary), CloudSyncService
+│   │                   (+ICloudStorage, CloudSnapshot); adapter UGS: UgsBootstrap, UgsRemoteConfigProvider, UgsAnalyticsSink, UgsCloudStorage
 │   ├── Missions/       MissionData (+MissionMetric, MissionReward), MissionCatalog (Resources), MissionRules, MissionService (nhiệm vụ ngày, mốc, quà 7 ngày)
 │   ├── Economy/        EconomyService (đường duy nhất đổi tiền tệ VÀ nguyên liệu; TrySpendMany, CanAfford; OnTransaction/OnSpent có lý do),
 │   │                   CurrencyIds, CurrencyCost, EconomyReasons (+CurrencyTransaction)
 │   ├── UI/             HudController, LevelUpPanel(+Animator), UpgradeOptionButton, PauseMenu, StageResultPanel, RevivePanel, BossHealthBar, SafeAreaFitter,
 │   │                   TalentPanel, TalentRow, EquipmentPanel, ItemDetailPopup, ItemSlotView, ItemTextFormatter, LootRowView, WeaponPanel, WeaponRowView,
 │   │                   TimeFormatter, UiHoverScale, VolumeSlider
-│   │   ├── Hub/        HubController, HubTopBar, HubTab, BattleTab, StageNodeView, LevelUpPopup, RewardFly, HubToast, ConsentPopup
+│   │   ├── Hub/        HubController, HubTopBar, HubTab, BattleTab, StageNodeView, LevelUpPopup, RewardFly, HubToast, ConsentPopup, CloudConflictPopup
 │   │   ├── Shop/       ShopPanel, ShopCardView, ShopConfirmPopup, ShopResultPopup, ShopOddsPopup
 │   │   └── Missions/   MissionPanel, MissionRowView, LoginDayView, MilestoneView, RewardIcons
 │   ├── Audio/          AudioManager, SoundBank, SoundEffect, ButtonSound, VolumeSettings
@@ -117,10 +119,10 @@ Assets/_Project/
 │                       VolumeSettings, ObjectPool, StageRules, StageCatalog, EnemyRules, EconomyService, SaveService, StageProgress,
 │                       StatRules, TalentService (+ migration v3), EquipmentRules, LootRules, InventoryService (+ migration v4),
 │                       StageLootApply, WeaponRules, WeaponService (+ migration v5), AccountService, RedDotRules, CsvReader,
-│                       BalanceRows, Chapter, ProgressionSim, ArenaLoader, Autoplay, SkillRules, GroundRules, Shop (+ MemoryStore, migration v6), Mission (+ đồng hồ, Tuning, analytics, migration v7)
+│                       BalanceRows, Chapter, ProgressionSim, ArenaLoader, Autoplay, SkillRules, GroundRules, Shop (+ MemoryStore, migration v6), Mission (+ đồng hồ, Tuning, analytics, migration v7), CloudSave
 ├── Resources/        ItemDatabase.asset, AccountLevelTable.asset, ShopCatalog.asset, MissionCatalog.asset (GameServices nạp bằng Resources.Load vì dịch vụ tự khởi tạo trước mọi scene)
 ├── Scenes/             Boot.unity (0), MainMenu.unity (1, chứa Hub — chưa đổi tên scene), Game.unity (2)
-├── link.xml            giữ namespace ArenaSurvival.Meta khi build IL2CPP (Newtonsoft đọc PlayerProfile bằng reflection)
+├── link.xml            giữ namespace ArenaSurvival.Meta + CloudSummary khi build IL2CPP (Newtonsoft đọc bằng reflection)
 ├── Data/               Enemies/ (+ Behaviours/), Bosses/ (Boss_*, BossBehaviour_*, Attack_*), Weapons/, RunUpgrades/,
 │                       Stages/ (Waves/Wave_C1..C3_*, Stage_C1..C3_01..10, Chapter_C1/C2/C3, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
 │                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*, Loot_Chest_*), Shop/ (Shop_*), Missions/ (Mission_*)
@@ -282,6 +284,18 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   hoặc DevMenu "Nạp lại"). `StageRules.DifficultyGrowthPerStage`/`RewardGrowthPerStage` giờ là property đọc `Tuning`; test đổi `Tuning`
   phải `Tuning.Reset()` ở TearDown. Save **v7**: `daily`, `login`, `lastSeenUtcTicks`. Tab Sự kiện → **Nhiệm vụ** (`featureId` `missions`, mở từ
   đầu, chấm đỏ = `HasClaimable`). DevMenu: "Giả lập sang ngày mới" (xóa mốc ngày đã lưu — không dịch đồng hồ), "Xong hết nhiệm vụ".
+- **Unity Gaming Services (12B)**: gói Authentication 3.8, Cloud Save 3.4.1, Remote Config 4.2.5, Analytics 6.3 (asmdef tham chiếu). Chỉ là adapter cho
+  interface 11A/12A. `GameServices.UsingUgs` = bản phát hành luôn bật; Editor/dev chỉ khi `PlayerPrefs dev_use_ugs = 1` (DevMenu, mở lại game);
+  bot (`SavePathOverride`) không bao giờ. Môi trường: dev → `development`, phát hành → `production`. `UgsBootstrap`: init → đăng nhập ẩn danh →
+  giờ máy chủ (header `Date` của HEAD tới `player-auth.services.api.unity.com`) → `GameClock.SetServerOffset` → gọi các `WhenReady`; lỗi thì
+  `ServicesHost.Update` thử lại sau 60 s. Analytics: `CustomEvent` (sự kiện + tham số phải khai báo trên dashboard), đồng ý qua
+  `UnityEngine.UnityConsent.EndUserConsent` (struct `ConsentState`), `AdsService.OnConsentChanged` báo khi đổi. Remote Config đọc `GetJson(key)`; sự kiện analytics xếp hàng tới khi SDK nhận đồng ý Granted (gửi sớm hơn bị SDK bỏ im lặng)
+  (GetString đoán ngày tháng). Cloud Save: khóa `profile` (nguyên chuỗi save có HMAC, `SaveService.ToEnvelope/TryParseEnvelope`) + `profile_meta`
+  (`CloudSummary`); syncId đã đồng bộ lưu ở **PlayerPrefs** `cloud_sync_<playerId>` (trạng thái lần cài → không đổi save, không vòng lặp lưu).
+  `CloudSaveRules.Decide`: không có bản mây / bản mây do máy này tải / mây rỗng → tải lên; máy rỗng → lấy bản mây; còn lại → hỏi
+  (`CloudConflictPopup` trong Hub). Chờ quyết định thì không tải lên. Lấy bản mây: `ProfileService.ReplaceWith` (PopulateObject vào CÙNG object,
+  collection thay mới) + `MergePurchases` (xóa QC, mã giao dịch, số lần mua) → lưu → nạp lại Hub. Tải lên: tối đa 1 lần/60 s sau `OnSaved`,
+  và ngay khi chuyển nền/thoát.
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.
@@ -353,7 +367,7 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 11A – Cửa hàng, IAP, quảng cáo (giả lập) | Xong: tab Cửa hàng (gói kim cương, khởi đầu, xóa QC, vàng, rương + tỷ lệ), IAPService + FakeStore, AdsService, hồi sinh/nhân đôi bằng QC, consent, save v6 |
 | 11B – SDK thật | Chờ tài khoản Google Play Console + điện thoại Android: Unity IAP, xác minh biên lai, LevelPlay, build Android |
 | 12A – Giữ chân + dịch vụ (cục bộ) | Xong: nhiệm vụ ngày + mốc, quà 7 ngày, tab Nhiệm vụ, analytics (log cục bộ), Remote Config (file), GameClock, tiền tệ có lý do, save v7 |
-| 12B – Unity Gaming Services | **Tiếp theo** (cần bật dịch vụ trên cloud.unity.com): đăng nhập ẩn danh, Cloud Save (+ chọn bản khi lệch), Remote Config, Analytics, giờ máy chủ |
+| 12B – Unity Gaming Services | Xong: adapter, Cloud Save + chọn bản, giờ máy chủ, DevMenu, 339 test; đã kết nối thật ở `development` (đăng nhập, Cloud Save, analytics đủ sự kiện, Remote Config đổi giá hồi sinh 25). Khóa Remote Config phải **publish** mới có hiệu lực |
 | 13 – Mobile, tối ưu, playtest | Chưa |
 | 14 – Soft launch | Chưa |
 
@@ -373,6 +387,10 @@ Scene `MainMenu.unity` giờ là Hub (giữ tên + build index để không ph�
 - Benchmark 300 quái + mọi kỹ năng cấp tối đa (màn 30): Main Thread ~2.0 ms, GC trung bình 5 B/frame (đỉnh ~3 KB, vài frame — chưa tìm nguồn).
 - Sau 10D chưa chạy lại bot (người dùng yêu cầu dừng test): độ khó giảm và kỹ năng mạnh hơn nên game dễ hơn bản bot v13 đã qua.
 - Nhiệm vụ "Xem 1 quảng cáo" không làm được ở bản phát hành tới khi có SDK quảng cáo (11B). Thông báo đẩy để Phase 13 (cần Android).
+- **Luôn sao lưu save ngay trước MỖI lần vào Play** (người dùng có thể đã chơi giữa hai lượt, bản sao lưu cũ không còn đúng).
+- Khôi phục save sau khi thử trong Play mode: `editor_stop` trả về TRƯỚC khi Editor lưu lần cuối lúc thoát → chờ ~5 s rồi mới chép bản sao lưu,
+  và kiểm tra lại md5 sau vài giây (đã bị ghi đè 1 lần ở 12A).
+- Đăng nhập UGS ẩn danh gắn với lần cài: gỡ game là mất tài khoản; Cloud Save chuyển máy thật sự cần liên kết Google Play Games (Play Console).
 - Thử nhiệm vụ/Remote Config trong Editor ghi `analytics-log.jsonl`, `remote-config.json`, `remote-cache.json` cạnh save thật: xóa sau khi thử.
 - Store giả lưu "đã mua" trong PlayerPrefs của máy: thử mua trong Editor xong nên bấm "Xóa store giả" ở DevMenu, nếu không nút Khôi phục
   sẽ trao lại gói vào save thật. Popup quảng cáo giả dùng font mặc định của TMP (chỉ bản dev).

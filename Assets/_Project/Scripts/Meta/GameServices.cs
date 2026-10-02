@@ -27,6 +27,14 @@ namespace ArenaSurvival.Meta
         public static ArenaSurvival.Services.AnalyticsService Analytics { get; private set; }
         public static ArenaSurvival.Services.RemoteConfigService RemoteConfig { get; private set; }
         public static ArenaSurvival.Missions.MissionService Missions { get; private set; }
+        /// <summary>Null khi không dùng UGS (Editor/bản dev chưa bật công tắc).</summary>
+        public static ArenaSurvival.Services.CloudSyncService Cloud { get; private set; }
+        /// <summary>Phiên này dùng Unity Gaming Services thật (bản phát hành luôn bật; Editor/dev bật bằng DevMenu).</summary>
+        public static bool UsingUgs { get; private set; }
+
+        /// <summary>PlayerPrefs của công tắc DevMenu "Dùng UGS thật" — đọc lúc khởi tạo nên đổi xong phải mở lại game.</summary>
+        public const string DevUseUgsPref = "dev_use_ugs";
+        private const string CloudSyncPrefPrefix = "cloud_sync_";
         public static bool IsInitialized => Profile != null;
 
         /// <summary>
@@ -51,6 +59,8 @@ namespace ArenaSurvival.Meta
             Analytics = null;
             RemoteConfig = null;
             Missions = null;
+            Cloud = null;
+            UsingUgs = false;
             Profile = null;
             SavePathOverride = null;
             Economy = null;
@@ -77,16 +87,22 @@ namespace ArenaSurvival.Meta
             Profile.Load();
             bool dev = Application.isEditor || Debug.isDebugBuild;
             string folder = System.IO.Path.GetDirectoryName(path);
+            // Bot tự chơi dùng save riêng: không bao giờ đẩy lên mây hay gửi analytics thật.
+            UsingUgs = savePath == null && (!dev || PlayerPrefs.GetInt(DevUseUgsPref, 0) == 1);
 
-            // Remote Config trước mọi dịch vụ đọc Tuning (giới hạn quảng cáo, giá hồi sinh...). 12A: file cạnh save ở bản dev.
-            ArenaSurvival.Services.IRemoteConfigProvider remote = dev
-                ? new ArenaSurvival.Services.FileRemoteConfigProvider(System.IO.Path.Combine(folder, "remote-config.json"))
-                : (ArenaSurvival.Services.IRemoteConfigProvider)new ArenaSurvival.Services.NullRemoteConfigProvider();
+            // Remote Config trước mọi dịch vụ đọc Tuning (giới hạn quảng cáo, giá hồi sinh...). Bản dev không bật UGS: file cạnh save.
+            ArenaSurvival.Services.IRemoteConfigProvider remote = UsingUgs
+                ? new ArenaSurvival.Services.UgsRemoteConfigProvider()
+                : dev
+                    ? new ArenaSurvival.Services.FileRemoteConfigProvider(System.IO.Path.Combine(folder, "remote-config.json"))
+                    : (ArenaSurvival.Services.IRemoteConfigProvider)new ArenaSurvival.Services.NullRemoteConfigProvider();
             RemoteConfig = new ArenaSurvival.Services.RemoteConfigService(remote, System.IO.Path.Combine(folder, "remote-cache.json"));
             RemoteConfig.Initialize();
 
             PlayerProfile profile = Profile.Profile;
             Clock = new ArenaSurvival.Services.GameClock(() => profile.lastSeenUtcTicks, ticks => profile.lastSeenUtcTicks = ticks);
+            // Môi trường riêng cho Editor/bản dev: số liệu thử không lẫn vào dashboard production.
+            if (UsingUgs) ArenaSurvival.Services.UgsBootstrap.Start(dev ? "development" : "production", Clock);
             Economy = new EconomyService(Profile.Profile, Profile.MarkDirty);
             Talents = new TalentService(Profile.Profile, Economy, () => Profile.Save());
             ItemDatabase database = LoadItemDatabase();
@@ -104,9 +120,15 @@ namespace ArenaSurvival.Meta
                 () => Profile.Save(), Profile.MarkDirty);
             Missions.Connect(Ads);
 
-            ArenaSurvival.Services.IAnalyticsSink sink = dev
-                ? new ArenaSurvival.Services.LocalAnalyticsSink(System.IO.Path.Combine(folder, "analytics-log.jsonl"))
-                : (ArenaSurvival.Services.IAnalyticsSink)new ArenaSurvival.Services.NullAnalyticsSink();
+            ArenaSurvival.Services.IAnalyticsSink sink;
+            if (UsingUgs)
+            {
+                var ugsSink = new ArenaSurvival.Services.UgsAnalyticsSink(Profile.Profile.consent == 1);
+                Ads.OnConsentChanged += ugsSink.SetConsent;
+                sink = ugsSink;
+            }
+            else if (dev) sink = new ArenaSurvival.Services.LocalAnalyticsSink(System.IO.Path.Combine(folder, "analytics-log.jsonl"));
+            else sink = new ArenaSurvival.Services.NullAnalyticsSink();
             Analytics = new ArenaSurvival.Services.AnalyticsService(sink, Profile.Profile);
             _tracker = new ArenaSurvival.Services.AnalyticsTracker(Analytics, Profile.Profile, Economy, Account, Weapons, Shop, Ads, Missions);
 
@@ -124,6 +146,15 @@ namespace ArenaSurvival.Meta
             // Sau khi mọi dịch vụ sẵn sàng: store có thể giao ngay giao dịch dở dang từ lần chạy trước.
             Iap.Initialize();
             _tracker.SessionStart(Application.version);
+
+            if (UsingUgs)
+            {
+                // "Bản mây máy này đồng bộ lần cuối" theo từng tài khoản UGS: trạng thái của lần cài, không thuộc hồ sơ.
+                Cloud = new ArenaSurvival.Services.CloudSyncService(Profile, new ArenaSurvival.Services.UgsCloudStorage(), Clock,
+                    id => PlayerPrefs.GetString(CloudSyncPrefPrefix + id, ""),
+                    (id, sync) => { PlayerPrefs.SetString(CloudSyncPrefPrefix + id, sync ?? ""); PlayerPrefs.Save(); });
+                Cloud.Start();
+            }
         }
 
         private static ArenaSurvival.Missions.MissionCatalog LoadMissionCatalog()

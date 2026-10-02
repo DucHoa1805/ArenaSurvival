@@ -5,5 +5,7 @@
 <linker>
   <assembly fullname="ArenaSurvival">
     <namespace fullname="ArenaSurvival.Meta" preserve="all" />
+    <!-- CloudSummary (tóm tắt bản Cloud Save, 12B) cũng đọc/ghi bằng Newtonsoft. -->
+    <type fullname="ArenaSurvival.Services.CloudSummary" preserve="all" />
   </assembly>
 </linker>

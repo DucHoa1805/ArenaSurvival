@@ -195,6 +195,24 @@ namespace ArenaSurvival.DevTools
                 }
                 if (GUILayout.Button("Nạp lại Remote Config")) GameServices.RemoteConfig.Refresh();
                 GUILayout.EndHorizontal();
+
+                // Phase 12B: Editor/bản dev mặc định cục bộ để số liệu thử không lên dashboard; bật để kiểm tra kết nối thật
+                // (môi trường "development"). Đọc lúc khởi tạo dịch vụ nên phải mở lại game.
+                bool useUgs = PlayerPrefs.GetInt(GameServices.DevUseUgsPref, 0) == 1;
+                string ugs = GameServices.UsingUgs
+                    ? $"{Services.UgsBootstrap.State} · {Services.UgsBootstrap.Environment} · {Services.UgsBootstrap.PlayerId}" +
+                      (Services.UgsBootstrap.ServerOffset.HasValue ? $" · lệch giờ {Services.UgsBootstrap.ServerOffset.Value.TotalSeconds:0}s" : "") +
+                      (Services.UgsBootstrap.LastError != null ? $" · <color=#ff6b5b>{Services.UgsBootstrap.LastError}</color>" : "")
+                    : "tắt (dùng bản cục bộ)";
+                string cloud = GameServices.Cloud != null
+                    ? $"{GameServices.Cloud.State}" + (GameServices.Cloud.LastSyncUtc.HasValue ? $" · đồng bộ {GameServices.Cloud.LastSyncUtc.Value.ToLocalTime():HH:mm:ss}" : "")
+                    : "-";
+                GUILayout.Label($"<b>UGS</b>: {ugs}  ·  Cloud Save: {cloud}", Rich());
+                GUILayout.BeginHorizontal();
+                bool toggled = GUILayout.Toggle(useUgs, " Dùng UGS thật (mở lại game để áp dụng)");
+                if (toggled != useUgs) { PlayerPrefs.SetInt(GameServices.DevUseUgsPref, toggled ? 1 : 0); PlayerPrefs.Save(); }
+                if (GameServices.Cloud != null && GUILayout.Button("Tải lên đám mây ngay")) GameServices.Cloud.Flush(Time.realtimeSinceStartup);
+                GUILayout.EndHorizontal();
             }
 
             private static void GiveRandomItem()

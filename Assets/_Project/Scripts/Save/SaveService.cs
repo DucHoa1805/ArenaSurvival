@@ -59,14 +59,7 @@ namespace ArenaSurvival.Save
         {
             try
             {
-                string payload = JsonConvert.SerializeObject(profile);
-                var envelope = new JObject
-                {
-                    ["format"] = FileFormat,
-                    ["payload"] = payload,
-                    ["hmac"] = SaveSecurity.Sign(payload),
-                };
-                File.WriteAllText(TempPath, envelope.ToString(Formatting.Indented));
+                File.WriteAllText(TempPath, ToEnvelope(profile));
                 ReplaceMainWithTemp();
                 return true;
             }
@@ -75,6 +68,31 @@ namespace ArenaSurvival.Save
                 Debug.LogWarning($"[SaveService] Không ghi được save '{_path}': {e.Message}");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Hồ sơ → chuỗi save có chữ ký (đúng định dạng file). Cloud Save (12B) lưu nguyên chuỗi này, nên bản trên mây đi qua cùng
+        /// đường đọc/migration/kiểm chữ ký với file.
+        /// </summary>
+        public static string ToEnvelope(PlayerProfile profile)
+        {
+            string payload = JsonConvert.SerializeObject(profile);
+            var envelope = new JObject
+            {
+                ["format"] = FileFormat,
+                ["payload"] = payload,
+                ["hmac"] = SaveSecurity.Sign(payload),
+            };
+            return envelope.ToString(Formatting.Indented);
+        }
+
+        /// <summary>Chuỗi save → hồ sơ (có migration). false = không đọc được; tampered = sai chữ ký nhưng vẫn đọc được.</summary>
+        public static bool TryParseEnvelope(string text, out PlayerProfile profile, out bool tampered)
+        {
+            ReadOutcome outcome = ReadText(text);
+            profile = outcome.Profile;
+            tampered = outcome.Tampered;
+            return profile != null;
         }
 
         private void ReplaceMainWithTemp()
@@ -167,10 +185,22 @@ namespace ArenaSurvival.Save
         private static ReadOutcome Read(string path)
         {
             if (!File.Exists(path)) return ReadOutcome.Unreadable;
-
             try
             {
-                JObject root = JObject.Parse(File.ReadAllText(path));
+                return ReadText(File.ReadAllText(path));
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+            {
+                return ReadOutcome.Unreadable;
+            }
+        }
+
+        private static ReadOutcome ReadText(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return ReadOutcome.Unreadable;
+            try
+            {
+                JObject root = JObject.Parse(text);
 
                 // Không có "payload" = save v1 của bản portfolio (JsonUtility, không chữ ký).
                 if (root["payload"] == null)
@@ -186,8 +216,7 @@ namespace ArenaSurvival.Save
                 PlayerProfile profile = ToProfile(SaveMigrations.Migrate(data, version));
                 return new ReadOutcome(profile, !signatureOk, version < PlayerProfile.CurrentVersion);
             }
-            catch (Exception e) when (e is JsonException || e is IOException || e is UnauthorizedAccessException ||
-                                      e is FormatException || e is InvalidCastException || e is ArgumentException)
+            catch (Exception e) when (e is JsonException || e is FormatException || e is InvalidCastException || e is ArgumentException)
             {
                 return ReadOutcome.Unreadable;
             }
@@ -210,6 +239,14 @@ namespace ArenaSurvival.Save
             foreach (string key in new System.Collections.Generic.List<string>(profile.weapons.Keys))
                 if (profile.weapons[key] == null) profile.weapons.Remove(key);
             WeaponService.EnsureDefaults(profile);
+            if (profile.processedTransactions == null) profile.processedTransactions = new System.Collections.Generic.List<string>();
+            if (profile.purchaseCounts == null) profile.purchaseCounts = new System.Collections.Generic.Dictionary<string, int>();
+            if (profile.adViews == null) profile.adViews = new System.Collections.Generic.Dictionary<string, int>();
+            if (profile.daily == null) profile.daily = new DailyMissionState();
+            if (profile.daily.progress == null) profile.daily.progress = new System.Collections.Generic.Dictionary<string, long>();
+            if (profile.daily.claimed == null) profile.daily.claimed = new System.Collections.Generic.List<string>();
+            if (profile.daily.milestones == null) profile.daily.milestones = new System.Collections.Generic.List<int>();
+            if (profile.login == null) profile.login = new LoginRewardState();
             return profile;
         }
     }

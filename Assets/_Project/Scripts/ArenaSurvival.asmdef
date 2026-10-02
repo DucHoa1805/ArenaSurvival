@@ -4,7 +4,13 @@
     "references": [
         "Unity.InputSystem",
         "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.Services.Core",
+        "Unity.Services.Core.Environments",
+        "Unity.Services.Authentication",
+        "Unity.Services.CloudSave",
+        "Unity.Services.Analytics",
+        "Unity.Services.RemoteConfig"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -27,6 +27,8 @@ namespace ArenaSurvival.Services
         public event Action OnChanged;
         /// <summary>Được thưởng ở vị trí nào (kể cả khi đã mua Xóa quảng cáo) — nhiệm vụ ngày và analytics.</summary>
         public event Action<string> OnRewarded;
+        /// <summary>Người chơi đổi lựa chọn quyền riêng tư — analytics (12B) báo lại cho SDK.</summary>
+        public event Action<bool> OnConsentChanged;
 
         public AdsService(IAdProvider provider, PlayerProfile profile, Action save, Func<DateTime> utcNow = null)
         {
@@ -73,6 +75,7 @@ namespace ArenaSurvival.Services
             _profile.consent = personalized ? 1 : 0;
             _provider.SetConsent(personalized);
             _save?.Invoke();
+            OnConsentChanged?.Invoke(personalized);
         }
 
         private void Count(string placement)

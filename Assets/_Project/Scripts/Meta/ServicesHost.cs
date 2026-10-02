@@ -21,11 +21,29 @@ namespace ArenaSurvival.Meta
             _instance = go.AddComponent<ServicesHost>();
         }
 
-        private void OnApplicationPause(bool paused)
+        private void Update()
         {
-            if (paused) GameServices.Profile?.SaveIfDirty();
+            // Chỉ khi dùng UGS; vài phép so sánh mỗi frame, không cấp phát.
+            if (!GameServices.UsingUgs) return;
+            float now = Time.realtimeSinceStartup;
+            ArenaSurvival.Services.UgsBootstrap.RetryIfFailed(now);
+            GameServices.Cloud?.Tick(now);
         }
 
-        private void OnApplicationQuit() => GameServices.Profile?.SaveIfDirty();
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused)
+            {
+                GameServices.Profile?.SaveIfDirty();
+                GameServices.Cloud?.Flush(Time.realtimeSinceStartup);
+            }
+            else GameServices.Cloud?.RetryIfFailed();
+        }
+
+        private void OnApplicationQuit()
+        {
+            GameServices.Profile?.SaveIfDirty();
+            GameServices.Cloud?.Flush(Time.realtimeSinceStartup);
+        }
     }
 }
