@@ -1,6 +1,6 @@
 ﻿id,displayName,sprite,behaviour,maxHealth,moveSpeed,contactDamage,projectileDamage,xpReward,scale,tint,isBoss,loot,lootChance
-Enemy_Basic,Basic Enemy,Kenney-TopDownShooter/PNG/Zombie 1/zoimbie1_hold.png,Behaviour_Chase,20,2,5,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
-Enemy_Fast,Fast Enemy,Kenney-TopDownShooter/PNG/Robot 1/robot1_hold.png,Behaviour_Chase,10,4,3,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
+Enemy_Basic,Basic Enemy,Kenney-TopDownShooter/PNG/Zombie 1/zoimbie1_hold.png,Behaviour_Chase,12,2,5,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
+Enemy_Fast,Fast Enemy,Kenney-TopDownShooter/PNG/Robot 1/robot1_hold.png,Behaviour_Chase,7,4,3,6,1,1,#FFFFFFFF,0,Loot_Common,0.02
 Enemy_Shooter,Xạ thủ,Kenney-TopDownShooter/PNG/Man Brown/manBrown_gun.png,Behaviour_Shooter,15,2.2,4,6,2,1,#FFFFFFFF,0,Loot_Common,0.03
 Enemy_Tank,Tank Enemy,Kenney-TopDownShooter/PNG/Soldier 1/soldier1_hold.png,Behaviour_Chase,50,1.2,10,6,4,1.5,#FFFFFFFF,0,Loot_Common,0.04
 Boss_MiniTank,Cỗ Máy Gác Cổng,Kenney-TopDownShooter/PNG/Robot 1/robot1_machine.png,BossBehaviour_MiniTank,320,1.4,15,8,15,1.9,#FFD199FF,1,,0

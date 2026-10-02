@@ -18,6 +18,11 @@ namespace ArenaSurvival.Core
         public const string KeyAdLimitFreeChest = "ad_limit_free_chest";
         public const string KeyStageGoldMultiplier = "stage_gold_multiplier";
         public const string KeyMissionRewardMultiplier = "mission_reward_multiplier";
+        public const string KeySpawnDensity = "spawn_density";
+        public const string KeySpawnEarlyBoost = "spawn_early_boost";
+        public const string KeyOpeningPack = "opening_pack";
+        public const string KeyMaxAlive = "max_alive";
+        public const string KeyUpgradeGrowth = "upgrade_growth";
 
         // 0.12 → 0.09 (10C, bot kẹt boss 1-10) → 0.075 (10D, người dùng muốn game dễ hơn nữa).
         public const float DefaultDifficultyGrowth = 0.075f;
@@ -26,6 +31,14 @@ namespace ArenaSurvival.Core
         public const int DefaultAdLimitDouble = 5;
         public const int DefaultAdLimitRevive = 3;
         public const int DefaultAdLimitFreeChest = 2;
+        // 10E: người dùng thấy đầu màn quá vắng (1-1 cứ 2 s mới 1 quái) → chương đầu sinh dày hơn, giảm dần tới chương 3.
+        // Thử đứng yên ở 1-1 (Súng lục cấp 1): ×2 + đàn 10 chết sau 7 s; ×2 + đàn 6 chết sau 15 s; ×1.8 + đàn 5 mất 15 máu,
+        // hạ 40 quái/46 s (bản cũ 19) — đông, có áp lực mà người mới không chết ngay.
+        public const float DefaultSpawnEarlyBoost = 0.8f;
+        public const int DefaultOpeningPack = 5;
+        // Benchmark 300 quái vẫn ~2 ms/frame; chừa chỗ cho tinh anh, boss, quái triệu hồi.
+        public const int DefaultMaxAlive = 220;
+        public const float DefaultUpgradeGrowth = 0.03f;
 
         public static float DifficultyGrowth { get; private set; }
         public static float RewardGrowth { get; private set; }
@@ -35,6 +48,11 @@ namespace ArenaSurvival.Core
         public static int AdLimitFreeChest { get; private set; }
         public static float StageGoldMultiplier { get; private set; }
         public static float MissionRewardMultiplier { get; private set; }
+        public static float SpawnDensity { get; private set; }
+        public static float SpawnEarlyBoost { get; private set; }
+        public static int OpeningPack { get; private set; }
+        public static int MaxAlive { get; private set; }
+        public static float UpgradeGrowth { get; private set; }
 
         static Tuning() => Reset();
 
@@ -48,6 +66,11 @@ namespace ArenaSurvival.Core
             AdLimitFreeChest = DefaultAdLimitFreeChest;
             StageGoldMultiplier = 1f;
             MissionRewardMultiplier = 1f;
+            SpawnDensity = 1f;
+            SpawnEarlyBoost = DefaultSpawnEarlyBoost;
+            OpeningPack = DefaultOpeningPack;
+            MaxAlive = DefaultMaxAlive;
+            UpgradeGrowth = DefaultUpgradeGrowth;
         }
 
         /// <summary>
@@ -71,6 +94,11 @@ namespace ArenaSurvival.Core
                     case KeyAdLimitFreeChest: if (TryInt(kv.Value, 0, 50, out int ac)) { AdLimitFreeChest = ac; applied++; } break;
                     case KeyStageGoldMultiplier: if (TryFloat(kv.Value, 0.1f, 10f, out float sg)) { StageGoldMultiplier = sg; applied++; } break;
                     case KeyMissionRewardMultiplier: if (TryFloat(kv.Value, 0.1f, 10f, out float mr)) { MissionRewardMultiplier = mr; applied++; } break;
+                    case KeySpawnDensity: if (TryFloat(kv.Value, 0.2f, 5f, out float sd)) { SpawnDensity = sd; applied++; } break;
+                    case KeySpawnEarlyBoost: if (TryFloat(kv.Value, 0f, 5f, out float eb)) { SpawnEarlyBoost = eb; applied++; } break;
+                    case KeyOpeningPack: if (TryInt(kv.Value, 0, 60, out int op)) { OpeningPack = op; applied++; } break;
+                    case KeyMaxAlive: if (TryInt(kv.Value, 30, 400, out int ma)) { MaxAlive = ma; applied++; } break;
+                    case KeyUpgradeGrowth: if (TryFloat(kv.Value, 0f, 0.2f, out float ug)) { UpgradeGrowth = ug; applied++; } break;
                 }
             }
             return applied;

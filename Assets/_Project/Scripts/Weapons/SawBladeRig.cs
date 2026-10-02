@@ -177,7 +177,7 @@ namespace ArenaSurvival.Weapons
             // Mỗi lần 1 lưỡi quét vào quái là 1 lần trúng; quái đứng yên sẽ bị các lưỡi lần lượt quét qua.
             if (!other.TryGetComponent(out Health targetHealth)) return;
 
-            targetHealth.TakeDamage(_damage * _stats.DamageMultiplier);
+            targetHealth.TakeDamage(_damage * _stats.DamageMultiplier * _stats.StageScale);
             GameEvents.ProjectileHit(other.transform.position);
         }
     }

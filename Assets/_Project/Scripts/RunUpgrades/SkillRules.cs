@@ -9,6 +9,28 @@ namespace ArenaSurvival.RunUpgrades
     public static class SkillRules
     {
         public const int MaxSawBlades = 8;
+
+        /// <summary>Hệ số sức mạnh nâng cấp trong màn theo số màn toàn cục (10E): màn càng cao thẻ càng mạnh.</summary>
+        public static float StageScale(int stageNumber) => 1f + Core.Tuning.UpgradeGrowth * (Mathf.Max(1, stageNumber) - 1);
+
+        /// <summary>Mô tả thẻ chỉ số với giá trị đã nhân hệ số màn (asset ghi số cố định nên không dùng được). null = không phải thẻ chỉ số.</summary>
+        public static string StatDescription(UpgradeType type, float value)
+        {
+            switch (type)
+            {
+                case UpgradeType.Damage: return $"Mọi đòn gây thêm {Mathf.RoundToInt(value * 100f)}% sát thương.";
+                case UpgradeType.FireRate: return $"Bắn nhanh hơn {Mathf.RoundToInt(value * 100f)}%.";
+                case UpgradeType.MoveSpeed: return $"Chạy nhanh hơn {Mathf.RoundToInt(value * 100f)}%.";
+                case UpgradeType.MaxHealth: return $"+{Mathf.RoundToInt(value)} máu tối đa (hồi luôn phần tăng).";
+                case UpgradeType.Heal: return $"Hồi ngay {Mathf.RoundToInt(value)} máu.";
+                default: return null;
+            }
+        }
+
+        /// <summary>Kỹ năng gây sát thương (hưởng hệ số màn qua PlayerStats.StageScale) — thẻ ghi thêm dòng hệ số.</summary>
+        public static bool ScalesSkillDamage(UpgradeType type) =>
+            type == UpgradeType.AddWeapon || type == UpgradeType.Aura || type == UpgradeType.Missile ||
+            type == UpgradeType.Lightning || type == UpgradeType.Drone;
         public const float SpreadPerExtraBullet = 10f;
 
         /// <summary>maxLevel = 0: kỹ năng lặp vô hạn (Hồi máu), không chiếm chỗ trong giới hạn kỹ năng.</summary>

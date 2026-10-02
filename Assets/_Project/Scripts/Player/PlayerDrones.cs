@@ -103,7 +103,7 @@ namespace ArenaSurvival.Player
                 drone.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
                 Projectile p = _pool.Get(pos, Quaternion.identity);
                 p.OnReturnToPool = _release;
-                p.Launch(dir, SkillRules.DroneDamage(_level) * _stats.DamageMultiplier, _bulletSpeed, _range, 0, 0f, 0f, 0f);
+                p.Launch(dir, SkillRules.DroneDamage(_level) * _stats.DamageMultiplier * _stats.StageScale, _bulletSpeed, _range, 0, 0f, 0f, 0f);
             }
         }
 

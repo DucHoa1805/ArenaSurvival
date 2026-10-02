@@ -296,6 +296,10 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   (`CloudConflictPopup` trong Hub). Chờ quyết định thì không tải lên. Lấy bản mây: `ProfileService.ReplaceWith` (PopulateObject vào CÙNG object,
   collection thay mới) + `MergePurchases` (xóa QC, mã giao dịch, số lần mua) → lưu → nạp lại Hub. Tải lên: tối đa 1 lần/60 s sau `OnSaved`,
   và ngay khi chuyển nền/thoát.
+- **Mật độ + thẻ theo màn (10E A+B)**: mỗi nhịp sinh `StageRules.SpawnDensity(n)` con (cộng dồn phần lẻ, `SpawnCount`), chương đầu ×1.8 giảm về ×1
+  ở màn 21; đàn mở màn 5 con; trần 220 quái (chỉ chặn sinh theo nhịp). Máu Basic 12, Fast 7, Súng lục 2 phát/giây. Thẻ lên cấp nhân
+  `SkillRules.StageScale(n) = 1 + 0.03(n−1)` (`PlayerStats.StageScale`, StageSession đặt): thẻ chỉ số hiện số đã nhân (`StatDescription`,
+  bỏ qua chữ trong asset), kỹ năng gây sát thương nhân thêm và ghi "Sức mạnh theo màn ×…". Mọi số chỉnh bằng Remote Config (`Docs/ugs-setup.md`).
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.

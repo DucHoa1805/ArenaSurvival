@@ -102,8 +102,13 @@ namespace ArenaSurvival.Stages
 
             _enemyFilter = new ContactFilter2D { useLayerMask = true, layerMask = _enemyLayer, useTriggers = true };
             _difficulty = StageRules.DifficultyMultiplier(Stage.stageNumber);
+            _spawner.Density = StageRules.SpawnDensity(Stage.stageNumber);
+            var stats = _playerHealth.GetComponent<Player.PlayerStats>();
+            if (stats != null) stats.StageScale = RunUpgrades.SkillRules.StageScale(Stage.stageNumber);
             _waveIndex = -1;
             StartNextWave();
+            // Đàn mở màn: vào là có quái để bắn ngay, không phải đợi vài nhịp sinh.
+            _spawner.SpawnImmediately(Core.Tuning.OpeningPack);
             StageEvents.RaiseStageStarted(Stage);
         }
 

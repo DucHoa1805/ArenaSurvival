@@ -21,6 +21,28 @@ namespace ArenaSurvival.Stages
         public static float DifficultyMultiplier(int stageNumber) =>
             1f + DifficultyGrowthPerStage * (Mathf.Max(1, stageNumber) - 1);
 
+        /// <summary>
+        /// Số quái sinh mỗi nhịp (trung bình): chương đầu được nhân thêm, giảm tuyến tính về ×1 ở màn 21 — chương 3 vốn đã dày.
+        /// Người dùng thấy đầu màn quá vắng nên chơi lâu (10E).
+        /// </summary>
+        public static float SpawnDensity(int stageNumber)
+        {
+            float early = Mathf.Max(0f, 1f - (Mathf.Max(1, stageNumber) - 1) / 20f);
+            return Tuning.SpawnDensity * (1f + Tuning.SpawnEarlyBoost * early);
+        }
+
+        /// <summary>
+        /// Cộng dồn phần lẻ của mật độ qua các nhịp (1.6 con/nhịp = 1, 2, 2, 1, 2...) để trung bình đúng mà không sinh "nửa con".
+        /// Không vượt trần quái sống. Trả số con sinh nhịp này, carry nhận phần lẻ còn lại.
+        /// </summary>
+        public static int SpawnCount(ref float carry, float density, int alive, int maxAlive)
+        {
+            carry += Mathf.Max(0f, density);
+            int count = Mathf.FloorToInt(carry);
+            carry -= count;
+            return Mathf.Clamp(count, 0, Mathf.Max(0, maxAlive - alive));
+        }
+
         public static float RewardScale(int stageNumber) =>
             1f + RewardGrowthPerStage * (Mathf.Max(1, stageNumber) - 1);
 

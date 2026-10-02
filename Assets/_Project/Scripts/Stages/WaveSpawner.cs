@@ -54,7 +54,11 @@ namespace ArenaSurvival.Stages
         private WaveData _wave;
         private EnemyModifiers _waveModifiers = EnemyModifiers.Default;
         private float _spawnTimer;
+        private float _spawnCarry;
         private float _leashTimer;
+
+        /// <summary>Số quái trung bình mỗi nhịp sinh (StageRules.SpawnDensity, StageSession đặt lúc vào màn).</summary>
+        public float Density { get; set; } = 1f;
 
         /// <summary>Quái chết vì trúng đòn (LootDropper nghe để rơi đồ). Không phát khi DespawnAll.</summary>
         public event System.Action<Enemy> OnEnemyKilled;
@@ -167,7 +171,9 @@ namespace ArenaSurvival.Stages
             if (_spawnTimer >= _wave.spawnInterval)
             {
                 _spawnTimer = 0f;
-                SpawnFromWave();
+                // Trần chỉ chặn sinh theo nhịp: tinh anh, boss và quái triệu hồi vẫn luôn ra.
+                int count = StageRules.SpawnCount(ref _spawnCarry, Density, _alive.Count, Core.Tuning.MaxAlive);
+                for (int i = 0; i < count; i++) SpawnFromWave();
             }
         }
 

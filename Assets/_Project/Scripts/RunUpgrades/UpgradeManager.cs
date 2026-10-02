@@ -163,29 +163,35 @@ namespace ArenaSurvival.RunUpgrades
             return null;
         }
 
+        /// <summary>Giá trị thẻ sau hệ số màn — thẻ hiển thị và Apply dùng cùng 1 số.</summary>
+        public float ScaledValue(UpgradeData upgrade) => upgrade.value * StageScale;
+
+        public float StageScale => _playerStats != null ? _playerStats.StageScale : 1f;
+
         private void Apply(UpgradeData upgrade)
         {
             int level = GetLevel(upgrade) + 1;
             _levels[upgrade] = level;
+            float value = ScaledValue(upgrade);
 
             switch (upgrade.type)
             {
                 case UpgradeType.Damage:
-                    _playerStats.AddDamageBonus(upgrade.value);
+                    _playerStats.AddDamageBonus(value);
                     break;
                 case UpgradeType.FireRate:
-                    _playerStats.AddFireRateBonus(upgrade.value);
+                    _playerStats.AddFireRateBonus(value);
                     break;
                 case UpgradeType.MoveSpeed:
-                    _playerStats.AddMoveSpeedBonus(upgrade.value);
+                    _playerStats.AddMoveSpeedBonus(value);
                     break;
                 case UpgradeType.MaxHealth:
                     // Tăng trần máu rồi hồi đúng phần vừa tăng, để người chơi thấy máu nhiều lên ngay.
-                    _playerHealth.SetMaxHealth(_playerHealth.MaxHealth + upgrade.value);
-                    _playerHealth.Heal(upgrade.value);
+                    _playerHealth.SetMaxHealth(_playerHealth.MaxHealth + value);
+                    _playerHealth.Heal(value);
                     break;
                 case UpgradeType.Heal:
-                    _playerHealth.Heal(upgrade.value);
+                    _playerHealth.Heal(value);
                     break;
                 case UpgradeType.AddWeapon:
                     MonoBehaviour weapon = FindWeapon(upgrade.weapon);

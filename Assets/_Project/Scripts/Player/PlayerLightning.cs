@@ -97,7 +97,7 @@ namespace ArenaSurvival.Player
 
         private void Strike(Transform first)
         {
-            float damage = SkillRules.LightningDamage(_level) * _stats.DamageMultiplier;
+            float damage = SkillRules.LightningDamage(_level) * _stats.DamageMultiplier * _stats.StageScale;
             int jumps = Mathf.Min(SkillRules.LightningJumps(_level), MaxBolts);
             Vector2 from = transform.position;
             Transform target = first;

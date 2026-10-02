@@ -21,6 +21,8 @@ namespace ArenaSurvival.Player
         public int ExtraPierce { get; set; }
         /// <summary>Kỹ năng Nam châm: hệ số bán kính hút XP.</summary>
         public float PickupRadiusMultiplier { get; set; } = 1f;
+        /// <summary>Hệ số theo màn (SkillRules.StageScale, StageSession đặt lúc vào màn): nhân giá trị thẻ chỉ số và sát thương kỹ năng.</summary>
+        public float StageScale { get; set; } = 1f;
 
         /// <summary>
         /// Hệ số gốc từ chỉ số ngoài trận (Talent, sau này trang bị) — đặt 1 lần lúc vào màn, TRƯỚC mọi nâng cấp trong màn;

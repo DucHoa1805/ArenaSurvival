@@ -31,6 +31,11 @@ Thêm/sửa khóa xong phải bấm **Publish** thì game mới nhận. Không t
 | `ad_limit_free_chest` | int | 2 | 0 – 50 | Lượt QC rương miễn phí/ngày |
 | `stage_gold_multiplier` | float | 1 | 0.1 – 10 | Hệ số vàng thưởng màn |
 | `mission_reward_multiplier` | float | 1 | 0.1 – 10 | Hệ số thưởng mốc/quà đăng nhập |
+| `spawn_density` | float | 1 | 0.2 – 5 | Hệ số mật độ quái mọi màn |
+| `spawn_early_boost` | float | 0.8 | 0 – 5 | Thêm mật độ cho chương đầu (giảm dần về 0 ở màn 21) |
+| `opening_pack` | int | 5 | 0 – 60 | Số quái sinh sẵn khi vào màn |
+| `max_alive` | int | 220 | 30 – 400 | Trần quái sống (chỉ chặn sinh theo nhịp) |
+| `upgrade_growth` | float | 0.03 | 0 – 0.2 | Thẻ lên cấp mạnh thêm mỗi màn (+3%) |
 
 ## 5. Analytics
 

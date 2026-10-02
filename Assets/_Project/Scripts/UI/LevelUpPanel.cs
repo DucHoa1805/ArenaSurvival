@@ -46,7 +46,7 @@ namespace ArenaSurvival.UI
 
                 if (hasOption)
                 {
-                    _optionButtons[i].Bind(options[i], _upgradeManager.GetLevel(options[i]), HandleOptionClicked);
+                    _optionButtons[i].Bind(options[i], _upgradeManager.GetLevel(options[i]), HandleOptionClicked, _upgradeManager.StageScale);
                 }
             }
 

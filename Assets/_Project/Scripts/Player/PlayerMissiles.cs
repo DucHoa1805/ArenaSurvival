@@ -67,7 +67,7 @@ namespace ArenaSurvival.Player
             if (found == 0) return; // chưa có quái trong tầm: giữ nhịp đã nạp, bắn ngay khi có
             _timer = 0f;
 
-            float damage = SkillRules.MissileDamage(_level) * _stats.DamageMultiplier;
+            float damage = SkillRules.MissileDamage(_level) * _stats.DamageMultiplier * _stats.StageScale;
             Vector2 origin = transform.position;
             for (int i = 0; i < SkillRules.MissileCount(_level); i++)
             {

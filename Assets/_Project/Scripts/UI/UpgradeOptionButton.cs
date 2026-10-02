@@ -30,7 +30,8 @@ namespace ArenaSurvival.UI
         }
 
         /// <param name="currentLevel">Cấp kỹ năng đang có trong màn (0 = chưa có).</param>
-        public void Bind(UpgradeData upgrade, int currentLevel, Action<UpgradeData> onClicked)
+        /// <param name="stageScale">Hệ số theo màn (SkillRules.StageScale): thẻ chỉ số hiện số đã nhân, kỹ năng ghi thêm hệ số.</param>
+        public void Bind(UpgradeData upgrade, int currentLevel, Action<UpgradeData> onClicked, float stageScale = 1f)
         {
             _upgrade = upgrade;
             _onClicked = onClicked;
@@ -39,7 +40,11 @@ namespace ArenaSurvival.UI
             if (upgrade.maxLevel <= 0) _nameText.text = upgrade.displayName;
             else if (currentLevel <= 0) _nameText.text = $"{upgrade.displayName}  <size=70%><color=#7CFF7C>MỚI</color></size>";
             else _nameText.text = $"{upgrade.displayName}  <size=70%>Cấp {currentLevel} → {next}</size>";
-            _descriptionText.text = upgrade.DescriptionForLevel(next);
+            string stat = SkillRules.StatDescription(upgrade.type, upgrade.value * stageScale);
+            string text = stat ?? upgrade.DescriptionForLevel(next);
+            if (stat == null && stageScale > 1.005f && SkillRules.ScalesSkillDamage(upgrade.type))
+                text += $"\n<color=#F2B544>Sức mạnh theo màn ×{stageScale:0.00}</color>";
+            _descriptionText.text = text;
 
             if (_iconImage != null)
             {

@@ -76,7 +76,7 @@ namespace ArenaSurvival.Player
             _timer = 0f;
             _pulse = 1f;
 
-            float damage = SkillRules.AuraDamage(_level) * _stats.DamageMultiplier;
+            float damage = SkillRules.AuraDamage(_level) * _stats.DamageMultiplier * _stats.StageScale;
             int count = Physics2D.OverlapCircle(transform.position, SkillRules.AuraRadius(_level), _filter, _buffer);
             for (int i = 0; i < count; i++)
             {
