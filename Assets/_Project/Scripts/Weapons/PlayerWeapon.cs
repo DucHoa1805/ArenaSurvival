@@ -26,6 +26,9 @@ namespace ArenaSurvival.Weapons
         [Tooltip("Đạn mặc định khi WeaponData không có prefab đạn riêng.")]
         [SerializeField] private Projectile _projectilePrefab;
         [SerializeField] private Transform _firePoint;
+        [Tooltip("Sprite lóe nòng (con của FirePoint, tắt sẵn). Không bắt buộc.")]
+        [SerializeField] private SpriteRenderer _muzzleFlash;
+        [SerializeField] private float _muzzleFlashTime = 0.05f;
         [SerializeField] private LayerMask _enemyLayer; // chỉ tìm mục tiêu trên layer Enemy
 
         [Header("Pooling")]
@@ -49,9 +52,17 @@ namespace ArenaSurvival.Weapons
         // (bản OverlapCircleNonAlloc cũ bị Unity 6 đánh dấu obsolete).
         private readonly List<Collider2D> _hits = new List<Collider2D>(MaxTargetsPerScan);
 
+        private float _flashTimer;
+
         private void Awake()
         {
             _playerStats = GetComponent<PlayerStats>();
+            if (_muzzleFlash == null && _firePoint != null)
+            {
+                Transform t = _firePoint.Find("MuzzleFlash");
+                if (t != null) _muzzleFlash = t.GetComponent<SpriteRenderer>();
+            }
+            if (_muzzleFlash != null) _muzzleFlash.enabled = false;
             _releaseProjectile = ReturnProjectileToPool;
             _enemyFilter = new ContactFilter2D { useLayerMask = true, layerMask = _enemyLayer, useTriggers = true };
         }
@@ -90,6 +101,11 @@ namespace ArenaSurvival.Weapons
         {
             if (!_equipped) return;
             _fireCooldown -= Time.deltaTime;
+            if (_flashTimer > 0f)
+            {
+                _flashTimer -= Time.deltaTime;
+                if (_flashTimer <= 0f && _muzzleFlash != null) _muzzleFlash.enabled = false;
+            }
 
             Transform target = FindNearestEnemy();
             if (target == null) return;
@@ -145,6 +161,14 @@ namespace ArenaSurvival.Weapons
                 projectile.OnReturnToPool = _releaseProjectile;
                 projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, pierce,
                     _stats.explosionRadius, _stats.explosionDamageFraction, _stats.knockback);
+            }
+
+            if (_muzzleFlash != null)
+            {
+                _muzzleFlash.enabled = true;
+                // Xoay ngẫu nhiên quanh trục nòng để các lần lóe không giống hệt nhau.
+                _muzzleFlash.transform.localRotation = Quaternion.Euler(Random.Range(0f, 360f), 0f, 0f);
+                _flashTimer = _muzzleFlashTime;
             }
 
             // 1 tiếng cho cả loạt đạn, không phải mỗi viên 1 tiếng.

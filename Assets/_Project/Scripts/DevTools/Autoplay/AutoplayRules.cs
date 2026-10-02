@@ -85,6 +85,8 @@ namespace ArenaSurvival.DevTools
                 // Kỹ năng gây sát thương/phòng thủ trước, chỉ số sau — giống người chơi hợp lý (spec run skills 10C).
                 case UpgradeType.Multishot: return 0;
                 case UpgradeType.AddWeapon: return 1;
+                case UpgradeType.Lightning: return 2;
+                case UpgradeType.Drone: return 2;
                 case UpgradeType.Aura: return 2;
                 case UpgradeType.Missile: return 3;
                 case UpgradeType.Shield: return 4;

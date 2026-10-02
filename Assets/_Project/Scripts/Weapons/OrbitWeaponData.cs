@@ -20,6 +20,15 @@ namespace ArenaSurvival.Weapons
         [Tooltip("Tốc độ quay vòng quanh Player (độ/giây). Âm = quay ngược chiều kim đồng hồ.")]
         public float orbitSpeed = 180f;
 
+        [Header("Effects (10D)")]
+        [Tooltip("Quầng sáng dưới mỗi lưỡi (sprite tròn mờ). Không bắt buộc.")]
+        public Sprite glowSprite;
+        [Tooltip("Material cho vệt và quầng (unlit, nhận màu đỉnh). Không bắt buộc.")]
+        public Material effectMaterial;
+        public Color glowColor = new Color(0.55f, 0.85f, 1f, 0.55f);
+        [Tooltip("Màu khi lưỡi cưa thức tỉnh (cấp tối đa).")]
+        public Color awakenedColor = new Color(1f, 0.55f, 0.15f, 0.8f);
+
         [Header("Damage")]
         [Tooltip("Sát thương mỗi lần 1 lưỡi cưa quét trúng quái.")]
         public float damage = 8f;

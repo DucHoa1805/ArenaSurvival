@@ -20,6 +20,10 @@ namespace ArenaSurvival.Weapons
         private PlayerStats _stats;
         private Rigidbody2D _rb;
         private Transform[] _visuals;
+        private SpriteRenderer[] _glows;
+        private TrailRenderer[] _trails;
+        private SpriteRenderer[] _bladeSprites;
+        private bool _awakened;
         private float _orbitAngle;
         private int _level = 1;
         private float _damage;
@@ -54,7 +58,12 @@ namespace ArenaSurvival.Weapons
             _level = Mathf.Max(1, level);
             _damage = Skills.SawBladeDamage(_data.damage, _level);
             int count = Skills.SawBladeCount(_level);
-            if (_visuals != null && _visuals.Length == count) return;
+            bool awakened = Skills.SawBladeAwakened(_level);
+            if (_visuals != null && _visuals.Length == count)
+            {
+                if (awakened != _awakened) ApplyLook(awakened);
+                return;
+            }
             for (int i = transform.childCount - 1; i >= 0; i--) Destroy(transform.GetChild(i).gameObject);
             BuildBlades(count);
         }
@@ -65,6 +74,9 @@ namespace ArenaSurvival.Weapons
             var root = gameObject;
             var rig = this;
             rig._visuals = new Transform[count];
+            rig._glows = new SpriteRenderer[count];
+            rig._trails = new TrailRenderer[count];
+            rig._bladeSprites = new SpriteRenderer[count];
 
             for (int i = 0; i < count; i++)
             {
@@ -92,6 +104,43 @@ namespace ArenaSurvival.Weapons
                 }
 
                 rig._visuals[i] = visual.transform;
+                rig._bladeSprites[i] = sr;
+
+                // Quầng sáng dưới lưỡi + vệt quét theo vòng: lưỡi cưa trông "có lực" thay vì 1 hình tròn trơn.
+                if (data.glowSprite != null)
+                {
+                    var glow = new GameObject("Glow");
+                    glow.transform.SetParent(blade.transform, false);
+                    var gsr = glow.AddComponent<SpriteRenderer>();
+                    gsr.sprite = data.glowSprite;
+                    if (data.effectMaterial != null) gsr.sharedMaterial = data.effectMaterial;
+                    gsr.sortingOrder = 0;
+                    glow.transform.localScale = Vector3.one * (data.bladeSize * 2.2f / data.glowSprite.bounds.size.x);
+                    rig._glows[i] = gsr;
+                }
+                var trail = blade.AddComponent<TrailRenderer>();
+                trail.time = 0.18f;
+                trail.widthMultiplier = data.bladeSize * 0.8f;
+                trail.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
+                trail.minVertexDistance = 0.05f;
+                trail.sortingOrder = 0;
+                if (data.effectMaterial != null) trail.sharedMaterial = data.effectMaterial;
+                rig._trails[i] = trail;
+            }
+            ApplyLook(Skills.SawBladeAwakened(_level));
+        }
+
+        /// <summary>Màu quầng/vệt: xanh thường, lửa vàng cam khi thức tỉnh (lưỡi cũng ánh cam).</summary>
+        private void ApplyLook(bool awakened)
+        {
+            _awakened = awakened;
+            Color glow = awakened ? _data.awakenedColor : _data.glowColor;
+            Color tail = glow; tail.a = 0f;
+            for (int i = 0; i < _visuals.Length; i++)
+            {
+                if (_glows[i] != null) _glows[i].color = glow;
+                if (_trails[i] != null) { _trails[i].startColor = glow; _trails[i].endColor = tail; }
+                if (_bladeSprites[i] != null) _bladeSprites[i].color = awakened ? new Color(1f, 0.82f, 0.6f) : Color.white;
             }
         }
 

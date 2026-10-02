@@ -8,7 +8,7 @@ reset sau màn) và ngoài màn (trang bị, Talent, level tài khoản, lưu v�
 - Spec/plan từng đợt việc: `Docs/specs/`, `Docs/plans/`. Thiết kế bản core cũ: `Docs/archive/core-design-v1.md`.
 - Giấy phép asset: `Docs/asset-licenses.md` (asset mới phải cho phép dùng thương mại và được ghi vào đây).
 
-Cập nhật lần cuối: 2026-10-02, sau Phase 10C (Chương 3 "Căn cứ", bot tự chơi `-autoplay`, kỹ năng trong màn có cấp, cân bằng — bot qua cả 30 màn).
+Cập nhật lần cuối: 2026-10-02, sau Phase 10D (bản đồ vô tận, nhân vật chính tự vẽ, hiệu ứng kỹ năng/súng, Sét lan + Drone, độ khó +7.5%/màn).
 
 ## Quy ước làm việc (quan trọng)
 
@@ -52,7 +52,7 @@ Cập nhật lần cuối: 2026-10-02, sau Phase 10C (Chương 3 "Căn cứ", bo
 - `simulate_key` của unity-cli **không** làm đổi `Keyboard.current` (kể cả phím D): không dùng để test phím tắt; gọi thẳng
   hàm/bật component qua `eval_file` (ví dụ bật `DevMenuView`) và nhờ người dùng bấm phím thật.
 - Chụp màn hình: `capture_game_view --save_path "Temp/x.png"` (file lưu vào `Assets/Temp/`, nhớ `delete_asset --confirm true` sau đó).
-- Unit test: `run_tests --mode EditMode` (hiện 274/274 đạt), hoặc Window → General → Test Runner.
+- Unit test: `run_tests --mode EditMode` (hiện 292/292 đạt), hoặc Window → General → Test Runner.
 - Hiện Editor mở scene nào thì Play chạy scene đó (dịch vụ vẫn tự khởi tạo). Muốn test cả vòng như bản build thì mở `Boot.unity` trước.
 - **Editor và bản build dùng CHUNG file save** `%USERPROFILE%\AppData\LocalLow\DefaultCompany\ArenaSurvival\save.json` (+ `.bak`):
   test trong Play mode cộng vàng/sao thật vào save của người dùng. Sao lưu file trước khi test thứ có thể phá dữ liệu.
@@ -68,7 +68,8 @@ Assets/_Project/
 ├── Scripts/            assembly ArenaSurvival (ArenaSurvival.asmdef); namespace = ArenaSurvival.<tên thư mục>
 │   ├── Core/           GameManager, GameState, GameEvents, ObjectPool, SceneLoader (+ FirstSceneOverride), PauseInput, CameraFollow
 │   ├── Player/         PlayerController (+MoveOverride cho bot), PlayerStats (+đa nòng/xuyên/nam châm), PlayerDeathHandler, PlayerLoadout,
-│   │                   PlayerShield, PlayerAura, PlayerMissiles (kỹ năng trong màn, tắt sẵn trên prefab), PlayerControls.inputactions
+│   │                   PlayerShield, PlayerAura, PlayerMissiles, PlayerLightning, PlayerDrones (kỹ năng trong màn, tắt sẵn trên prefab),
+│                   HeroFx (vòng sáng dưới chân, vệt chạy), PlayerControls.inputactions
 │   ├── Combat/         Health (+giáp, ShieldLayers), IHitReceiver (đòn có hướng), HealthRegen, CombatRules (hàm thuần: công thức giáp), Projectile (tầm, xuyên, nổ vùng, đẩy lùi)
 │   ├── Stats/          StatKind, StatBlock (+StatRules), HeroBaseStats (SO)
 │   ├── Items/          Rarity/EquipSlot (+EquipSlotIds), ItemData, MaterialData, ItemDatabase (Resources), EquipmentRules (hàm thuần),
@@ -82,7 +83,7 @@ Assets/_Project/
 │   │                   BossAttack → RadialBurstAttack, DashAttack, SummonAttack, SpiralAttack, ArtilleryAttack;
 │   │                   EnemyProjectiles (pool đạn chung + quả pháo ArtilleryShell)
 │   ├── Stages/         StageSession (điều phối màn), WaveSpawner, StageData + EliteGroup, WaveData, StageCatalog (+chapters), ChapterData (+arenaPrefab),
-│   │                   ArenaLoader (đổi sân theo chương, trong Game + MainMenu),
+│   │                   ArenaLoader (đổi nền theo chương, trong Game + MainMenu), InfiniteGround + GroundRules (nền vô tận theo chunk),
 │   │                   StageSelection (màn đang chọn, static), StageResult, StageRules (hàm thuần: độ khó, sao, thưởng), RunStats
 │   ├── RunUpgrades/    Lên cấp + chọn kỹ năng TRONG MÀN: ExperienceSystem, XpCurve, XpOrb, XpOrbSpawner, UpgradeData (+maxLevel, mô tả theo cấp),
 │   │                   UpgradeManager (cấp từng kỹ năng), SkillRules (hàm thuần: số theo cấp), RandomPicker
@@ -114,10 +115,11 @@ Assets/_Project/
 │                       Stages/ (Waves/Wave_C1..C3_*, Stage_C1..C3_01..10, Chapter_C1/C2/C3, StageCatalog_Main), Audio/ (SoundBank), Stats/ (HeroBaseStats),
 │                       Talents/ (Talent_*, TalentCatalog_Main), Items/ (Item_*, Materials/Mat_*), Loot/ (Loot_*)
 ├── Prefabs/            Player, Enemy (dùng chung cho mọi quái và boss; con `Telegraph` = tia ngắm), Projectile, EnemyProjectile, XpOrb, AudioManager,
-│                       Arena (sa mạc), Arena_City (thành phố), Arena_Base (căn cứ), Vfx/* (+ArtilleryShell),
+│                       Ground_Desert/City/Base (nền vô tận 3 chương; Arena/Arena_City/Arena_Base cũ là nguồn lớp tilemap, không còn dùng trong scene),
+│                       Vfx/* (+ArtilleryShell),
 │                       LootPickup, UI/VolumeSettings, UI/TalentPanel, UI/TalentRow, UI/EquipmentPanel, UI/ItemSlot, UI/ItemSlotSmall, UI/WeaponRow, UI/StageNode,
 │                       Projectile_Grenade, Projectile_Laser, Vfx/Vfx_Explosion, Vfx/Vfx_HealPulse
-├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Fonts, Vfx, Weapons, Pickups, Projectiles
+├── Art/                Kenney-TopDownShooter, Tiles (Tilemap), UI (sprite + icon tự vẽ), Player (nhân vật, lóe nòng, drone — tự vẽ), Enemies, Fonts, Vfx, Weapons, Pickups, Projectiles
 └── Audio/              MainMixer.mixer (Master/Music/SFX), UI, Impact, Digital (Kenney), Music (Juhani Junkala, OGG)
 ```
 
@@ -238,6 +240,14 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   Lưỡi cưa (3 → 8 lưỡi, +10%/cấp; `OrbitWeapon.SetLevel` dựng lại lưỡi), Lá chắn (`Health.ShieldLayers`, hồi 8→4 s, cấp 5 hai lớp),
   Vòng điện, Tên lửa (đạn lựu, pool riêng), Nam châm. Số theo cấp ở `SkillRules`. Enum `UpgradeType` chỉ thêm ở cuối.
   Vũ khí chính +12% sát thương gốc/cấp; sao 3 thêm 1 viên (Súng lục, Súng máy, Laser).
+- **Bản đồ vô tận + hình ảnh (10D)**: không còn tường/sân giữa. `InfiniteGround` tô chunk 16×16 ô quanh camera (bán kính 2), xóa chunk xa;
+  chọn tile bằng `GroundRules` (hash + nhiễu, tất định — quay lại thấy y hệt); mảng phụ dạng **khối chữ nhật** (`blockSize`) vì tile Kenney
+  không có mảnh chuyển tiếp cho mép cong. `WaveSpawner._endless`: quái sinh trên vòng ngay ngoài màn hình quanh camera, `ClampToArena`
+  trả nguyên vị trí, quái xa hơn 1.8× nửa đường chéo màn hình được đưa lại vòng sinh (không "bỏ" quái được). Bot dùng `PlayArea` (vô hạn).
+  Nhân vật `Art/Player/hero.png` (Visual ×1.3), bóng, `GroundRing`, `RunTrail`, lóe nòng (`PlayerWeapon._muzzleFlash`). Vệt đạn: TrailRenderer
+  trên prefab đạn, `Projectile.Launch` gọi `Clear()` (đạn từ pool). Lưỡi cưa: quầng + vệt, cấp 6 "thức tỉnh" lửa cam (+30%). Vòng điện xoay/nảy,
+  cấp 5 vàng; lá chắn lấp lánh + chớp khi chặn. Kỹ năng mới: Sét lan (LineRenderer dựng sẵn), Drone hộ vệ (pool đạn riêng).
+  Hiệu ứng dùng chung `Art/Vfx/Vfx_Particle.mat` (URP unlit) — không dùng `Shader.Find` (dễ bị loại khỏi bản build). Độ khó **+7.5%/màn**.
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.
@@ -278,9 +288,9 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | Màn chơi (10, C3) | Chương 3 "Căn cứ" 3-1..3-10 (số màn 21–30): 3-2 Lính Khiên, 3-3 Sniper C3, 3-5 mini-boss Pháo Đài Di Động (Mưa Pháo), 3-10 boss Tướng Chỉ Huy (Mưa Pháo, xoắn ốc, gọi Lính Khiên/Kamikaze). Lực chiến đề xuất 1040 → 1530 |
 | Màn chơi (10, C2) | Chương 2 "Thành phố" 2-1..2-10 (số màn 11–20): 3 đợt × 60 s (nhịp sinh 0.95 → 0.67 s) + đợt tinh anh; 2-2 Sniper, 2-3 Charger C2, 2-4 Xạ thủ C2 + Kamikaze, 2-6 Splitter, 2-7 Healer; 2-5 mini-boss, 2-10 boss. Quà lần đầu: 2-3 10 mảnh Laser, 2-10 20 mảnh Phóng lựu. Lực chiến đề xuất 565 → 1115 (mô phỏng: 20 màn ~108 phút) |
 | Vũ khí chính (5) | Súng lục (có sẵn), Shotgun (6 viên tầm ngắn, đẩy lùi), Súng máy (6 phát/giây, tản), Phóng lựu (nổ r=1.6), Laser (xuyên 4); cấp + 5 sao |
-| Kỹ năng trong màn (12, có cấp) | Sát thương +25%, Tốc bắn +20%, Tốc chạy +10%, Máu +20, Hồi máu +30, Lưỡi cưa (3→8 lưỡi), Đa nòng, Đạn xuyên, Lá chắn, Vòng điện, Tên lửa, Nam châm |
+| Kỹ năng trong màn (14, có cấp) | Sát thương +25%, Tốc bắn +20%, Tốc chạy +10%, Máu +20, Hồi máu +30, Lưỡi cưa (3→8 lưỡi, cấp 6 thức tỉnh), Đa nòng, Đạn xuyên, Lá chắn, Vòng điện, Tên lửa, Nam châm, Sét lan, Drone hộ vệ |
 | XP trong màn | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
-| Sân | Tilemap 30×30 ô trong viền đá. Sa mạc: cát, đường đất, bãi cỏ, bụi cây. Thành phố: đường nhựa + vạch vàng ngã tư, thùng phuy, mảnh vụn, vỉa hè bê tông, bụi cây |
+| Bản đồ | Vô tận, không tường. Sa mạc: cát + bãi đất, đá, bụi cây. Thành phố: đường nhựa + ô bê tông, mảnh vụn, thùng phuy. Căn cứ: sân bê tông + bãi nhựa/đất, thùng hàng |
 | UI | HUD (đợt i/n + thanh tiến độ màn, banner "ĐỢT TINH ANH!" / "BOSS XUẤT HIỆN!" / "BOSS NỔI GIẬN!"), thanh máu boss (tên + vạch ngưỡng pha), bảng lên cấp, menu ESC (slider âm lượng), bảng hồi sinh, màn kết quả (sao, thưởng, Màn tiếp/Chơi lại/Về menu), Hub (thanh trên, 5 tab, chọn màn, popup lên cấp, tiền bay, chấm đỏ) + bảng Cài đặt + bảng Nâng cấp (Talent, lực chiến) + bảng Trang bị (kho, chi tiết, nâng cấp/đột phá/phân rã, ô Vũ khí) + bảng Vũ khí (mở khóa, lên sao, nâng cấp), hàng vật phẩm ở màn kết quả |
 | Trang bị (4) | Áo Da (máu 20, giáp 3), Giáp Sắt (máu 10, giáp 6), Nhẫn Sức Mạnh (+4% sát thương), Bùa Gió (+3% tốc chạy, +0.2 hồi máu); 4 độ hiếm |
 | Nguyên liệu | Quặng (nâng vũ khí), Da (nâng giáp/phụ kiện), Lõi boss (đột phá), 5 loại mảnh vũ khí |
@@ -305,7 +315,7 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 10A – Công cụ dữ liệu + Chương 1 | Xong: CSV + nhập/xuất, mô phỏng tiến trình, ChapterData, 10 màn, 4 quái mới, tab Chiến đấu 10 màn |
 | 10B – Chương 2 | Xong: Arena_City + ArenaLoader (sân theo chương, cả nền Hub), 10 màn, Sniper, 5 biến thể, đòn xoắn ốc, mini-boss + boss mới, bảng rơi C2 |
 | 10C – Chương 3 + cân bằng | Xong: Arena_Base, 10 màn, Lính Khiên, Mưa Pháo, 2 boss, bot tự chơi, kỹ năng có cấp, cân bằng (bot qua 30 màn ~199 phút) |
-| 10D – Bản đồ vô tận + hình ảnh | **Tiếp theo**: bỏ tường/sân giữa, nền vô tận theo camera, nhân vật chính tự vẽ, hiệu ứng kỹ năng/súng |
+| 10D – Bản đồ vô tận + hình ảnh | Xong: nền vô tận theo chunk, bỏ tường/sân giữa, nhân vật tự vẽ + hiệu ứng, Sét lan + Drone, lưỡi cưa thức tỉnh, độ khó +7.5%/màn |
 | 11 – Cửa hàng, IAP, quảng cáo | Chưa |
 | 12 – Giữ chân, analytics, cloud save | Chưa |
 | 13 – Mobile, tối ưu, playtest | Chưa |
@@ -324,7 +334,9 @@ Scene `MainMenu.unity` giờ là Hub (giữ tên + build index để không ph�
 - Test Runner thỉnh thoảng lỗi ở bước khôi phục scene (`RestoreSceneSetupTask` NullReference) và để lại hộp thoại chặn mọi lệnh CLI:
   nhờ người dùng đóng hộp thoại rồi chạy lại.
 - Collider của quái là collider cứng (người dùng tự chỉnh); Player mass 10 nên quái chặn đường nhưng không ép được vào góc.
-- Benchmark 300 quái + mọi kỹ năng cấp tối đa (màn 30): Main Thread ~2.4 ms, GC trung bình 4 B/frame (đỉnh 3.4 KB, chưa tìm nguồn — xem ở 10D).
+- Benchmark 300 quái + mọi kỹ năng cấp tối đa (màn 30): Main Thread ~2.0 ms, GC trung bình 5 B/frame (đỉnh ~3 KB, vài frame — chưa tìm nguồn).
+- Sau 10D chưa chạy lại bot (người dùng yêu cầu dừng test): độ khó giảm và kỹ năng mạnh hơn nên game dễ hơn bản bot v13 đã qua.
+- Mảng bê tông/đất là khối chữ nhật lặp theo lưới; muốn mép tự nhiên hơn cần tile chuyển tiếp (asset mới) hoặc RuleTile.
 - Bot chỉ dùng súng tầm ≥ 5 và né theo luật cứng: số liệu bot là mốc so sánh, vẫn cần người chơi thật.
 - Ba font asset TMP mỗi file khoảng 4 MB (atlas 1024 động) và tự thay đổi khi gặp ký tự mới lúc chạy; commit cùng lúc là được.
 - Mỗi lần build, Unity tự ghi lại vài file cài đặt (`UniversalRP.asset`, `UniversalRenderPipelineGlobalSettings.asset`,

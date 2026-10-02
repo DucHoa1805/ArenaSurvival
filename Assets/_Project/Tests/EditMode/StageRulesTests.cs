@@ -6,9 +6,9 @@ namespace ArenaSurvival.Tests
     public class StageRulesTests
     {
         [TestCase(1, 1f)]
-        [TestCase(2, 1.09f)]
-        [TestCase(11, 1.9f)]
-        public void DifficultyMultiplier_Grows9PercentPerStage(int stage, float expected)
+        [TestCase(2, 1.075f)]
+        [TestCase(11, 1.75f)]
+        public void DifficultyMultiplier_Grows7_5PercentPerStage(int stage, float expected)
         {
             Assert.AreEqual(expected, StageRules.DifficultyMultiplier(stage), 0.0001f);
         }

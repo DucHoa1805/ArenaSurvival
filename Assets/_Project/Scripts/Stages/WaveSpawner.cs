@@ -24,6 +24,15 @@ namespace ArenaSurvival.Stages
         [Tooltip("Quái chỉ xuất hiện cách mép màn hình ít nhất bấy nhiêu, để không hiện ra ngay trước mặt người chơi.")]
         [SerializeField] private float _offscreenMargin = 0.5f;
 
+        [Header("Endless (10D)")]
+        [Tooltip("Bản đồ vô tận: quái sinh trên vòng quanh màn hình và không bị kẹp trong sân. Tắt = luật sân cố định cũ.")]
+        [SerializeField] private bool _endless = true;
+        [Tooltip("Độ dày vòng sinh (đơn vị) tính từ mép màn hình ra ngoài.")]
+        [SerializeField] private float _spawnRingDepth = 2.5f;
+        [Tooltip("Quái xa hơn bấy nhiêu lần nửa đường chéo màn hình thì được đưa lại vòng sinh — người chơi không 'bỏ' quái được.")]
+        [SerializeField] private float _leashFactor = 1.8f;
+        [SerializeField] private float _leashCheckInterval = 0.5f;
+
         [Header("Pooling")]
         [SerializeField] private int _poolPrewarmCount = 15;
 
@@ -45,6 +54,7 @@ namespace ArenaSurvival.Stages
         private WaveData _wave;
         private EnemyModifiers _waveModifiers = EnemyModifiers.Default;
         private float _spawnTimer;
+        private float _leashTimer;
 
         /// <summary>Quái chết vì trúng đòn (LootDropper nghe để rơi đồ). Không phát khi DespawnAll.</summary>
         public event System.Action<Enemy> OnEnemyKilled;
@@ -102,9 +112,12 @@ namespace ArenaSurvival.Stages
         }
 
         /// <summary>Quái không va chạm tường (tường chỉ giữ Player) nên tự kẹp trong vùng sân.</summary>
-        public Vector2 ClampToArena(Vector2 position) => new Vector2(
+        public Vector2 ClampToArena(Vector2 position) => _endless ? position : new Vector2(
             Mathf.Clamp(position.x, _arenaArea.xMin, _arenaArea.xMax),
             Mathf.Clamp(position.y, _arenaArea.yMin, _arenaArea.yMax));
+
+        /// <summary>Vùng bot coi là "sân" để né mép: vô tận thì rất lớn (không có mép).</summary>
+        public Rect PlayArea => _endless ? new Rect(-1e5f, -1e5f, 2e5f, 2e5f) : _arenaArea;
 
         public void NotifyKilled(Enemy enemy) => OnEnemyKilled?.Invoke(enemy);
 
@@ -138,6 +151,16 @@ namespace ArenaSurvival.Stages
 
         private void Update()
         {
+            if (_endless)
+            {
+                _leashTimer += Time.deltaTime;
+                if (_leashTimer >= _leashCheckInterval)
+                {
+                    _leashTimer = 0f;
+                    LeashFarEnemies();
+                }
+            }
+
             if (_wave == null) return;
 
             _spawnTimer += Time.deltaTime;
@@ -181,6 +204,7 @@ namespace ArenaSurvival.Stages
         /// </summary>
         private Vector2 GetSpawnPosition()
         {
+            if (_endless) return RingPoint();
             Rect view = GetCameraView(_offscreenMargin);
 
             for (int i = 0; i < MaxSpawnAttempts; i++)
@@ -194,6 +218,41 @@ namespace ArenaSurvival.Stages
 
             // Dự phòng (rất hiếm): góc sân xa camera nhất, chấp nhận có thể lọt vào mép màn hình.
             return GetFarthestCorner(view.center);
+        }
+
+        private float ViewHalfDiagonal()
+        {
+            float h = _targetCamera.orthographicSize, w = h * _targetCamera.aspect;
+            return Mathf.Sqrt(h * h + w * w);
+        }
+
+        /// <summary>1 điểm ngẫu nhiên trên vòng ngay ngoài màn hình quanh camera (camera bám Player).</summary>
+        private Vector2 RingPoint()
+        {
+            float angle = Random.Range(0f, Mathf.PI * 2f);
+            float radius = ViewHalfDiagonal() + _offscreenMargin + Random.Range(0f, _spawnRingDepth);
+            return (Vector2)_targetCamera.transform.position + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+        }
+
+        /// <summary>
+        /// Quái bị bỏ quá xa (người chơi chạy thẳng một hướng) được đưa về vòng sinh — giữ áp lực như sân kín mà không cần tường.
+        /// Duyệt danh sách có sẵn, không cấp phát.
+        /// </summary>
+        private void LeashFarEnemies()
+        {
+            if (_targetCamera == null) return;
+            Vector2 center = _targetCamera.transform.position;
+            float limit = ViewHalfDiagonal() * _leashFactor;
+            float limitSqr = limit * limit;
+            for (int i = 0; i < _alive.Count; i++)
+            {
+                Enemy enemy = _alive[i];
+                Vector2 pos = enemy.transform.position;
+                if ((pos - center).sqrMagnitude <= limitSqr) continue;
+                Vector2 target = RingPoint();
+                enemy.transform.position = target;
+                if (enemy.TryGetComponent(out Rigidbody2D rb)) rb.position = target;
+            }
         }
 
         private Rect GetCameraView(float margin)

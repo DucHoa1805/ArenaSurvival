@@ -21,6 +21,8 @@ namespace ArenaSurvival.Player
         private PlayerStats _stats;
         private int _level;
         private float _timer;
+        private float _pulse;
+        private Vector3 _baseScale;
 
         public int Level => _level;
 
@@ -52,15 +54,27 @@ namespace ArenaSurvival.Player
                 // Sprite vòng chuẩn hóa đường kính 1 ở scale 1; bù scale của Player để vòng đúng bán kính thế giới.
                 float parentScale = Mathf.Max(0.01f, transform.lossyScale.x);
                 _visual.localScale = Vector3.one * (SkillRules.AuraRadius(_level) * 2f / parentScale);
+                _baseScale = _visual.localScale;
+                // Cấp tối đa đổi sang vàng điện: nhìn là biết đã nâng hết.
+                var sr = _visual.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null) sr.color = _level >= 5 ? new Color(1f, 0.85f, 0.35f, 0.55f) : new Color(0.45f, 0.75f, 1f, 0.45f);
             }
         }
 
         private void Update()
         {
             if (_level <= 0) return;
+            if (_visual != null)
+            {
+                _visual.Rotate(0f, 0f, 90f * Time.deltaTime);
+                // Nảy to lên mỗi nhịp gây sát thương rồi co lại: người chơi "thấy" vòng đang đánh.
+                _pulse = Mathf.Max(0f, _pulse - Time.deltaTime * 4f);
+                _visual.localScale = _baseScale * (1f + 0.12f * _pulse);
+            }
             _timer += Time.deltaTime;
             if (_timer < _tickInterval) return;
             _timer = 0f;
+            _pulse = 1f;
 
             float damage = SkillRules.AuraDamage(_level) * _stats.DamageMultiplier;
             int count = Physics2D.OverlapCircle(transform.position, SkillRules.AuraRadius(_level), _filter, _buffer);

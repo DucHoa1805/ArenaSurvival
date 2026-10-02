@@ -27,7 +27,13 @@ namespace ArenaSurvival.RunUpgrades
 
         public static int SawBladeCount(int level) => Mathf.Clamp(2 + level, 3, MaxSawBlades);
 
-        public static float SawBladeDamage(float baseDamage, int level) => baseDamage * (1f + 0.1f * Mathf.Max(0, level - 1));
+        public const int SawBladeMaxLevel = 6;
+
+        /// <summary>Cấp tối đa: lưỡi cưa "thức tỉnh" (lửa vàng cam, +30% sát thương) — phần thưởng nhìn thấy được khi dồn kỹ năng.</summary>
+        public static bool SawBladeAwakened(int level) => level >= SawBladeMaxLevel;
+
+        public static float SawBladeDamage(float baseDamage, int level) =>
+            baseDamage * (1f + 0.1f * Mathf.Max(0, level - 1)) * (SawBladeAwakened(level) ? 1.3f : 1f);
 
         public static float ShieldCooldown(int level) => Mathf.Max(4f, 9f - Mathf.Max(1, level));
 
@@ -40,6 +46,16 @@ namespace ArenaSurvival.RunUpgrades
         public static int MissileCount(int level) => 1 + (Mathf.Max(1, level) - 1) / 2;
 
         public static float MissileDamage(int level) => 10f + 4f * Mathf.Max(1, level);
+
+        // Sét lan (10D): đánh quái gần nhất rồi nhảy sang quái kế bên.
+        public static int LightningJumps(int level) => 2 + Mathf.Max(1, level);
+        public static float LightningDamage(int level) => 12f + 5f * Mathf.Max(1, level);
+        public static float LightningInterval(int level) => Mathf.Max(1f, 1.7f - 0.1f * Mathf.Max(1, level));
+
+        // Drone hộ vệ (10D): bay quanh người, tự bắn quái gần nhất.
+        public static int DroneCount(int level) => 1 + Mathf.Max(1, level) / 2;
+        public static float DroneFireInterval(int level) => Mathf.Max(0.5f, 1f - 0.15f * (Mathf.Max(1, level) - 1));
+        public static float DroneDamage(int level) => 5f * (1f + 0.2f * (Mathf.Max(1, level) - 1));
 
         public static float MagnetMultiplier(int level) => 1f + 0.5f * Mathf.Max(0, level);
 

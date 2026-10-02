@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
+  m_Name: Upgrade_Drone
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.RunUpgrades.UpgradeData
+  displayName: "Drone h\u1ED9 v\u1EC7"
+  description: "1 drone bay quanh ng\u01B0\u1EDDi, t\u1EF1 b\u1EAFn qu\xE1i."
+  icon: {fileID: 21300000, guid: 709f5fd65018dfe44bd4e23371299950, type: 3}
+  type: 13
+  value: 0
+  weapon: {fileID: 0}
+  maxLevel: 4
+  levelDescriptions:
+  - "1 drone bay quanh ng\u01B0\u1EDDi, t\u1EF1 b\u1EAFn qu\xE1i."
+  - "Th\xEAm 1 drone (2 chi\u1EBFc)."
+  - "Drone b\u1EAFn nhanh v\xE0 m\u1EA1nh h\u01A1n."
+  - "Th\xEAm 1 drone (3 chi\u1EBFc), b\u1EAFn nhanh h\u01A1n."
+  requiredLevel: 1

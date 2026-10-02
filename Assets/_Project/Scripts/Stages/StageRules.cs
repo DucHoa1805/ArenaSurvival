@@ -10,8 +10,8 @@ namespace ArenaSurvival.Stages
     public static class StageRules
     {
         // Gom hằng số một chỗ: Phase 10 (bảng cân bằng) và Phase 12 (Remote Config) chỉ cần thay ở đây.
-        // 0.09 (10C): với 0.12, bot chơi thử cho thấy quái tăng nhanh hơn hẳn sức mạnh người chơi (kẹt ở boss 1-10).
-        public const float DifficultyGrowthPerStage = 0.09f;
+        // 0.12 → 0.09 (10C, bot kẹt boss 1-10) → 0.075 (10D, người dùng muốn game dễ hơn nữa).
+        public const float DifficultyGrowthPerStage = 0.075f;
         public const float RewardGrowthPerStage = 0.15f;
         public const float StarHealthThreshold = 0.5f;
         public const float DefeatRewardShare = 0.5f;

@@ -23,6 +23,7 @@ namespace ArenaSurvival.Combat
         private static readonly Collider2D[] ExplosionBuffer = new Collider2D[MaxExplosionTargets];
 
         private Rigidbody2D _rb;
+        private TrailRenderer _trail;
         private float _spawnTime;
         private float _life;
         private Vector2 _direction;
@@ -40,6 +41,7 @@ namespace ArenaSurvival.Combat
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _trail = GetComponentInChildren<TrailRenderer>(true);
             if (_explosionMask.value == 0) _explosionMask = LayerMask.GetMask("Enemy");
             _explosionFilter = new ContactFilter2D { useLayerMask = true, layerMask = _explosionMask, useTriggers = true };
         }
@@ -74,6 +76,8 @@ namespace ArenaSurvival.Combat
             _rb.linearVelocity = _direction * _speed;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            // Đạn từ pool: xóa vệt của lần bắn trước, nếu không sẽ có 1 nét dài nối chỗ cũ với nòng súng.
+            if (_trail != null) _trail.Clear();
         }
 
         private void Update()

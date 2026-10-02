@@ -205,7 +205,7 @@ namespace ArenaSurvival.DevTools
 
             _playerHealth = player.GetComponent<Health>();
             var pilot = player.AddComponent<BotPilot>();
-            if (spawner != null) pilot.Configure(spawner.ArenaArea);
+            if (spawner != null) pilot.Configure(spawner.PlayArea);
             if (_upgrades != null) _upgrades.OnOptionsOffered += _onOptions;
             _session.OnStageEnded += _onStageEnded;
         }

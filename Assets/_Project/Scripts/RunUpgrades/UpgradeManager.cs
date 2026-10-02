@@ -37,6 +37,8 @@ namespace ArenaSurvival.RunUpgrades
         private PlayerShield _shield;
         private PlayerAura _aura;
         private PlayerMissiles _missiles;
+        private PlayerLightning _lightning;
+        private PlayerDrones _drones;
 
         /// <summary>Cấp hiện tại của kỹ năng (0 = chưa có). Thẻ lên cấp hiện "cấp → cấp kế".</summary>
         public int GetLevel(UpgradeData upgrade) => upgrade != null && _levels.TryGetValue(upgrade, out int level) ? level : 0;
@@ -49,6 +51,8 @@ namespace ArenaSurvival.RunUpgrades
             _shield = player.GetComponent<PlayerShield>();
             _aura = player.GetComponent<PlayerAura>();
             _missiles = player.GetComponent<PlayerMissiles>();
+            _lightning = player.GetComponent<PlayerLightning>();
+            _drones = player.GetComponent<PlayerDrones>();
         }
 
         // Lên nhiều cấp cùng lúc (nhặt 1 lượng XP lớn) thì xếp hàng: chọn xong lượt này mới tới lượt kế.
@@ -135,6 +139,8 @@ namespace ArenaSurvival.RunUpgrades
                 case UpgradeType.Shield: return _shield != null;
                 case UpgradeType.Aura: return _aura != null;
                 case UpgradeType.Missile: return _missiles != null;
+                case UpgradeType.Lightning: return _lightning != null;
+                case UpgradeType.Drone: return _drones != null;
                 default: return true;
             }
         }
@@ -203,6 +209,12 @@ namespace ArenaSurvival.RunUpgrades
                     break;
                 case UpgradeType.Missile:
                     _missiles.SetLevel(level);
+                    break;
+                case UpgradeType.Lightning:
+                    _lightning.SetLevel(level);
+                    break;
+                case UpgradeType.Drone:
+                    _drones.SetLevel(level);
                     break;
                 case UpgradeType.Magnet:
                     _playerStats.PickupRadiusMultiplier = SkillRules.MagnetMultiplier(level);

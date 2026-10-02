@@ -88,6 +88,8 @@ namespace ArenaSurvival.DevTools
                 go.GetComponent<Player.PlayerShield>()?.SetLevel(5);
                 go.GetComponent<Player.PlayerAura>()?.SetLevel(5);
                 go.GetComponent<Player.PlayerMissiles>()?.SetLevel(5);
+                go.GetComponent<Player.PlayerLightning>()?.SetLevel(5);
+                go.GetComponent<Player.PlayerDrones>()?.SetLevel(4);
                 var stats = go.GetComponent<Player.PlayerStats>();
                 if (stats != null) { stats.ExtraProjectiles = 4; stats.ExtraPierce = 3; }
             }

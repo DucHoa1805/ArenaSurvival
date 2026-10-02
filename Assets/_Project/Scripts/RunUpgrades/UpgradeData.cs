@@ -18,7 +18,9 @@ namespace ArenaSurvival.RunUpgrades
         Shield,     // bật/nâng PlayerShield
         Aura,       // bật/nâng PlayerAura (vòng điện)
         Missile,    // bật/nâng PlayerMissiles
-        Magnet      // bán kính hút XP theo SkillRules.MagnetMultiplier
+        Magnet,     // bán kính hút XP theo SkillRules.MagnetMultiplier
+        Lightning,  // bật/nâng PlayerLightning (Sét lan)
+        Drone       // bật/nâng PlayerDrones (Drone hộ vệ)
     }
 
     /// <summary>

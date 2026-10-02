@@ -35,6 +35,7 @@ namespace ArenaSurvival.Tests
         {
             Assert.AreEqual(8f, SkillRules.SawBladeDamage(8f, 1), 1e-4);
             Assert.AreEqual(8f * 1.3f, SkillRules.SawBladeDamage(8f, 4), 1e-4);
+            Assert.AreEqual(8f * 1.5f * 1.3f, SkillRules.SawBladeDamage(8f, 6), 1e-4, "cấp tối đa thức tỉnh: thêm ×1.3");
         }
 
         [TestCase(1, 8f, 1)]
@@ -59,6 +60,27 @@ namespace ArenaSurvival.Tests
         [TestCase(3, 2)]
         [TestCase(5, 3)]
         public void MissileCount(int level, int expected) => Assert.AreEqual(expected, SkillRules.MissileCount(level));
+
+        [TestCase(1, 3, 17f)]
+        [TestCase(5, 7, 37f)]
+        public void Lightning(int level, int jumps, float damage)
+        {
+            Assert.AreEqual(jumps, SkillRules.LightningJumps(level));
+            Assert.AreEqual(damage, SkillRules.LightningDamage(level), 1e-4);
+            Assert.GreaterOrEqual(SkillRules.LightningInterval(level), 1f, "không bắn liên thanh");
+        }
+
+        [TestCase(1, 1)]
+        [TestCase(2, 2)]
+        [TestCase(4, 3)]
+        public void DroneCount(int level, int expected) => Assert.AreEqual(expected, SkillRules.DroneCount(level));
+
+        [Test]
+        public void DroneFiresFasterAndHarderWithLevel()
+        {
+            Assert.Less(SkillRules.DroneFireInterval(4), SkillRules.DroneFireInterval(1));
+            Assert.Greater(SkillRules.DroneDamage(4), SkillRules.DroneDamage(1));
+        }
 
         [Test]
         public void Multishot_SpreadWidensPerExtraBullet()
