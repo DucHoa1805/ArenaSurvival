@@ -80,7 +80,16 @@ namespace ArenaSurvival.DevTools
                 foreach (MonoBehaviour behaviour in _playerHealth.GetComponents<MonoBehaviour>())
                 {
                     if (behaviour is IWeapon) behaviour.enabled = true;
+                    // Lưỡi cưa ở cấp tối đa (8 lưỡi) — trường hợp nặng nhất cho phép đo.
+                    if (behaviour is OrbitWeapon orbit) orbit.SetLevel(6);
                 }
+                // Kỹ năng trong màn (10C) ở cấp tối đa để benchmark đo cả chi phí của chúng.
+                var go = _playerHealth.gameObject;
+                go.GetComponent<Player.PlayerShield>()?.SetLevel(5);
+                go.GetComponent<Player.PlayerAura>()?.SetLevel(5);
+                go.GetComponent<Player.PlayerMissiles>()?.SetLevel(5);
+                var stats = go.GetComponent<Player.PlayerStats>();
+                if (stats != null) { stats.ExtraProjectiles = 4; stats.ExtraPierce = 3; }
             }
 
             // Bỏ giới hạn fps (tắt VSync, targetFrameRate = -1): nếu khóa 60 fps thì "Main Thread" luôn ~16.7 ms

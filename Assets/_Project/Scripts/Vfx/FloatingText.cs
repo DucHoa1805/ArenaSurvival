@@ -50,10 +50,10 @@ namespace ArenaSurvival.Vfx
         /// Hiện 1 số nguyên mà không tạo chuỗi mới. SetText("{0}", value) của TMP ghi thẳng chữ số vào bộ đệm có sẵn;
         /// value.ToString() thì cấp phát 1 string mỗi lần — với số sát thương là hàng chục lần mỗi giây khi quái đông.
         /// </summary>
-        public void ShowNumber(int value, Vector3 position)
+        public void ShowNumber(int value, Vector3 position, Color? color = null)
         {
             _text.SetText("{0}", value);
-            _color = _baseColor;
+            _color = color ?? _baseColor;
             Begin(position);
         }
 

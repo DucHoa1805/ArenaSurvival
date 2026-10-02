@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
   m_Name: Upgrade_Heal
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Progression.UpgradeData
-  displayName: "H\u1ED3i m\xE1u +30"
+  displayName: "H\u1ED3i m\xE1u"
   description: "H\u1ED3i ngay 30 m\xE1u."
   icon: {fileID: 21300000, guid: df281fa9f4d695c4587a442ee632d1ed, type: 3}
   type: 4
   value: 30
   weapon: {fileID: 0}
+  maxLevel: 0
+  levelDescriptions:
+  - "H\u1ED3i ngay 30 m\xE1u."
   requiredLevel: 1

@@ -18,8 +18,8 @@ MonoBehaviour:
   description: "Li\xEAn thanh 6 ph\xE1t/gi\xE2y, s\xE1t th\u01B0\u01A1ng th\u1EA5p,
     h\u01A1i t\u1EA3n."
   shardMaterial: {fileID: 11400000, guid: 507b5648c0b911c47993ffc80c44c18b, type: 2}
-  damage: 1.6
-  damagePerLevel: 0.128
+  damage: 2.08
+  damagePerLevel: 0.25
   fireRate: 6
   range: 6.5
   projectileSpeed: 16
@@ -32,7 +32,7 @@ MonoBehaviour:
   knockback: 0
   projectilePrefab: {fileID: 0}
   starBonus3:
-    extraProjectiles: 0
+    extraProjectiles: 1
     extraPierce: 0
     fireRatePercent: 25
     explosionRadiusPercent: 0

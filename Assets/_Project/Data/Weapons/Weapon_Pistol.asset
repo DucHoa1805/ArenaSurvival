@@ -18,8 +18,8 @@ MonoBehaviour:
   description: "B\u1EAFn t\u1EEBng vi\xEAn v\xE0o qu\xE1i g\u1EA7n nh\u1EA5t. C\xE2n
     b\u1EB1ng, d\u1EC5 d\xF9ng."
   shardMaterial: {fileID: 11400000, guid: c7e57c693526d0842b2089774fcbceea, type: 2}
-  damage: 5
-  damagePerLevel: 0.39999998
+  damage: 6.5
+  damagePerLevel: 0.78
   fireRate: 1.5
   range: 6
   projectileSpeed: 10

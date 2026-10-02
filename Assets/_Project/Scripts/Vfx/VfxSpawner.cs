@@ -26,6 +26,8 @@ namespace ArenaSurvival.Vfx
         [SerializeField] private FloatingText _damageNumberPrefab;
         [Tooltip("Lệch ngang ngẫu nhiên tối đa, để số của nhiều quái đứng sát nhau không đè lên nhau.")]
         [SerializeField] private float _damageNumberJitter = 0.25f;
+        [Tooltip("Màu số khi đòn bị khiên chặn phần lớn: người chơi thấy rõ là bị chặn, không tưởng là lỗi sát thương.")]
+        [SerializeField] private Color _blockedNumberColor = new Color(0.62f, 0.66f, 0.72f, 1f);
 
         [Header("References")]
         [SerializeField] private Transform _player;
@@ -139,7 +141,7 @@ namespace ArenaSurvival.Vfx
             vfx.transform.localScale = Vector3.one * (radius / Mathf.Max(0.01f, _explosionPrefabRadius));
         }
 
-        private void HandleEnemyDamaged(float amount, Vector3 position)
+        private void HandleEnemyDamaged(float amount, Vector3 position, bool blocked)
         {
             if (_damageNumberPool == null) return;
 
@@ -148,7 +150,7 @@ namespace ArenaSurvival.Vfx
             text.OnReturnToPool = _releaseDamageNumber;
             // Làm tròn và tối thiểu 1: sát thương lẻ (hệ số nâng cấp x1.2) hiện "12.4" trông rối mắt,
             // còn hiện "0" thì người chơi tưởng đòn không trúng.
-            text.ShowNumber(Mathf.Max(1, Mathf.RoundToInt(amount)), position);
+            text.ShowNumber(Mathf.Max(1, Mathf.RoundToInt(amount)), position, blocked ? _blockedNumberColor : (Color?)null);
         }
 
         private void HandleGameStateChanged(GameState newState)

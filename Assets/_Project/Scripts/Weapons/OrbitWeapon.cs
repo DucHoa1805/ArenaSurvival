@@ -27,6 +27,12 @@ namespace ArenaSurvival.Weapons
             _rig.gameObject.SetActive(enabled);
         }
 
+        /// <summary>Cấp kỹ năng Lưỡi cưa trong màn (UpgradeManager gọi): cấp 1 = 3 lưỡi, mỗi cấp +1 lưỡi.</summary>
+        public void SetLevel(int level)
+        {
+            if (_rig != null) _rig.SetLevel(level);
+        }
+
         private void OnEnable()
         {
             if (_rig != null) _rig.gameObject.SetActive(true);

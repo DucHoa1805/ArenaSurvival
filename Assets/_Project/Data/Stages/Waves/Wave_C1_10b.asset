@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wave_C1_10b
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.WaveData
   duration: 60
-  spawnInterval: 0.9
+  spawnInterval: 1.03
   enemyTypes:
   - {fileID: 11400000, guid: 6125a9f2678efb3469d1ac8b1aae5baf, type: 2}
   - {fileID: 11400000, guid: aea2d4de057ad9e42978aba57e0a3428, type: 2}

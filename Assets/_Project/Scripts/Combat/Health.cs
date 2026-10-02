@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace ArenaSurvival.Combat
@@ -22,6 +22,12 @@ namespace ArenaSurvival.Combat
         /// <summary>Giáp giảm sát thương nhận vào (CombatRules.ApplyArmor). Quái để 0; Player lấy từ Talent/trang bị.</summary>
         public float Armor { get; set; }
 
+        /// <summary>Lớp lá chắn (kỹ năng trong màn): mỗi lớp chặn trọn 1 đòn. Chỉ Player dùng; PlayerShield hồi lại lớp.</summary>
+        public int ShieldLayers { get; set; }
+
+        /// <summary>1 đòn bị lá chắn chặn (để hiện hiệu ứng/âm thanh và bắt đầu đếm hồi).</summary>
+        public event Action OnShieldBlocked;
+
         // Truyền kèm giá trị sát thương/máu hiện tại để UI (thanh máu) có thể dùng trực tiếp,
         // không cần tự query lại Health mỗi lần.
         public event Action<float, float> OnDamaged; // (damage, currentHealth)
@@ -41,6 +47,12 @@ namespace ArenaSurvival.Combat
         public void TakeDamage(float amount)
         {
             if (IsDead || Invulnerable || amount <= 0f) return;
+            if (ShieldLayers > 0)
+            {
+                ShieldLayers--;
+                OnShieldBlocked?.Invoke();
+                return;
+            }
             if (Armor > 0f) amount = CombatRules.ApplyArmor(amount, Armor);
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);

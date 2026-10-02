@@ -18,8 +18,8 @@ MonoBehaviour:
   description: "Tia b\u1EAFn r\u1EA5t nhanh, xuy\xEAn qua 4 qu\xE1i tr\xEAn \u0111\u01B0\u1EDDng
     bay."
   shardMaterial: {fileID: 11400000, guid: 6b7cb42fe88d6c3448c968aa13304ce3, type: 2}
-  damage: 6
-  damagePerLevel: 0.48
+  damage: 7.8
+  damagePerLevel: 0.936
   fireRate: 1
   range: 8
   projectileSpeed: 24
@@ -32,7 +32,7 @@ MonoBehaviour:
   knockback: 0
   projectilePrefab: {fileID: 4644805776529081687, guid: 35490833a2cc8b34f942e35f687bbdd9, type: 3}
   starBonus3:
-    extraProjectiles: 0
+    extraProjectiles: 1
     extraPierce: 3
     fireRatePercent: 0
     explosionRadiusPercent: 0

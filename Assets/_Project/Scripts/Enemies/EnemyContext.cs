@@ -11,9 +11,11 @@ namespace ArenaSurvival.Enemies
     {
         public Enemy Enemy;
         public Rigidbody2D Body;
-        public Transform Visual;
+        public Transform Visual;                // object con "Visual": rung khi boss gồng đòn mà không đụng vật lý
         /// <summary>Tia báo trước (LineRenderer con, tắt sẵn) — Sniper ngắm. Null nếu prefab không có.</summary>
-        public LineRenderer Telegraph;          // object con "Visual": rung khi boss gồng đòn mà không đụng vật lý
+        public LineRenderer Telegraph;
+        /// <summary>Sprite khiên (con "Shield", tắt sẵn) — chỉ Lính Khiên bật. Null nếu prefab không có.</summary>
+        public GameObject Shield;
         public Transform Player;
         public EnemyData Data;
         public EnemyModifiers Modifiers;
@@ -58,11 +60,24 @@ namespace ArenaSurvival.Enemies
         }
 
         /// <summary>Xoay mặt dần về hướng direction (qua Rigidbody, như MovePosition).</summary>
-        public void Face(Vector2 direction, float dt)
+        public void Face(Vector2 direction, float dt) => Face(direction, dt, RotationSpeed);
+
+        /// <summary>Như trên nhưng tốc xoay riêng (Lính Khiên xoay chậm để người chơi vòng ra sau được).</summary>
+        public void Face(Vector2 direction, float dt, float rotationSpeed)
         {
             if (direction.sqrMagnitude < 0.0001f) return;
             float target = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + SpriteAngleOffset;
-            Body.MoveRotation(Mathf.MoveTowardsAngle(Body.rotation, target, RotationSpeed * dt));
+            Body.MoveRotation(Mathf.MoveTowardsAngle(Body.rotation, target, rotationSpeed * dt));
+        }
+
+        /// <summary>Hướng đang quay mặt (bỏ góc lệch của sprite).</summary>
+        public Vector2 Facing
+        {
+            get
+            {
+                float rad = (Body.rotation - SpriteAngleOffset) * Mathf.Deg2Rad;
+                return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+            }
         }
 
         public void ResetState()
@@ -78,6 +93,8 @@ namespace ArenaSurvival.Enemies
             if (Visual != null) Visual.localPosition = Vector3.zero;
             // Chết/trả về pool giữa lúc ngắm: không để tia đỏ treo lại trên sân.
             if (Telegraph != null) Telegraph.enabled = false;
+            // Object dùng chung cho mọi loại quái: con trước là Lính Khiên thì con sau không được mang khiên theo.
+            if (Shield != null) Shield.SetActive(false);
         }
     }
 }

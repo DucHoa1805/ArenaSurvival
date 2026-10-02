@@ -6,9 +6,9 @@ namespace ArenaSurvival.Tests
     public class StageRulesTests
     {
         [TestCase(1, 1f)]
-        [TestCase(2, 1.12f)]
-        [TestCase(11, 2.2f)]
-        public void DifficultyMultiplier_Grows12PercentPerStage(int stage, float expected)
+        [TestCase(2, 1.09f)]
+        [TestCase(11, 1.9f)]
+        public void DifficultyMultiplier_Grows9PercentPerStage(int stage, float expected)
         {
             Assert.AreEqual(expected, StageRules.DifficultyMultiplier(stage), 0.0001f);
         }
@@ -92,6 +92,15 @@ namespace ArenaSurvival.Tests
         {
             Assert.AreEqual((0, 0), StageRules.CalculateRewards(0, 0, 5, true, 1f));
             Assert.AreEqual((0, 0), StageRules.CalculateRewards(100, 20, 1, false, -1f));
+        }
+
+        [TestCase(3, 3, 0, true)]   // đã ra hết tinh anh và không còn con nào → quái thường còn lại nổ, thắng
+        [TestCase(3, 3, 1, false)]  // còn 1 tinh anh sống
+        [TestCase(3, 2, 0, false)]  // còn tinh anh chưa ra sân (đang rải dần)
+        [TestCase(0, 0, 0, true)]   // màn không có tinh anh: hết đợt thường là xong
+        public void EliteWaveCleared_OnlyWhenAllElitesSpawnedAndDead(int queued, int spawned, int alive, bool expected)
+        {
+            Assert.AreEqual(expected, StageRules.EliteWaveCleared(queued, spawned, alive));
         }
 
         [TestCase(30f, 120f, 0.25f)]

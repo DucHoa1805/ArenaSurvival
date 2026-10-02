@@ -23,6 +23,9 @@ namespace ArenaSurvival.UI
         [SerializeField] private TMP_Text _powerText;
         [SerializeField] private Button _closeButton;
 
+        public TalentCatalog Catalog => _catalog;
+        public HeroBaseStats HeroBase => _heroBase;
+
         private readonly List<TalentRow> _rows = new List<TalentRow>();
         private Action<string, long> _onCurrencyChanged;
         private Action<string, int> _onTalentChanged;

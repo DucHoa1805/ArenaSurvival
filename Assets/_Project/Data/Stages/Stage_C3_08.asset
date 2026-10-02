@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86dd06594c765f842a8de0b98d07efbb, type: 3}
+  m_Name: Stage_C3_08
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Stages.StageData
+  id: c3_s08
+  displayName: 3-8
+  stageNumber: 28
+  waves:
+  - {fileID: 11400000, guid: 835a7289e732c504c82f239ab9585c97, type: 2}
+  - {fileID: 11400000, guid: 098e84d43c10f634786701398434cfbf, type: 2}
+  - {fileID: 11400000, guid: 481b52e781bea9e4b87f4eff12eb923d, type: 2}
+  finalWave:
+  - enemy: {fileID: 11400000, guid: aea2d4de057ad9e42978aba57e0a3428, type: 2}
+    count: 4
+    healthMultiplier: 3
+    scaleMultiplier: 1.3
+    tint: {r: 1, g: 0.75, b: 0.45, a: 1}
+    loot: {fileID: 11400000, guid: 65a7ac1e6c3bd1f40aa0caf972055ea9, type: 2}
+  eliteSpawnInterval: 0.6
+  boss: {fileID: 0}
+  bossDelay: 1.5
+  bossLoot: {fileID: 0}
+  recommendedPower: 1290
+  targetTime: 240
+  baseGold: 100
+  baseAccountXp: 20
+  victoryLoot: {fileID: 11400000, guid: ca030a51be0c3ce499c06c599ae189d6, type: 2}
+  firstClearReward: []

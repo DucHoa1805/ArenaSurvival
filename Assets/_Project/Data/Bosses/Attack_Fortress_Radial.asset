@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64910ee92e20554abdfa8c5a56daa4f, type: 3}
+  m_Name: Attack_Fortress_Radial
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.RadialBurstAttack
+  _bulletsPerRing: 16
+  _rings: 3
+  _ringInterval: 0.42
+  _rotatePerRing: 11
+  _bulletSpeed: 4.3

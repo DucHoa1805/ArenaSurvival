@@ -23,6 +23,9 @@ namespace ArenaSurvival.Player
         private PlayerStats _stats;
         private Vector2 _moveInput;
 
+        /// <summary>Hướng đi do bot tự chơi đặt (chỉ build dev); null = đọc bàn phím/cần điều khiển như bình thường.</summary>
+        public Vector2? MoveOverride { get; set; }
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -42,7 +45,7 @@ namespace ArenaSurvival.Player
         private void Update()
         {
             // Đọc input trong Update: input cần được lấy mỗi frame để không bị trễ.
-            _moveInput = _moveAction.action.ReadValue<Vector2>();
+            _moveInput = MoveOverride ?? _moveAction.action.ReadValue<Vector2>();
 
             // Chỉ xoay khi thực sự có input — tránh nhân vật "giật" về góc 0 khi đứng yên.
             if (_moveInput.sqrMagnitude > 0.0001f)

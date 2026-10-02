@@ -51,6 +51,7 @@ namespace ArenaSurvival.Stages
 
         /// <summary>Số quái đang sống trên sân.</summary>
         public int ActiveCount => _alive.Count;
+        public Rect ArenaArea => _arenaArea;
 
         private void Awake()
         {
@@ -114,6 +115,15 @@ namespace ArenaSurvival.Stages
             for (int i = _alive.Count - 1; i >= 0; i--)
             {
                 if (i < _alive.Count) _alive[i].Despawn(false);
+            }
+        }
+
+        /// <summary>Như DespawnAll nhưng giữ lại những con keep trả về true (tinh anh khi boss xuất hiện).</summary>
+        public void DespawnAllExcept(System.Predicate<Enemy> keep)
+        {
+            for (int i = _alive.Count - 1; i >= 0; i--)
+            {
+                if (i < _alive.Count && !keep(_alive[i])) _alive[i].Despawn(false);
             }
         }
 

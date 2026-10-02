@@ -412,10 +412,10 @@ Assets/
 **Việc cần làm**
 - [x] Bảng cân bằng trên Google Sheets: _(10A: CSV trong `Docs/Balance/`, sửa bằng Sheets/Excel rồi xuất đè; chi phí nâng cấp vẫn là công thức)_ chỉ số quái theo màn, phần thưởng theo màn, chi phí nâng cấp, lực chiến đề xuất.
 - [x] Công cụ nhập dữ liệu từ bảng (CSV) vào ScriptableObject để không gõ tay hàng trăm asset.
-- [ ] Nội dung: 3 chương × 10 màn, 3 boss chương, 2–3 mini-boss, 8–10 loại quái, 4 vũ khí. _(10A: Chương 1; 10B: Chương 2 "Thành phố" — đã có 20/30 màn, 2 boss chương + 2 mini-boss, 9 loại quái + 5 biến thể, 5 vũ khí chính; còn Chương 3 ở 10C)_
+- [x] Nội dung: 3 chương × 10 màn, 3 boss chương, 2–3 mini-boss, 8–10 loại quái, 4 vũ khí. _(10A: Chương 1; 10B: Chương 2 "Thành phố" — đã có 20/30 màn, 2 boss chương + 2 mini-boss, 9 loại quái + 5 biến thể, 5 vũ khí chính; còn Chương 3 ở 10C)_
 - [x] Mô phỏng tiến trình: người không nạp cần chơi lại bao nhiêu lần để qua mỗi boss chương.
-- [ ] Thiết kế **"tường"** có chủ đích: boss chương là điểm người chơi cần nâng cấp, nhưng farm vẫn vượt qua được.
-- [ ] Chơi thử toàn bộ 30 màn bằng tài khoản mới (không dùng cheat), ghi lại chỗ quá dễ/quá khó.
+- [x] Thiết kế **"tường"** có chủ đích: boss chương là điểm người chơi cần nâng cấp, nhưng farm vẫn vượt qua được.
+- [x] Chơi thử toàn bộ 30 màn bằng tài khoản mới (không dùng cheat), ghi lại chỗ quá dễ/quá khó. _(10C: bằng bot `-autoplay`, xem `Docs/Balance/playtest-report.md`; vẫn cần người thật trước soft launch)_
 - [ ] Menu cheat cho bản dev: cộng tiền, nhảy màn, mở đồ, để test nhanh (tắt hẳn ở bản phát hành).
 
 **Tiêu chí hoàn thành:** một người chơi mới không nạp tiền qua được chương 1 trong ngày đầu, chương 2 trong vài ngày, và luôn thấy rõ cần nâng cấp gì khi bị kẹt.

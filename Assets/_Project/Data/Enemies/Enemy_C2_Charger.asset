@@ -18,7 +18,7 @@ MonoBehaviour:
   tint: {r: 1, g: 0.8156863, b: 0.8156863, a: 1}
   maxHealth: 34
   moveSpeed: 2.5
-  contactDamage: 9
+  contactDamage: 7
   projectileDamage: 6
   behaviour: {fileID: 11400000, guid: 8705097c87f30fd44a401224dadc6f66, type: 2}
   isBoss: 0

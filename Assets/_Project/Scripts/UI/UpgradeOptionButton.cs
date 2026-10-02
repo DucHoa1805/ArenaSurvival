@@ -29,12 +29,17 @@ namespace ArenaSurvival.UI
             _button.onClick.RemoveListener(HandleClick);
         }
 
-        public void Bind(UpgradeData upgrade, Action<UpgradeData> onClicked)
+        /// <param name="currentLevel">Cấp kỹ năng đang có trong màn (0 = chưa có).</param>
+        public void Bind(UpgradeData upgrade, int currentLevel, Action<UpgradeData> onClicked)
         {
             _upgrade = upgrade;
             _onClicked = onClicked;
-            _nameText.text = upgrade.displayName;
-            _descriptionText.text = upgrade.description;
+            int next = currentLevel + 1;
+            // Ghi rõ đang nâng tới đâu để người chơi biết nên dồn vào kỹ năng nào; Hồi máu (không cấp) giữ tên trơn.
+            if (upgrade.maxLevel <= 0) _nameText.text = upgrade.displayName;
+            else if (currentLevel <= 0) _nameText.text = $"{upgrade.displayName}  <size=70%><color=#7CFF7C>MỚI</color></size>";
+            else _nameText.text = $"{upgrade.displayName}  <size=70%>Cấp {currentLevel} → {next}</size>";
+            _descriptionText.text = upgrade.DescriptionForLevel(next);
 
             if (_iconImage != null)
             {

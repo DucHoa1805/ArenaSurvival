@@ -4,12 +4,13 @@ namespace ArenaSurvival.Enemies
 {
     /// <summary>
     /// Quái hỗ trợ: giữ khoảng cách như Xạ thủ nhưng không bắn; định kỳ hồi máu cho quái xung quanh (không tính chính nó) kèm vòng sáng
-    /// xanh để người chơi nhận ra và ưu tiên hạ trước. Ô nhớ EnemyContext: Timer (đếm tới lần hồi kế).
+    /// xanh để người chơi nhận ra và ưu tiên hạ trước. Không hồi cho Healer khác. Ô nhớ EnemyContext: Timer (đếm tới lần hồi kế).
     /// </summary>
     [CreateAssetMenu(menuName = "ArenaSurvival/Enemy Behaviour/Healer", fileName = "Behaviour_Healer")]
     public class HealerBehaviour : EnemyBehaviour
     {
-        [SerializeField] private float _preferredRange = 6f;
+        // 5 chứ không 6: đứng đúng mép tầm Súng lục (6) thì hầu như không bị bắn tới (bot chơi thử 10C).
+        [SerializeField] private float _preferredRange = 5f;
         [SerializeField] private float _tolerance = 1f;
         [SerializeField] private float _interval = 4f;
         [SerializeField] private float _radius = 3.5f;
@@ -54,6 +55,9 @@ namespace ArenaSurvival.Enemies
             for (int i = 0; i < count; i++)
             {
                 if (!Buffer[i].TryGetComponent(out Enemy other) || other == ctx.Enemy) continue;
+                // Không hồi cho Healer khác: 2 Healer tinh anh đứng cạnh nhau hồi qua lại 20%/4 s gần như không hạ được
+                // (bot chơi thử kẹt ở 1-9, nhiều lượt hết giờ).
+                if (other.Data != null && other.Data.behaviour is HealerBehaviour) continue;
                 var health = other.Health;
                 health.Heal(EnemyRules.HealAmount(health.MaxHealth, health.CurrentHealth, _healFraction));
             }

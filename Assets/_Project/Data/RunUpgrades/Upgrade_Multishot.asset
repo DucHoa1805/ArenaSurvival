@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
+  m_Name: Upgrade_Multishot
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.RunUpgrades.UpgradeData
+  displayName: "\u0110a n\xF2ng"
+  description: "B\u1EAFn th\xEAm 1 vi\xEAn n\u1EEFa (t\u1ED5ng +4)."
+  icon: {fileID: 21300000, guid: a1065e9312d1f7e41a210c1afb86bb79, type: 3}
+  type: 6
+  value: 1
+  weapon: {fileID: 0}
+  maxLevel: 4
+  levelDescriptions:
+  - "S\xFAng ch\xEDnh b\u1EAFn th\xEAm 1 vi\xEAn m\u1ED7i ph\xE1t."
+  - "B\u1EAFn th\xEAm 1 vi\xEAn n\u1EEFa (t\u1ED5ng +2)."
+  - "B\u1EAFn th\xEAm 1 vi\xEAn n\u1EEFa (t\u1ED5ng +3)."
+  - "B\u1EAFn th\xEAm 1 vi\xEAn n\u1EEFa (t\u1ED5ng +4)."
+  requiredLevel: 1

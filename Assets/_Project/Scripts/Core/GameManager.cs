@@ -13,6 +13,16 @@ namespace ArenaSurvival.Core
 
         public GameState CurrentState { get; private set; } = GameState.Menu;
 
+        /// <summary>
+        /// timeScale khi đang chơi (mặc định 1). Bot tự chơi đặt cao hơn để chạy nhanh; mọi chỗ "chơi tiếp" dùng giá trị này
+        /// chứ không đặt cứng 1, nếu không mỗi lần lên cấp/hồi sinh xong game lại về tốc độ thường.
+        /// </summary>
+        public static float PlayingTimeScale = 1f;
+
+        // Editor tắt domain reload thì biến static còn giá trị từ lần Play trước.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => PlayingTimeScale = 1f;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -44,7 +54,7 @@ namespace ArenaSurvival.Core
         public void StartGame()
         {
             SetState(GameState.Playing);
-            Time.timeScale = 1f;
+            Time.timeScale = PlayingTimeScale;
         }
 
         public void PauseGame()
@@ -60,7 +70,7 @@ namespace ArenaSurvival.Core
             if (CurrentState != GameState.Paused) return;
 
             SetState(GameState.Playing);
-            Time.timeScale = 1f;
+            Time.timeScale = PlayingTimeScale;
         }
 
         /// <summary>Dùng cho phím Pause: đang chơi thì dừng, đang dừng thì chơi tiếp, trạng thái khác thì bỏ qua.</summary>
@@ -89,7 +99,7 @@ namespace ArenaSurvival.Core
             if (CurrentState != GameState.LevelUp) return;
 
             SetState(GameState.Playing);
-            Time.timeScale = 1f;
+            Time.timeScale = PlayingTimeScale;
         }
 
         // Không tự vào GameOver khi Player chết nữa: GameManager không biết còn lượt hồi sinh hay không.
@@ -108,7 +118,7 @@ namespace ArenaSurvival.Core
             if (CurrentState != GameState.RevivePrompt) return;
 
             SetState(GameState.Playing);
-            Time.timeScale = 1f;
+            Time.timeScale = PlayingTimeScale;
         }
 
         /// <summary>Kết thúc màn: thắng → Victory, thua → GameOver. Gọi được từ Playing, LevelUp hoặc RevivePrompt.</summary>

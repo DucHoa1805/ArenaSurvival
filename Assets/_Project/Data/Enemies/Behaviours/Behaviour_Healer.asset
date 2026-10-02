@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d13cf58ef7e5d2f468d6b9a6c7b06919, type: 3}
   m_Name: Behaviour_Healer
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.HealerBehaviour
-  _preferredRange: 6
+  _preferredRange: 5
   _tolerance: 1
   _interval: 4
   _radius: 3.5

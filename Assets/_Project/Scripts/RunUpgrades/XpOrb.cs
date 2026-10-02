@@ -14,6 +14,7 @@ namespace ArenaSurvival.RunUpgrades
         [Header("Magnet")]
         [SerializeField] private float _magnetRadius = 2.5f; // Player vào trong khoảng này thì orb bắt đầu bị hút
         [SerializeField] private float _magnetSpeed = 8f;    // phải lớn hơn tốc độ chạy của Player để orb luôn bắt kịp
+        private Player.PlayerStats _playerStats;
 
         private Rigidbody2D _rb;
         private Transform _playerTransform;
@@ -42,6 +43,8 @@ namespace ArenaSurvival.RunUpgrades
                 if (playerObj != null)
                 {
                     _playerTransform = playerObj.transform;
+                    // Kỹ năng Nam châm nới bán kính hút; lấy 1 lần khi tìm thấy Player.
+                    _playerStats = playerObj.GetComponent<Player.PlayerStats>();
                 }
             }
 
@@ -57,7 +60,8 @@ namespace ArenaSurvival.RunUpgrades
 
             if (!_isAttracted)
             {
-                if ((playerPosition - _rb.position).sqrMagnitude > _magnetRadius * _magnetRadius) return;
+                float radius = _magnetRadius * (_playerStats != null ? _playerStats.PickupRadiusMultiplier : 1f);
+                if ((playerPosition - _rb.position).sqrMagnitude > radius * radius) return;
 
                 // Đã bị hút thì bám theo tới cùng, kể cả khi Player chạy ra khỏi bán kính —
                 // tránh cảnh orb đuổi nửa chừng rồi đứng lại.

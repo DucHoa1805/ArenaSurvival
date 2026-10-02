@@ -11,7 +11,7 @@ namespace ArenaSurvival.Enemies
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Health))]
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IHitReceiver
     {
         [Header("Combat")]
         [SerializeField] private float _damageCooldown = 1f; // tránh gây damage mỗi frame khi đứng chạm liên tục
@@ -36,6 +36,18 @@ namespace ArenaSurvival.Enemies
         public EnemyModifiers Modifiers => _ctx.Modifiers;
         public Health Health => _health;
         public float HealthFraction => _health.MaxHealth > 0f ? _health.CurrentHealth / _health.MaxHealth : 0f;
+
+        /// <summary>
+        /// Đúng trong lúc Health đang xử lý 1 đòn bị khiên giảm — DamageNumberSource đọc trong OnDamaged để tô số xám
+        /// (người chơi thấy đòn bị chặn chứ không tưởng là lỗi). Cờ thay vì event để không thêm delegate cho object trong pool.
+        /// </summary>
+        public bool ApplyingBlockedHit { get; private set; }
+
+        /// <summary>
+        /// Tăng mỗi lần lấy ra từ pool. Ai giữ tham chiếu tới 1 con quái (StageSession theo dõi tinh anh) so số này để biết con đó
+        /// còn sống thật hay object đã chết và được tái dùng làm quái khác — Kamikaze tự nổ chẳng hạn không báo NotifyKilled.
+        /// </summary>
+        public int SpawnId { get; private set; }
 
         // Giống Projectile: Enemy không biết gì về ObjectPool<T>, chỉ gọi callback khi xong việc.
         public Action<Enemy> OnReturnToPool;
@@ -72,6 +84,12 @@ namespace ArenaSurvival.Enemies
                 Telegraph = GetComponentInChildren<LineRenderer>(true),
             };
             if (_ctx.Telegraph != null) _ctx.Telegraph.enabled = false;
+            Transform shield = transform.Find("Shield");
+            if (shield != null)
+            {
+                _ctx.Shield = shield.gameObject;
+                _ctx.Shield.SetActive(false);
+            }
 
             // Đăng ký 1 lần ở Awake chứ không ở OnEnable/OnDisable: object này nằm trong pool, bật/tắt mỗi lần quái sinh ra
             // hay chết, và mỗi lần += / -= là tạo delegate mới (rác GC). Health ở cùng object nên sống chết cùng nhau;
@@ -99,6 +117,7 @@ namespace ArenaSurvival.Enemies
         public void Initialize(EnemyData data, EnemyModifiers modifiers)
         {
             _data = data;
+            SpawnId++;
             _health.SetMaxHealth(data.maxHealth * modifiers.health, healToFull: true);
             _contactDamage = data.contactDamage * modifiers.damage;
             _spriteRenderer.sprite = data.sprite;
@@ -141,6 +160,14 @@ namespace ArenaSurvival.Enemies
         {
             if (_ctx.Player == null || _data == null) return;
             Behaviour.Tick(_ctx, Time.fixedDeltaTime);
+        }
+
+        public void TakeHit(float damage, Vector2 direction)
+        {
+            float taken = _data != null ? Behaviour.ModifyIncomingDamage(_ctx, damage, direction) : damage;
+            ApplyingBlockedHit = taken < damage;
+            _health.TakeDamage(taken);
+            ApplyingBlockedHit = false;
         }
 
         /// <summary>Chỉ BossBehaviour gọi.</summary>

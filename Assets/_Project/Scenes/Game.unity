@@ -1042,6 +1042,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyProjectiles
   _prefab: {fileID: 4644805776529081687, guid: 7a969906c19994d4fbb4e663685e1b43, type: 3}
   _prewarmCount: 80
+  _shellPrefab: {fileID: 8511096504876356394, guid: 951135a7678e59447b156edf4e9f7288, type: 3}
+  _shellPrewarmCount: 24
 --- !u!4 &121551725
 Transform:
   m_ObjectHideFlags: 0
@@ -3776,7 +3778,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef973ace634c6734f858163a10ccd6cd, type: 2}
   - {fileID: 11400000, guid: b671adf3915e8e64982a5b0275dcd2da, type: 2}
   - {fileID: 11400000, guid: d674807a3aa3eab4cbee2dc8557bd5ba, type: 2}
+  - {fileID: 11400000, guid: 0362cd5feab860344933952916c08416, type: 2}
+  - {fileID: 11400000, guid: 682880a33dce6284e8cecb78cf39fed9, type: 2}
+  - {fileID: 11400000, guid: 2077620a01f22f74686fa5e9eff45473, type: 2}
+  - {fileID: 11400000, guid: c39e92f1c8786c9438781759a7bad3a5, type: 2}
+  - {fileID: 11400000, guid: ccae709adefeadf4995985d70883cedf, type: 2}
+  - {fileID: 11400000, guid: 1003c41be30033a40b1f490756c68bf9, type: 2}
   _choicesPerLevelUp: 3
+  _maxSkills: 8
   _playerStats: {fileID: 3625615909647938582}
   _playerHealth: {fileID: 749638466}
   _weapons:
@@ -4112,8 +4121,8 @@ MonoBehaviour:
   _playerHealth: {fileID: 749638466}
   _lootDropper: {fileID: 774692875}
   _reviveHealthFraction: 0.5
-  _reviveInvulnerability: 2
-  _revivePushRadius: 3
+  _reviveInvulnerability: 3
+  _revivePushRadius: 5
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -15041,6 +15050,7 @@ MonoBehaviour:
   _levelUpTextPrefab: {fileID: 569529996518482080, guid: d0ed1775d55af034abf1045787bce252, type: 3}
   _damageNumberPrefab: {fileID: 569529996518482080, guid: 6f5d740196a4ff541a09702f989286e8, type: 3}
   _damageNumberJitter: 0.25
+  _blockedNumberColor: {r: 0.62, g: 0.66, b: 0.72, a: 1}
   _player: {fileID: 204102605}
   _maxHitEffects: 48
   _maxDeathEffects: 32

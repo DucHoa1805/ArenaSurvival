@@ -16,7 +16,7 @@ MonoBehaviour:
   sprite: {fileID: 2993993634901728976, guid: d958751291f1a1e4da0bf1ae50c0b13e, type: 3}
   scale: 1.9
   tint: {r: 1, g: 0.82, b: 0.6, a: 1}
-  maxHealth: 400
+  maxHealth: 320
   moveSpeed: 1.4
   contactDamage: 15
   projectileDamage: 8

@@ -44,6 +44,19 @@ namespace ArenaSurvival.Enemies
         /// <summary>Player có trúng vụ nổ của Kamikaze không (tính cả đúng mép bán kính).</summary>
         public static bool KamikazeHit(float distance, float radius) => distance <= radius;
 
+        /// <summary>
+        /// Khiên chặn đòn đến từ phía trước: đạn bay NGƯỢC hướng mặt, lệch không quá nửa cung. Không có hướng (nổ, lưỡi cưa)
+        /// thì không chặn — đó là cách khắc chế Lính Khiên có chủ đích.
+        /// </summary>
+        public static bool ShieldBlocks(Vector2 facing, Vector2 hitDirection, float arcDegrees)
+        {
+            if (hitDirection.sqrMagnitude < 0.0001f || facing.sqrMagnitude < 0.0001f) return false;
+            return Vector2.Angle(facing, -hitDirection) <= arcDegrees * 0.5f;
+        }
+
+        /// <summary>Mưa Pháo: tính cả mép vòng, vì vòng báo trước vẽ đúng bán kính — đứng trên vạch đỏ thì phải trúng.</summary>
+        public static bool InBlast(Vector2 center, float radius, Vector2 point) => (point - center).sqrMagnitude <= radius * radius + 1e-5f;
+
         public static int PhaseForHealth(float[] thresholds, float hpFraction, int current)
         {
             if (thresholds == null || thresholds.Length == 0) return current;

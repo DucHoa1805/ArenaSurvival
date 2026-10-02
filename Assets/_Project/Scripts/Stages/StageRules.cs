@@ -10,7 +10,8 @@ namespace ArenaSurvival.Stages
     public static class StageRules
     {
         // Gom hằng số một chỗ: Phase 10 (bảng cân bằng) và Phase 12 (Remote Config) chỉ cần thay ở đây.
-        public const float DifficultyGrowthPerStage = 0.12f;
+        // 0.09 (10C): với 0.12, bot chơi thử cho thấy quái tăng nhanh hơn hẳn sức mạnh người chơi (kẹt ở boss 1-10).
+        public const float DifficultyGrowthPerStage = 0.09f;
         public const float RewardGrowthPerStage = 0.15f;
         public const float StarHealthThreshold = 0.5f;
         public const float DefeatRewardShare = 0.5f;
@@ -41,5 +42,11 @@ namespace ArenaSurvival.Stages
 
         public static float Progress(float survivalTime, float plannedDuration) =>
             plannedDuration <= 0f ? 0f : Mathf.Clamp01(survivalTime / plannedDuration);
+
+        /// <summary>
+        /// Đợt tinh anh xong khi đã rải hết và không con tinh anh nào còn sống — quái thường còn lại nổ theo (như sau khi boss chết).
+        /// Trước 10C phải dọn sạch cả sân: quái thường dồn lại qua 3 đợt khiến người chơi chạy vòng tới hết giờ (bot chơi thử kẹt ở 1-9).
+        /// </summary>
+        public static bool EliteWaveCleared(int queued, int spawned, int alive) => spawned >= queued && alive <= 0;
     }
 }

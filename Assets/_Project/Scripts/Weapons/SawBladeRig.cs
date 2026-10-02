@@ -2,6 +2,7 @@ using ArenaSurvival.Core;
 using ArenaSurvival.Player;
 using UnityEngine;
 using ArenaSurvival.Combat;
+using Skills = ArenaSurvival.RunUpgrades.SkillRules;
 
 namespace ArenaSurvival.Weapons
 {
@@ -20,6 +21,8 @@ namespace ArenaSurvival.Weapons
         private Rigidbody2D _rb;
         private Transform[] _visuals;
         private float _orbitAngle;
+        private int _level = 1;
+        private float _damage;
 
         /// <summary>Dựng bộ lưỡi cưa bằng code từ dữ liệu, nên đổi số lưỡi/bán kính chỉ cần sửa asset.</summary>
         public static SawBladeRig Create(OrbitWeaponData data, Transform owner, PlayerStats stats)
@@ -37,11 +40,35 @@ namespace ArenaSurvival.Weapons
             rig._owner = owner;
             rig._stats = stats;
             rig._rb = rb;
-            rig._visuals = new Transform[data.bladeCount];
+            rig._damage = data.damage;
+            rig.BuildBlades(data.bladeCount);
+            return rig;
+        }
 
-            for (int i = 0; i < data.bladeCount; i++)
+        /// <summary>
+        /// Kỹ năng Lưỡi cưa lên cấp: đổi số lưỡi + sát thương. Dựng lại toàn bộ lưỡi cho chia đều vòng tròn — chỉ xảy ra lúc
+        /// chọn nâng cấp (vài lần mỗi màn, game đang dừng), nên tạo object ở đây không ảnh hưởng lúc chơi.
+        /// </summary>
+        public void SetLevel(int level)
+        {
+            _level = Mathf.Max(1, level);
+            _damage = Skills.SawBladeDamage(_data.damage, _level);
+            int count = Skills.SawBladeCount(_level);
+            if (_visuals != null && _visuals.Length == count) return;
+            for (int i = transform.childCount - 1; i >= 0; i--) Destroy(transform.GetChild(i).gameObject);
+            BuildBlades(count);
+        }
+
+        private void BuildBlades(int count)
+        {
+            OrbitWeaponData data = _data;
+            var root = gameObject;
+            var rig = this;
+            rig._visuals = new Transform[count];
+
+            for (int i = 0; i < count; i++)
             {
-                float angle = i * Mathf.PI * 2f / data.bladeCount;
+                float angle = i * Mathf.PI * 2f / count;
 
                 var blade = new GameObject($"Blade{i + 1}");
                 blade.layer = root.layer;
@@ -66,8 +93,6 @@ namespace ArenaSurvival.Weapons
 
                 rig._visuals[i] = visual.transform;
             }
-
-            return rig;
         }
 
         private void OnEnable()
@@ -103,7 +128,7 @@ namespace ArenaSurvival.Weapons
             // Mỗi lần 1 lưỡi quét vào quái là 1 lần trúng; quái đứng yên sẽ bị các lưỡi lần lượt quét qua.
             if (!other.TryGetComponent(out Health targetHealth)) return;
 
-            targetHealth.TakeDamage(_data.damage * _stats.DamageMultiplier);
+            targetHealth.TakeDamage(_damage * _stats.DamageMultiplier);
             GameEvents.ProjectileHit(other.transform.position);
         }
     }

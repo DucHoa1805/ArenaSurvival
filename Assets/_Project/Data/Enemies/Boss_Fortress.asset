@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7a2cf7e80a7a34593a9a02d77ebe23, type: 3}
+  m_Name: Boss_Fortress
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Enemies.EnemyData
+  displayName: "Ph\xE1o \u0110\xE0i Di \u0110\u1ED9ng"
+  sprite: {fileID: -1098820121315280203, guid: 3bb5c28fcd735e34f952e57edce151b3, type: 3}
+  scale: 2.2
+  tint: {r: 0.6901961, g: 0.65882355, b: 0.5647059, a: 1}
+  maxHealth: 420
+  moveSpeed: 1.2
+  contactDamage: 18
+  projectileDamage: 10
+  behaviour: {fileID: 11400000, guid: 73257996b2815c142ae6c2af670906ca, type: 2}
+  isBoss: 1
+  xpReward: 25
+  loot: {fileID: 0}
+  lootChance: 0

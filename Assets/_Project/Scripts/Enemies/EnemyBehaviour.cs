@@ -20,5 +20,11 @@ namespace ArenaSurvival.Enemies
         /// quái phân thân nổ theo boss mà còn đẻ con thì màn không bao giờ dọn sạch.
         /// </summary>
         public virtual void OnDeath(EnemyContext ctx) { }
+
+        /// <summary>
+        /// Sát thương thực nhận khi trúng đòn có hướng (đạn). Mặc định nhận đủ; Lính Khiên giảm khi trúng phía trước.
+        /// hitDirection = zero với đòn không hướng.
+        /// </summary>
+        public virtual float ModifyIncomingDamage(EnemyContext ctx, float damage, Vector2 hitDirection) => damage;
     }
 }

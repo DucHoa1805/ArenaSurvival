@@ -12,10 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7688bc6591bace84cbf744f951da61a0, type: 3}
   m_Name: Upgrade_MaxHealth
   m_EditorClassIdentifier: Assembly-CSharp::ArenaSurvival.Progression.UpgradeData
-  displayName: "M\xE1u t\u1ED1i \u0111a +20"
-  description: "T\u0103ng 20 m\xE1u t\u1ED1i \u0111a v\xE0 h\u1ED3i ngay 20 m\xE1u."
+  displayName: "M\xE1u t\u1ED1i \u0111a"
+  description: "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
   icon: {fileID: 21300000, guid: 65d64d64d6b350148a5be2251ebedb58, type: 3}
   type: 3
   value: 20
   weapon: {fileID: 0}
+  maxLevel: 5
+  levelDescriptions:
+  - "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
+  - "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
+  - "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
+  - "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
+  - "+20 m\xE1u t\u1ED1i \u0111a (h\u1ED3i lu\xF4n ph\u1EA7n t\u0103ng)."
   requiredLevel: 1

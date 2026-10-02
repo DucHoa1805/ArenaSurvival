@@ -22,6 +22,12 @@ namespace ArenaSurvival.Meta
         public static AccountService Account { get; private set; }
         public static bool IsInitialized => Profile != null;
 
+        /// <summary>
+        /// Đường dẫn save thay thế cho lần tự khởi tạo (bot tự chơi dùng save riêng). Đặt ở AfterAssembliesLoaded — chạy sau
+        /// ResetStatics và trước AutoInitialize (BeforeSceneLoad).
+        /// </summary>
+        public static string SavePathOverride;
+
         // Gán sẵn 1 lần để gỡ được đúng delegate khi khởi tạo lại.
         private static System.Action<StageResult> _onStageCompleted;
 
@@ -32,6 +38,7 @@ namespace ArenaSurvival.Meta
         {
             if (_onStageCompleted != null) StageEvents.OnStageCompleted -= _onStageCompleted;
             Profile = null;
+            SavePathOverride = null;
             Economy = null;
             StageProgress = null;
             Talents = null;
@@ -41,7 +48,7 @@ namespace ArenaSurvival.Meta
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void AutoInitialize() => Initialize();
+        private static void AutoInitialize() => Initialize(SavePathOverride);
 
         /// <summary>Gọi lại nhiều lần không sao: đã khởi tạo thì bỏ qua.</summary>
         public static void Initialize(string savePath = null)

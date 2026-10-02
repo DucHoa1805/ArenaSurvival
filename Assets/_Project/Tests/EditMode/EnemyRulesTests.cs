@@ -97,6 +97,25 @@ namespace ArenaSurvival.Tests
         }
 
         [Test]
+        public void ShieldBlocks_OnlyFrontalHits()
+        {
+            Vector2 facing = Vector2.right;
+            Assert.IsTrue(EnemyRules.ShieldBlocks(facing, Vector2.left, 120f), "đạn bay thẳng vào mặt khiên");
+            Assert.IsTrue(EnemyRules.ShieldBlocks(facing, new Vector2(-1f, 0.5f), 120f), "lệch ~27° vẫn trong cung 60° mỗi bên");
+            Assert.IsFalse(EnemyRules.ShieldBlocks(facing, new Vector2(-1f, 2f), 120f), "lệch ~63°: ngoài cung → đánh bên hông được");
+            Assert.IsFalse(EnemyRules.ShieldBlocks(facing, Vector2.right, 120f), "đạn bắn từ sau lưng");
+            Assert.IsFalse(EnemyRules.ShieldBlocks(facing, Vector2.zero, 120f), "nổ/lưỡi cưa không có hướng → không chặn");
+        }
+
+        [Test]
+        public void InBlast_IncludesEdge()
+        {
+            Assert.IsTrue(EnemyRules.InBlast(Vector2.zero, 1.5f, new Vector2(1.5f, 0f)));
+            Assert.IsTrue(EnemyRules.InBlast(new Vector2(2f, 2f), 1.5f, new Vector2(2.5f, 2.5f)));
+            Assert.IsFalse(EnemyRules.InBlast(Vector2.zero, 1.5f, new Vector2(1.2f, 1.2f)));
+        }
+
+        [Test]
         public void KamikazeHit_InsideRadiusOnly()
         {
             Assert.IsTrue(EnemyRules.KamikazeHit(1.7f, 1.8f));

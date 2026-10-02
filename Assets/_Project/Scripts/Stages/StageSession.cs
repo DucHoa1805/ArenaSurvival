@@ -29,9 +29,10 @@ namespace ArenaSurvival.Stages
 
         [Header("Hồi sinh")]
         [SerializeField, Range(0.1f, 1f)] private float _reviveHealthFraction = 0.5f;
-        [SerializeField] private float _reviveInvulnerability = 2f;
+        // 3 s + đẩy r=5 (10C): với 2 s / r=3, bot chơi thử chết lại ngay sau hồi sinh 9 lần — quái đông áp sát lại trước khi kịp chạy.
+        [SerializeField] private float _reviveInvulnerability = 3f;
         [Tooltip("Quái trong bán kính này bị đẩy ra mép, để Player vừa hồi sinh không chết lại ngay.")]
-        [SerializeField] private float _revivePushRadius = 3f;
+        [SerializeField] private float _revivePushRadius = 5f;
         [SerializeField] private LayerMask _enemyLayer;
 
         [Header("Kết thúc")]
@@ -70,6 +71,9 @@ namespace ArenaSurvival.Stages
 
         private readonly List<(EnemyData data, EnemyModifiers mods)> _eliteQueue = new List<(EnemyData, EnemyModifiers)>();
         private int _nextElite;
+        // Tinh anh đã ra sân (kèm SpawnId lúc sinh) để biết khi nào chết hết; dựng sẵn sức chứa, không cấp phát lúc chơi.
+        private readonly List<(Enemy enemy, int spawnId)> _elites = new List<(Enemy, int)>(16);
+        private bool _leftoversCleared;
         private float _eliteTimer;
         private float _clearedTimer = -1f;
 
@@ -163,6 +167,8 @@ namespace ArenaSurvival.Stages
             }
 
             _nextElite = 0;
+            _elites.Clear();
+            _leftoversCleared = false;
             _eliteTimer = Stage.eliteSpawnInterval; // con đầu tiên ra ngay
             OnWaveStarted?.Invoke(CurrentWave, TotalWaves);
             OnFinalWaveStarted?.Invoke();
@@ -177,7 +183,8 @@ namespace ArenaSurvival.Stages
                 {
                     _eliteTimer = 0f;
                     var (data, mods) = _eliteQueue[_nextElite++];
-                    _spawner.Spawn(data, mods);
+                    Enemy elite = _spawner.Spawn(data, mods);
+                    if (elite != null) _elites.Add((elite, elite.SpawnId));
                 }
                 return;
             }
@@ -190,6 +197,13 @@ namespace ArenaSurvival.Stages
                     if (_bossTimer >= Stage.bossDelay) SpawnBoss();
                 }
                 return; // màn có boss: thắng khi boss chết, không cần dọn sạch sân
+            }
+
+            // Hết tinh anh thì quái thường còn sót nổ theo (không XP/đồ), y như khi boss chết.
+            if (!_leftoversCleared && StageRules.EliteWaveCleared(_eliteQueue.Count, _nextElite, CountElitesAlive()))
+            {
+                _leftoversCleared = true;
+                _spawner.DespawnAll();
             }
 
             if (_spawner.ActiveCount > 0)
@@ -207,9 +221,30 @@ namespace ArenaSurvival.Stages
             if (_clearedTimer >= _victoryDelay) EndStage(true);
         }
 
+        private Predicate<Enemy> _isEliteCache;
+
+        private bool IsTrackedElite(Enemy enemy)
+        {
+            foreach (var (elite, spawnId) in _elites)
+                if (elite == enemy && elite.SpawnId == spawnId) return true;
+            return false;
+        }
+
+        private int CountElitesAlive()
+        {
+            int alive = 0;
+            foreach (var (enemy, spawnId) in _elites)
+                if (enemy != null && enemy.gameObject.activeInHierarchy && enemy.SpawnId == spawnId) alive++;
+            return alive;
+        }
+
         private void SpawnBoss()
         {
             _bossSpawned = true;
+            // Quái thường còn sót từ 3 đợt trước nổ hết, chỉ giữ tinh anh: trận boss là màn đấu tay đôi + vài tinh anh,
+            // không phải boss giữa đám đông (bot chơi thử 10C chết ở boss 1-10 hàng chục lượt vì đám quái cũ vẫn bám theo).
+            if (_isEliteCache == null) _isEliteCache = IsTrackedElite;
+            _spawner.DespawnAllExcept(_isEliteCache);
             // Boss mạnh theo độ khó của màn như mọi quái, giữ màu và kích thước gốc của nó.
             EnemyModifiers bossMods = EnemyModifiers.ForDifficulty(_difficulty);
             bossMods.loot = Stage.bossLoot;

@@ -129,18 +129,21 @@ namespace ArenaSurvival.Weapons
         private void Fire(Vector2 direction)
         {
             float damage = _stats.damage * _playerStats.DamageMultiplier;
-            int count = Mathf.Max(1, _stats.projectileCount);
+            int extra = _playerStats.ExtraProjectiles;
+            int count = Mathf.Max(1, _stats.projectileCount) + extra;
+            float spread = RunUpgrades.SkillRules.SpreadWithExtra(_stats.spreadAngle, extra);
+            int pierce = _stats.pierce + _playerStats.ExtraPierce;
 
             for (int i = 0; i < count; i++)
             {
                 // Xoay hướng ngắm quanh trục Z để các viên tỏa đều thành hình quạt quanh mục tiêu; súng máy lệch thêm ngẫu nhiên.
-                float offset = GetSpreadOffset(i, count, _stats.spreadAngle);
+                float offset = GetSpreadOffset(i, count, spread);
                 if (_stats.aimJitter > 0f) offset += Random.Range(-_stats.aimJitter, _stats.aimJitter);
                 Vector2 shotDirection = Quaternion.Euler(0f, 0f, offset) * direction;
 
                 Projectile projectile = _projectilePool.Get(_firePoint.position, Quaternion.identity);
                 projectile.OnReturnToPool = _releaseProjectile;
-                projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, _stats.pierce,
+                projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, pierce,
                     _stats.explosionRadius, _stats.explosionDamageFraction, _stats.knockback);
             }
 

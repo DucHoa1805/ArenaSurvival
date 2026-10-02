@@ -15,6 +15,12 @@ namespace ArenaSurvival.Player
         public float DamageMultiplier { get; private set; } = 1f;
         public float FireRateMultiplier { get; private set; } = 1f;
         public float MoveSpeedMultiplier { get; private set; } = 1f;
+        /// <summary>Kỹ năng Đa nòng: số viên thêm mỗi phát của súng chính.</summary>
+        public int ExtraProjectiles { get; set; }
+        /// <summary>Kỹ năng Đạn xuyên: số lần xuyên thêm.</summary>
+        public int ExtraPierce { get; set; }
+        /// <summary>Kỹ năng Nam châm: hệ số bán kính hút XP.</summary>
+        public float PickupRadiusMultiplier { get; set; } = 1f;
 
         /// <summary>
         /// Hệ số gốc từ chỉ số ngoài trận (Talent, sau này trang bị) — đặt 1 lần lúc vào màn, TRƯỚC mọi nâng cấp trong màn;

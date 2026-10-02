@@ -93,7 +93,9 @@ namespace ArenaSurvival.Combat
             // (PlayerProjectile chỉ chạm Enemy, EnemyProjectile chỉ chạm Player).
             if (!other.TryGetComponent(out Health targetHealth)) return;
 
-            targetHealth.TakeDamage(_damage);
+            // Quái nhận đòn kèm hướng bay (khiên chặn phía trước); Player không cần nên đi thẳng vào Health.
+            if (other.TryGetComponent(out IHitReceiver receiver)) receiver.TakeHit(_damage, _direction);
+            else targetHealth.TakeDamage(_damage);
             if (_raiseHitEvent) Core.GameEvents.ProjectileHit(transform.position);
 
             if (_knockback > 0f && other.attachedRigidbody != null)
