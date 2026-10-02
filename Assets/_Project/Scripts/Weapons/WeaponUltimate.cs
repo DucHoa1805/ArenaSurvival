@@ -18,6 +18,8 @@ namespace ArenaSurvival.Weapons
         public LayerMask EnemyLayer;
         /// <summary>Tia laser dựng sẵn (tắt khi không dùng).</summary>
         public LineRenderer Beam;
+        /// <summary>Tia điện nảy (Tesla, Lưới điện). Null nếu Player không có ChainBolts.</summary>
+        public ChainBolts Chain;
 
         private readonly List<Collider2D> _hits = new List<Collider2D>(128);
         private readonly RaycastHit2D[] _rayHits = new RaycastHit2D[64];
@@ -47,6 +49,27 @@ namespace ArenaSurvival.Weapons
             for (int i = 0; i < count; i++)
                 if (_hits[i].TryGetComponent(out Health health)) health.TakeDamage(damage);
             Core.GameEvents.Explosion(center, radius);
+        }
+
+        /// <summary>Danh sách quái trong bán kính (dùng chung bộ đệm — đọc xong trước lần gọi kế).</summary>
+        public List<Collider2D> EnemiesAround(Vector2 center, float radius)
+        {
+            Physics2D.OverlapCircle(center, radius, Filter, _hits);
+            return _hits;
+        }
+
+        /// <summary>Gây sát thương mọi quái trong 1 dải rộng width dọc theo tia (Railgun).</summary>
+        public void DamageAlongThickRay(Vector2 origin, Vector2 direction, float length, float width, float damage)
+        {
+            int count = Physics2D.CircleCast(origin, width * 0.5f, direction, Filter, _rayHits, length);
+            for (int i = 0; i < count; i++)
+            {
+                if (_rayHits[i].collider.TryGetComponent(out Health health))
+                {
+                    health.TakeDamage(damage);
+                    Core.GameEvents.ProjectileHit(_rayHits[i].point);
+                }
+            }
         }
 
         /// <summary>Gây sát thương mọi quái nằm trên đoạn thẳng (tia laser).</summary>

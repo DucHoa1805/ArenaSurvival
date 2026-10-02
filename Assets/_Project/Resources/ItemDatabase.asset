@@ -26,9 +26,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 507b5648c0b911c47993ffc80c44c18b, type: 2}
   - {fileID: 11400000, guid: fbae4ef4dfb01d444895e27c10dda21b, type: 2}
   - {fileID: 11400000, guid: 6b7cb42fe88d6c3448c968aa13304ce3, type: 2}
+  - {fileID: 11400000, guid: a3db75ca60eefa54d8da1ce25b9c175f, type: 2}
+  - {fileID: 11400000, guid: 2265a014e63d0ca408b44a1af82674a1, type: 2}
+  - {fileID: 11400000, guid: 8e6d331c5749aec4d9a2858e5a274623, type: 2}
   weapons:
   - {fileID: 11400000, guid: 15aeef8b479207f438191e2e9d053d53, type: 2}
   - {fileID: 11400000, guid: 48d0712e269809b46af2d8e5e0db81a8, type: 2}
   - {fileID: 11400000, guid: cf00ca75e4b2ba74db307014fbcbdca8, type: 2}
   - {fileID: 11400000, guid: 926d3fc2c80017a46895e0504580221b, type: 2}
   - {fileID: 11400000, guid: f26c97bef20cb29469466df033b73998, type: 2}
+  - {fileID: 11400000, guid: 3413371b4880d764781a0a671bfe133f, type: 2}
+  - {fileID: 11400000, guid: 3017c746bc29fe8469dddecc37cc02c6, type: 2}
+  - {fileID: 11400000, guid: b1e262320497c8a419fb18469b0fabfe, type: 2}

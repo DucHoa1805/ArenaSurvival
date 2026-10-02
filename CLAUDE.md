@@ -307,6 +307,12 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
   `WeaponBuffUltimate` (Shotgun — Đạn chùm: đạn nổ 5 s; Súng máy — Cuồng nộ: bắn ×3 4 s; qua `PlayerWeapon.SetBuff/ClearBuff`),
   `GrenadeRainUltimate` (Phóng lựu — Mưa lựu), `BeamSweepUltimate` (Laser — tia `LineRenderer` dựng sẵn, quét 360°). Sát thương = bội số
   `PlayerWeapon.CurrentShotDamage`. `GameEvents.UltimateUsed` → `UltimateFlash` (lóe màu + tên chiêu) và rung camera. DevMenu: "Đầy mana".
+- **3 vũ khí mới (10E D)**: Phun lửa (đạn `Projectile_Flame` cầu lửa + vệt, xuyên 99, đốt cháy `burnDps` qua `IBurnable` → `Enemy.ApplyBurn`:
+  trừ máu mỗi 0.25 s, ngọn lửa con tạo 1 lần/object, `StopBurn` khi spawn/chết), Tesla (`WeaponData.fireMode = Chain`: tia nảy tức thì qua
+  `ChainBolts` trên Player — pool 40 LineRenderer, viên thêm từ sao/Đa nòng = nảy thêm), Railgun (`Projectile_Rail`, xuyên 99, chậm, mạnh).
+  Chiêu: `FireStormUltimate` (Bão lửa), `ChainStormUltimate` (Lưới điện), `RailBlastUltimate` (tia dày `CircleCast`). Tia điện/tia chiêu dùng
+  vật liệu `Sprite-Unlit-Default` của URP (vật liệu cộng màu `Vfx_Particle` làm xanh lơ thành tím nhạt trên nền cát). Mảnh `shard_weapon_*`
+  trong `Loot_WeaponShards`; quà thắng lần đầu 2-6 Phun lửa, 3-1 Tesla, 3-7 Railgun (10 mảnh). Icon chiêu riêng `icon_ult_*`.
 - **Bot tự chơi (10C)**: `ArenaSurvival.exe -autoplay -speed 8 -label tên [-maxRuns N]` (build dev): save riêng `autoplay-save.json` (xóa đầu lượt,
   save thật không bị chạm — `GameServices.SavePathOverride`), `GameManager.PlayingTimeScale` để chạy nhanh, ghi `autoplay-log.csv` +
   `autoplay-summary.md` cạnh save. Kết quả các vòng: `Docs/Balance/playtest-report.md`.
@@ -346,7 +352,7 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | Màn chơi (10) | Chương 1 "Sa mạc" 1-1..1-10 (`Docs/Balance/stages.csv`): mỗi màn 3 đợt (45 s ở 1-1/1-2, 60 s từ 1-3) + đợt tinh anh; quái mới giới thiệu dần (1-3 Charger, 1-4 Xạ thủ, 1-6 Kamikaze, 1-7 Splitter, 1-9 Healer); 1-5 mini-boss, 1-10 boss chương. Quà lần đầu: 1-3 mảnh Shotgun, 1-5 Súng máy, 1-10 Phóng lựu. Lực chiến đề xuất 110 → 575 |
 | Màn chơi (10, C3) | Chương 3 "Căn cứ" 3-1..3-10 (số màn 21–30): 3-2 Lính Khiên, 3-3 Sniper C3, 3-5 mini-boss Pháo Đài Di Động (Mưa Pháo), 3-10 boss Tướng Chỉ Huy (Mưa Pháo, xoắn ốc, gọi Lính Khiên/Kamikaze). Lực chiến đề xuất 1040 → 1530 |
 | Màn chơi (10, C2) | Chương 2 "Thành phố" 2-1..2-10 (số màn 11–20): 3 đợt × 60 s (nhịp sinh 0.95 → 0.67 s) + đợt tinh anh; 2-2 Sniper, 2-3 Charger C2, 2-4 Xạ thủ C2 + Kamikaze, 2-6 Splitter, 2-7 Healer; 2-5 mini-boss, 2-10 boss. Quà lần đầu: 2-3 10 mảnh Laser, 2-10 20 mảnh Phóng lựu. Lực chiến đề xuất 565 → 1115 (mô phỏng: 20 màn ~108 phút) |
-| Vũ khí chính (5) | Súng lục (có sẵn), Shotgun (6 viên tầm ngắn, đẩy lùi), Súng máy (6 phát/giây, tản), Phóng lựu (nổ r=1.6), Laser (xuyên 4); cấp + 5 sao |
+| Vũ khí chính (8) | Súng lục (có sẵn), Shotgun (6 viên tầm ngắn, đẩy lùi), Súng máy (6 phát/giây, tản), Phóng lựu (nổ r=1.6), Laser (xuyên 4), Phun lửa (nón ngắn, đốt cháy), Tesla (tia nảy 4 quái), Railgun (chậm, xuyên mọi quái); cấp + 5 sao; mỗi khẩu 1 chiêu dùng mana |
 | Kỹ năng trong màn (14, có cấp) | Sát thương +25%, Tốc bắn +20%, Tốc chạy +10%, Máu +20, Hồi máu +30, Lưỡi cưa (3→8 lưỡi, cấp 6 thức tỉnh), Đa nòng, Đạn xuyên, Lá chắn, Vòng điện, Tên lửa, Nam châm, Sét lan, Drone hộ vệ |
 | XP trong màn | Cấp 1 cần 5 XP, mỗi cấp sau cần thêm 5; orb bị hút trong bán kính 2.5 |
 | Bản đồ | Vô tận, không tường. Sa mạc: cát + bãi đất, đá, bụi cây. Thành phố: đường nhựa + ô bê tông, mảnh vụn, thùng phuy. Căn cứ: sân bê tông + bãi nhựa/đất, thùng hàng |
@@ -374,6 +380,7 @@ Thư mục cho hệ thống mới (`Meta/`, `Inventory/`, `Economy/`, `Shop/`, `
 | 10A – Công cụ dữ liệu + Chương 1 | Xong: CSV + nhập/xuất, mô phỏng tiến trình, ChapterData, 10 màn, 4 quái mới, tab Chiến đấu 10 màn |
 | 10B – Chương 2 | Xong: Arena_City + ArenaLoader (sân theo chương, cả nền Hub), 10 màn, Sniper, 5 biến thể, đòn xoắn ốc, mini-boss + boss mới, bảng rơi C2 |
 | 10C – Chương 3 + cân bằng | Xong: Arena_Base, 10 màn, Lính Khiên, Mưa Pháo, 2 boss, bot tự chơi, kỹ năng có cấp, cân bằng (bot qua 30 màn ~199 phút) |
+| 10E – Quái đông, thẻ theo màn, chiêu, 3 vũ khí | Xong: mật độ chương đầu, thẻ +3%/màn, mana + 8 chiêu, Phun lửa/Tesla/Railgun, icon chiêu |
 | 10D – Bản đồ vô tận + hình ảnh | Xong: nền vô tận theo chunk, bỏ tường/sân giữa, nhân vật tự vẽ + hiệu ứng, Sét lan + Drone, lưỡi cưa thức tỉnh, độ khó +7.5%/màn |
 | 11A – Cửa hàng, IAP, quảng cáo (giả lập) | Xong: tab Cửa hàng (gói kim cương, khởi đầu, xóa QC, vàng, rương + tỷ lệ), IAPService + FakeStore, AdsService, hồi sinh/nhân đôi bằng QC, consent, save v6 |
 | 11B – SDK thật | Chờ tài khoản Google Play Console + điện thoại Android: Unity IAP, xác minh biên lai, LevelPlay, build Android |

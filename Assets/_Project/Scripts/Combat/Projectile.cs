@@ -71,6 +71,7 @@ namespace ArenaSurvival.Combat
             _explosionRadius = explosionRadius;
             _explosionFraction = explosionFraction;
             _knockback = knockback;
+            _burnDps = 0f;
             _direction = direction.normalized;
 
             _rb.linearVelocity = _direction * _speed;
@@ -78,6 +79,16 @@ namespace ArenaSurvival.Combat
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
             // Đạn từ pool: xóa vệt của lần bắn trước, nếu không sẽ có 1 nét dài nối chỗ cũ với nòng súng.
             if (_trail != null) _trail.Clear();
+        }
+
+        private float _burnDps;
+        private float _burnDuration;
+
+        /// <summary>Gọi SAU Launch (Launch xóa về 0): đạn Phun lửa đốt cháy quái trúng đạn.</summary>
+        public void SetBurn(float dps, float duration)
+        {
+            _burnDps = dps;
+            _burnDuration = duration;
         }
 
         private void Update()
@@ -101,6 +112,7 @@ namespace ArenaSurvival.Combat
             if (other.TryGetComponent(out IHitReceiver receiver)) receiver.TakeHit(_damage, _direction);
             else targetHealth.TakeDamage(_damage);
             if (_raiseHitEvent) Core.GameEvents.ProjectileHit(transform.position);
+            if (_burnDps > 0f && other.TryGetComponent(out IBurnable burnable)) burnable.ApplyBurn(_burnDps, _burnDuration);
 
             if (_knockback > 0f && other.attachedRigidbody != null)
             {

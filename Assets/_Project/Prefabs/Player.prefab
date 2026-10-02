@@ -600,6 +600,7 @@ GameObject:
   - component: {fileID: 1554718142681855157}
   - component: {fileID: 3308007627007584282}
   - component: {fileID: 7382286247698523214}
+  - component: {fileID: 7264634912213622615}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -945,7 +946,25 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  _beamMaterial: {fileID: 2100000, guid: 2d4ee472dd00aca46b6f7c132cc5b07e, type: 2}
+  _beamMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+--- !u!114 &7264634912213622615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134866167689488960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 276bcf01616a33f40a8ecf4899e66386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Player.ChainBolts
+  _material: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _boltLife: 0.16
+  _width: 0.14
 --- !u!1 &8513488347418391097
 GameObject:
   m_ObjectHideFlags: 0

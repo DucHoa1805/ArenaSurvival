@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace ArenaSurvival.Weapons
 {
+    public enum WeaponFireMode
+    {
+        Projectile,
+        Chain,
+    }
+
     /// <summary>
     /// Dữ liệu 1 khẩu súng chính (8C): số liệu gốc ở cấp 1/1★ + cách đạn hành xử (xuyên, nổ, đẩy lùi) + phần meta (id, mảnh, hiệu ứng sao).
     /// Kiểu bắn khác nhau chỉ là bộ số khác nhau (phương án A) — thêm súng mới thường chỉ cần tạo asset, không sửa PlayerWeapon.
@@ -51,6 +57,17 @@ namespace ArenaSurvival.Weapons
         [Header("Hiệu ứng sao")]
         public WeaponStarBonus starBonus3;
         public WeaponStarBonus starBonus5;
+
+        [Header("Kiểu bắn đặc biệt (10E)")]
+        [Tooltip("Projectile = đạn bay; Chain = tia điện nảy tức thì giữa các quái (Tesla).")]
+        public WeaponFireMode fireMode = WeaponFireMode.Projectile;
+        [Tooltip("Chain: số quái trúng mỗi phát (sao 3/Đa nòng cộng thêm).")]
+        [Min(1)] public int chainJumps = 4;
+        [Min(0.5f)] public float chainRange = 3.5f;
+        public Color chainColor = new Color(0.55f, 0.85f, 1f, 1f);
+        [Tooltip("Đốt cháy khi trúng: sát thương/giây ở cấp 1 (tăng theo cấp cùng tỉ lệ với sát thương). 0 = không cháy.")]
+        [Min(0f)] public float burnDps;
+        [Min(0f)] public float burnDuration = 2.5f;
 
         [Header("Chiêu đặc biệt (10E)")]
         [Tooltip("Dùng khi đầy mana. Trống = vũ khí không có chiêu (nút chiêu ẩn).")]

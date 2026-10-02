@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef93873ae106d7d43bed6972af679921, type: 3}
+  m_Name: Weapon_Flamethrower
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Weapons.WeaponData
+  displayName: "Phun l\u1EEDa"
+  icon: {fileID: 21300000, guid: 715e44bf4d02a5440a14ea480ea68528, type: 3}
+  id: weapon_flamethrower
+  description: "Phun l\u1EEDa h\xECnh n\xF3n t\u1EA7m ng\u1EAFn xuy\xEAn qua m\u1ECDi
+    qu\xE1i, \u0111\u1ED1t ch\xE1y theo th\u1EDDi gian."
+  shardMaterial: {fileID: 11400000, guid: a3db75ca60eefa54d8da1ce25b9c175f, type: 2}
+  damage: 2.6
+  damagePerLevel: 0.312
+  fireRate: 9
+  range: 3.6
+  projectileSpeed: 8
+  projectileCount: 2
+  spreadAngle: 26
+  aimJitter: 9
+  pierce: 99
+  explosionRadius: 0
+  explosionDamageFraction: 0.7
+  knockback: 0
+  projectilePrefab: {fileID: 4644805776529081687, guid: 1ed865de5a72e514089c8614210a7094, type: 3}
+  starBonus3:
+    extraProjectiles: 1
+    extraPierce: 0
+    fireRatePercent: 0
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "Th\xEAm 1 lu\u1ED3ng l\u1EEDa"
+  starBonus5:
+    extraProjectiles: 0
+    extraPierce: 0
+    fireRatePercent: 25
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "T\u1ED1c phun +25%"
+  fireMode: 0
+  chainJumps: 4
+  chainRange: 3.5
+  chainColor: {r: 0.55, g: 0.85, b: 1, a: 1}
+  burnDps: 5
+  burnDuration: 2.5
+  ultimate: {fileID: 11400000, guid: 91d45024bb710e64d838cdd2a3a5feb6, type: 2}

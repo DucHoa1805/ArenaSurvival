@@ -15,10 +15,10 @@ MonoBehaviour:
   displayName: "M\u01B0a l\u1EF1u"
   description: "D\u1ED9i 12 qu\u1EA3 l\u1EF1u xu\u1ED1ng quanh ng\u01B0\u1EDDi trong
     h\u01A1n 1 gi\xE2y."
-  icon: {fileID: 21300000, guid: 113b93afb588254458db4c5a08c2aa8e, type: 3}
+  icon: {fileID: 21300000, guid: fde9ec2d28057744cbb24850989bc50c, type: 3}
   color: {r: 0.6117647, g: 1, b: 0.34117648, a: 1}
-  count: 12
+  count: 14
   totalTime: 1.2
   areaRadius: 5
-  blastRadius: 1.8
+  blastRadius: 2.1
   damageMultiplier: 2

@@ -35,4 +35,9 @@ MonoBehaviour:
   baseGold: 100
   baseAccountXp: 20
   victoryLoot: {fileID: 11400000, guid: ca030a51be0c3ce499c06c599ae189d6, type: 2}
-  firstClearReward: []
+  firstClearReward:
+  - material: {fileID: 11400000, guid: 2265a014e63d0ca408b44a1af82674a1, type: 2}
+    item: {fileID: 0}
+    min: 10
+    max: 10
+    weight: 1

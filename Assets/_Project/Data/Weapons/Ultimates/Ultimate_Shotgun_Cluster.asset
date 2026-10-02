@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: "\u0110\u1EA1n ch\xF9m"
   description: "B\u1EAFn 1 v\xF2ng \u0111\u1EA1n r\u1ED3i trong 5 gi\xE2y m\u1ECDi
     vi\xEAn \u0111\u1EC1u n\u1ED5 khi tr\xFAng."
-  icon: {fileID: 21300000, guid: a1065e9312d1f7e41a210c1afb86bb79, type: 3}
+  icon: {fileID: 21300000, guid: db241bf48f03e134187cf9b0cedb4807, type: 3}
   color: {r: 1, g: 0.5411765, b: 0.23921569, a: 1}
   duration: 5
   fireRateMultiplier: 1.2

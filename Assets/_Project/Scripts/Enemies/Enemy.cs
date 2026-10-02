@@ -11,7 +11,7 @@ namespace ArenaSurvival.Enemies
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Health))]
-    public class Enemy : MonoBehaviour, IHitReceiver
+    public class Enemy : MonoBehaviour, IHitReceiver, IBurnable
     {
         [Header("Combat")]
         [SerializeField] private float _damageCooldown = 1f; // tránh gây damage mỗi frame khi đứng chạm liên tục
@@ -24,6 +24,17 @@ namespace ArenaSurvival.Enemies
         private Rigidbody2D _rb;
         private Health _health;
         private SpriteRenderer _spriteRenderer;
+
+        [Header("Cháy (10E)")]
+        [Tooltip("Ngọn lửa hiện trên quái khi đang cháy (Phun lửa, Bão lửa).")]
+        [SerializeField] private Sprite _burnSprite;
+        private SpriteRenderer _burnFx;
+        private float _burnDps;
+        private float _burnLeft;
+        private float _burnTick;
+        private const float BurnTickInterval = 0.25f;
+        // Sprite lửa vẽ nhỏ (48×64 px) để nét; phóng trong game cho thấy rõ trên quái (lần đầu thử gần như không thấy).
+        private const float BurnFxScale = 2.6f;
         private EnemyContext _ctx;
         private float _lastDamageTime = -999f;
         private float _contactDamage;
@@ -123,6 +134,7 @@ namespace ArenaSurvival.Enemies
             _spriteRenderer.sprite = data.sprite;
             // Đặt lại màu mỗi lần lấy từ pool: con trước có thể là quái tinh anh hoặc boss có màu riêng.
             _spriteRenderer.color = data.tint * modifiers.tint;
+            StopBurn();
 
             // Gán lại mỗi lần lấy ra từ pool: object này lần trước có thể là 1 loại quái khác kích thước.
             // Scale transform thì collider cũng to theo, không cần chỉnh riêng.
@@ -160,6 +172,55 @@ namespace ArenaSurvival.Enemies
         {
             if (_ctx.Player == null || _data == null) return;
             Behaviour.Tick(_ctx, Time.fixedDeltaTime);
+            if (_burnLeft > 0f) TickBurn(Time.fixedDeltaTime);
+        }
+
+        public void ApplyBurn(float dps, float duration)
+        {
+            if (dps <= 0f || duration <= 0f || !gameObject.activeSelf) return;
+            _burnDps = Mathf.Max(_burnDps, dps);
+            _burnLeft = Mathf.Max(_burnLeft, duration);
+            if (_burnFx == null) CreateBurnFx();
+            if (_burnFx != null) _burnFx.enabled = true;
+        }
+
+        private void TickBurn(float dt)
+        {
+            _burnLeft -= dt;
+            _burnTick += dt;
+            if (_burnFx != null)
+            {
+                // Lửa lập lòe: co giãn theo nhiễu, không cần hoạt ảnh sprite.
+                float f = 0.85f + 0.3f * Mathf.PerlinNoise(Time.time * 9f, SpawnId * 0.37f);
+                _burnFx.transform.localScale = new Vector3(f * BurnFxScale, f * 1.15f * BurnFxScale, 1f);
+            }
+            if (_burnTick >= BurnTickInterval)
+            {
+                _burnTick -= BurnTickInterval;
+                _health.TakeDamage(_burnDps * BurnTickInterval);
+            }
+            if (_burnLeft <= 0f) StopBurn();
+        }
+
+        private void StopBurn()
+        {
+            _burnDps = 0f;
+            _burnLeft = 0f;
+            _burnTick = 0f;
+            if (_burnFx != null) _burnFx.enabled = false;
+        }
+
+        // Tạo 1 lần cho mỗi object quái (pool tái dùng), không tạo lại mỗi lần cháy.
+        private void CreateBurnFx()
+        {
+            if (_burnSprite == null) return;
+            var go = new GameObject("Burn");
+            go.transform.SetParent(_spriteRenderer.transform, false);
+            _burnFx = go.AddComponent<SpriteRenderer>();
+            _burnFx.sprite = _burnSprite;
+            _burnFx.sortingLayerID = _spriteRenderer.sortingLayerID;
+            _burnFx.sortingOrder = _spriteRenderer.sortingOrder + 1;
+            _burnFx.enabled = false;
         }
 
         public void TakeHit(float damage, Vector2 direction)
@@ -213,6 +274,7 @@ namespace ArenaSurvival.Enemies
         private void HandleDied()
         {
             _rb.linearVelocity = Vector2.zero;
+            StopBurn();
             _ctx.ResetVisual();
 
             // Phát sự kiện toàn cục để hệ thống XP (Phase 4) lắng nghe mà Enemy không cần biết

@@ -53,6 +53,7 @@ namespace ArenaSurvival.Weapons
         private readonly List<Collider2D> _hits = new List<Collider2D>(MaxTargetsPerScan);
 
         private float _flashTimer;
+        private ChainBolts _chain;
 
         // Cường hóa tạm thời từ chiêu (WeaponBuffUltimate). Mặc định = không đổi gì.
         private float _buffFireRate = 1f;
@@ -94,6 +95,7 @@ namespace ArenaSurvival.Weapons
         private void Awake()
         {
             _playerStats = GetComponent<PlayerStats>();
+            _chain = GetComponent<ChainBolts>();
             if (_muzzleFlash == null && _firePoint != null)
             {
                 Transform t = _firePoint.Find("MuzzleFlash");
@@ -179,10 +181,18 @@ namespace ArenaSurvival.Weapons
             return nearest;
         }
 
+        /// <summary>Đốt cháy tăng theo cấp/sao cùng tỉ lệ với sát thương phát bắn.</summary>
+        private float BurnDps => _weaponData.burnDps * (_weaponData.damage > 0f ? _stats.damage / _weaponData.damage : 1f) * _playerStats.DamageMultiplier;
+
         private void Fire(Vector2 direction)
         {
             float damage = _stats.damage * _playerStats.DamageMultiplier;
             int extra = _playerStats.ExtraProjectiles;
+            if (_weaponData.fireMode == WeaponFireMode.Chain && _chain != null)
+            {
+                FireChain(damage, extra);
+                return;
+            }
             int count = Mathf.Max(1, _stats.projectileCount) + extra;
             float spread = RunUpgrades.SkillRules.SpreadWithExtra(_stats.spreadAngle, extra);
             int pierce = _stats.pierce + _playerStats.ExtraPierce + _buffPierce;
@@ -198,6 +208,7 @@ namespace ArenaSurvival.Weapons
                 projectile.OnReturnToPool = _releaseProjectile;
                 projectile.Launch(shotDirection, damage, _stats.projectileSpeed, _stats.range, pierce,
                     Mathf.Max(_stats.explosionRadius, _buffExplosionRadius), ExplosionFraction, _stats.knockback);
+                if (_weaponData.burnDps > 0f) projectile.SetBurn(BurnDps, _weaponData.burnDuration);
             }
 
             if (_muzzleFlash != null)
@@ -209,6 +220,21 @@ namespace ArenaSurvival.Weapons
             }
 
             // 1 tiếng cho cả loạt đạn, không phải mỗi viên 1 tiếng.
+            GameEvents.PlayerFired();
+        }
+
+        /// <summary>Tesla: tia nảy tức thì. Viên thêm (sao 3, Đa nòng) = thêm số quái nảy; cường hóa tốc bắn vẫn áp qua cooldown.</summary>
+        private void FireChain(float damage, int extra)
+        {
+            Transform first = _chain.Nearest(_firePoint.position, _stats.range);
+            if (first == null) return;
+            int jumps = _weaponData.chainJumps + (Mathf.Max(1, _stats.projectileCount) - 1) + extra + _buffPierce;
+            _chain.Strike(_firePoint.position, first, jumps, _weaponData.chainRange, damage, _weaponData.chainColor);
+            if (_muzzleFlash != null)
+            {
+                _muzzleFlash.enabled = true;
+                _flashTimer = _muzzleFlashTime;
+            }
             GameEvents.PlayerFired();
         }
 

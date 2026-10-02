@@ -374,6 +374,7 @@ MonoBehaviour:
   _damageCooldown: 1
   _spriteAngleOffset: 0
   _rotationSpeed: 540
+  _burnSprite: {fileID: 21300000, guid: 6cd1b63354a2e3c498d6812511bf27cb, type: 3}
 --- !u!114 &1468814717609280168
 MonoBehaviour:
   m_ObjectHideFlags: 0

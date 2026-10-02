@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef93873ae106d7d43bed6972af679921, type: 3}
+  m_Name: Weapon_Tesla
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Weapons.WeaponData
+  displayName: Tesla
+  icon: {fileID: 21300000, guid: a250c6145a179b74e8fa5a2fa2018bc7, type: 3}
+  id: weapon_tesla
+  description: "Tia \u0111i\u1EC7n t\u1EE9c th\xEC \u0111\xE1nh qu\xE1i g\u1EA7n
+    nh\u1EA5t r\u1ED3i n\u1EA3y sang 4 qu\xE1i k\u1EBF b\xEAn."
+  shardMaterial: {fileID: 11400000, guid: 2265a014e63d0ca408b44a1af82674a1, type: 2}
+  damage: 8.5
+  damagePerLevel: 1.02
+  fireRate: 1.4
+  range: 7
+  projectileSpeed: 0
+  projectileCount: 1
+  spreadAngle: 0
+  aimJitter: 0
+  pierce: 0
+  explosionRadius: 0
+  explosionDamageFraction: 0.7
+  knockback: 0
+  projectilePrefab: {fileID: 0}
+  starBonus3:
+    extraProjectiles: 2
+    extraPierce: 0
+    fireRatePercent: 0
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "N\u1EA3y th\xEAm 2 qu\xE1i"
+  starBonus5:
+    extraProjectiles: 0
+    extraPierce: 0
+    fireRatePercent: 30
+    explosionRadiusPercent: 0
+    knockbackPercent: 0
+    text: "T\u1ED1c b\u1EAFn +30%"
+  fireMode: 1
+  chainJumps: 4
+  chainRange: 3.5
+  chainColor: {r: 0.24705882, g: 0.7058824, b: 1, a: 1}
+  burnDps: 0
+  burnDuration: 2.5
+  ultimate: {fileID: 11400000, guid: 706a11659a8d6124eb11a9c5c918528c, type: 2}

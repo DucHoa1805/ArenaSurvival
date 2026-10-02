@@ -40,6 +40,21 @@ MonoBehaviour:
     min: 3
     max: 5
     weight: 1
+  - material: {fileID: 11400000, guid: a3db75ca60eefa54d8da1ce25b9c175f, type: 2}
+    item: {fileID: 0}
+    min: 3
+    max: 5
+    weight: 1
+  - material: {fileID: 11400000, guid: 2265a014e63d0ca408b44a1af82674a1, type: 2}
+    item: {fileID: 0}
+    min: 3
+    max: 5
+    weight: 1
+  - material: {fileID: 11400000, guid: 8e6d331c5749aec4d9a2858e5a274623, type: 2}
+    item: {fileID: 0}
+    min: 3
+    max: 5
+    weight: 1
   nothingWeight: 0
   rarityWeights:
   - 1

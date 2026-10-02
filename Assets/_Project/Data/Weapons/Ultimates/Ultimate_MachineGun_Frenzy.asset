@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: "Cu\u1ED3ng n\u1ED9"
   description: "B\u1EAFn nhanh g\u1EA5p 3 v\xE0 xuy\xEAn th\xEAm 1 qu\xE1i trong
     4 gi\xE2y."
-  icon: {fileID: 21300000, guid: 60af646b9fa2e514589f36553812af9b, type: 3}
+  icon: {fileID: 21300000, guid: 42ea83a5fdf76b149bcfd412036d4aa3, type: 3}
   color: {r: 1, g: 0.3019608, b: 0.3019608, a: 1}
   duration: 4
   fireRateMultiplier: 3

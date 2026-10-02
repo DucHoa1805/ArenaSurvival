@@ -45,7 +45,7 @@ namespace ArenaSurvival.Player
             if (_weapon == null) _weapon = GetComponent<PlayerWeapon>();
             if (_stats == null) _stats = GetComponent<PlayerStats>();
             _onKilled = (xp, pos) => Mana = UltimateRules.AddKills(Mana, 1);
-            _ctx = new UltimateContext { Player = transform, Weapon = _weapon, Stats = _stats, EnemyLayer = _enemyLayer, Beam = CreateBeam() };
+            _ctx = new UltimateContext { Player = transform, Weapon = _weapon, Stats = _stats, EnemyLayer = _enemyLayer, Beam = CreateBeam(), Chain = GetComponent<ChainBolts>() };
         }
 
         private void OnEnable() => GameEvents.OnEnemyKilled += _onKilled;
