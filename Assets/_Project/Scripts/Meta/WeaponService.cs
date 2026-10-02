@@ -97,7 +97,7 @@ namespace ArenaSurvival.Meta
 
         public bool TryUnlock(string id)
         {
-            if (IsOwned(id) || !GetStarCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer)) return false;
+            if (IsOwned(id) || !GetStarCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer, EconomyReasons.WeaponUnlock)) return false;
 
             _profile.weapons[id] = new OwnedWeapon { level = 1, stars = 1 };
             Commit(id);
@@ -107,7 +107,7 @@ namespace ArenaSurvival.Meta
         public bool TryStarUp(string id)
         {
             // Chưa sở hữu phải đi qua TryUnlock: tách rõ để UI ghi đúng chữ "Mở khóa" / "Lên sao".
-            if (!IsOwned(id) || !GetStarCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer)) return false;
+            if (!IsOwned(id) || !GetStarCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer, EconomyReasons.WeaponStar)) return false;
 
             _profile.weapons[id].stars++;
             Commit(id);
@@ -116,7 +116,7 @@ namespace ArenaSurvival.Meta
 
         public bool TryUpgrade(string id)
         {
-            if (!GetUpgradeCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer)) return false;
+            if (!GetUpgradeCost(id, _costBuffer) || !_economy.TrySpendMany(_costBuffer, EconomyReasons.WeaponUpgrade)) return false;
 
             _profile.weapons[id].level++;
             Commit(id);

@@ -113,16 +113,16 @@ namespace ArenaSurvival.DevTools
                 if (!GameServices.IsInitialized) return;
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("+1000 vàng")) GameServices.Economy.Add(CurrencyIds.Gold, 1000);
-                if (GUILayout.Button("+100 kim cương")) GameServices.Economy.Add(CurrencyIds.Gem, 100);
+                if (GUILayout.Button("+1000 vàng")) GameServices.Economy.Add(CurrencyIds.Gold, 1000, EconomyReasons.Dev);
+                if (GUILayout.Button("+100 kim cương")) GameServices.Economy.Add(CurrencyIds.Gem, 100, EconomyReasons.Dev);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("+50 mỗi nguyên liệu"))
                 {
-                    GameServices.Economy.Add(CurrencyIds.Leather, 50);
-                    GameServices.Economy.Add(CurrencyIds.Ore, 50);
-                    GameServices.Economy.Add(CurrencyIds.BossCore, 50);
+                    GameServices.Economy.Add(CurrencyIds.Leather, 50, EconomyReasons.Dev);
+                    GameServices.Economy.Add(CurrencyIds.Ore, 50, EconomyReasons.Dev);
+                    GameServices.Economy.Add(CurrencyIds.BossCore, 50, EconomyReasons.Dev);
                 }
                 if (GUILayout.Button("Nhận 1 trang bị ngẫu nhiên")) GiveRandomItem();
                 GUILayout.EndHorizontal();
@@ -135,7 +135,7 @@ namespace ArenaSurvival.DevTools
                 if (GUILayout.Button("+20 mảnh mỗi vũ khí"))
                 {
                     foreach (Weapons.WeaponData weapon in GameServices.Inventory.Database.weapons)
-                        if (weapon != null) GameServices.Economy.Add(Weapons.WeaponRules.ShardId(weapon.id), 20);
+                        if (weapon != null) GameServices.Economy.Add(Weapons.WeaponRules.ShardId(weapon.id), 20, EconomyReasons.Dev);
                 }
 
                 GUILayout.BeginHorizontal();
@@ -169,6 +169,31 @@ namespace ArenaSurvival.DevTools
                 if (GUILayout.Button("Giao lại giao dịch dở dang")) GameServices.Iap.Initialize();
                 if (GUILayout.Button("Xóa store giả")) Shop.FakeStore.ClearAll();
                 if (GUILayout.Button("Đặt lại lượt QC hôm nay")) { GameServices.Profile.Profile.adViews.Clear(); GameServices.Profile.Save(); }
+                GUILayout.EndHorizontal();
+
+                // Phase 12: thử nhiệm vụ/quà mà không phải chờ qua ngày. Không dịch đồng hồ (GameClock nhớ mốc lớn nhất nên dịch
+                // tới rồi tắt game sẽ làm đồng hồ đứng tới khi giờ thật đuổi kịp) — chỉ xóa mốc ngày đã lưu.
+                Missions.MissionService missions = GameServices.Missions;
+                GUILayout.Label($"<b>Nhiệm vụ</b>: điểm {missions.Points}  ·  quà đăng nhập đã nhận {GameServices.Profile.Profile.login.count}" +
+                                $"  ·  Remote Config: {GameServices.RemoteConfig.Source} ({GameServices.RemoteConfig.AppliedKeys} khóa)" +
+                                $"  ·  analytics: {(GameServices.Analytics.Enabled ? GameServices.Analytics.SentCount + " sự kiện" : "chưa đồng ý")}", Rich());
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Giả lập sang ngày mới"))
+                {
+                    PlayerProfile p = GameServices.Profile.Profile;
+                    p.daily.day = 0;
+                    p.login.lastDay = 0;
+                    p.adDay = 0;
+                    GameServices.Profile.Save();
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                if (GUILayout.Button("Xong hết nhiệm vụ"))
+                {
+                    foreach (Missions.MissionData m in missions.Catalog.daily)
+                        if (m != null) missions.Track(m.metric, m.target);
+                    GameServices.Profile.Save();
+                }
+                if (GUILayout.Button("Nạp lại Remote Config")) GameServices.RemoteConfig.Refresh();
                 GUILayout.EndHorizontal();
             }
 

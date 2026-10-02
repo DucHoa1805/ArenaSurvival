@@ -53,6 +53,9 @@ namespace ArenaSurvival.Meta
             Profile.adViews.Clear();
             Profile.adDay = 0;
             Profile.consent = -1;
+            // lastSeenUtcTicks giữ nguyên: xóa hồ sơ không được là cách lách chống chỉnh giờ.
+            Profile.daily = new DailyMissionState();
+            Profile.login = new LoginRewardState();
             Profile.tampered = false;
             Save();
         }

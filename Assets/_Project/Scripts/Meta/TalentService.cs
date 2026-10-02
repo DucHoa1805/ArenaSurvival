@@ -44,7 +44,7 @@ namespace ArenaSurvival.Meta
         {
             if (talent == null) return false;
             int cost = GetCost(talent);
-            if (cost < 0 || !_economy.TrySpend(CurrencyIds.Gold, cost)) return false;
+            if (cost < 0 || !_economy.TrySpend(CurrencyIds.Gold, cost, EconomyReasons.TalentUpgrade)) return false;
 
             int level = GetLevel(talent.id) + 1;
             _profile.talents[talent.id] = level;

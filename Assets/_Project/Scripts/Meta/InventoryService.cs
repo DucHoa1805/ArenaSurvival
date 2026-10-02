@@ -180,7 +180,7 @@ namespace ArenaSurvival.Meta
         public bool TryUpgrade(string uid)
         {
             OwnedItem item = Get(uid);
-            if (item == null || !GetUpgradeCost(item, _costBuffer) || !_economy.TrySpendMany(_costBuffer)) return false;
+            if (item == null || !GetUpgradeCost(item, _costBuffer) || !_economy.TrySpendMany(_costBuffer, EconomyReasons.ItemUpgrade)) return false;
 
             item.level++;
             CommitInventory(equipmentChanged: IsEquipped(uid));
@@ -190,7 +190,7 @@ namespace ArenaSurvival.Meta
         public bool TryAscend(string uid)
         {
             OwnedItem item = Get(uid);
-            if (item == null || !GetAscendCost(item, _costBuffer) || !_economy.TrySpendMany(_costBuffer)) return false;
+            if (item == null || !GetAscendCost(item, _costBuffer) || !_economy.TrySpendMany(_costBuffer, EconomyReasons.ItemAscend)) return false;
 
             item.ascension++;
             CommitInventory(equipmentChanged: false);
@@ -231,9 +231,9 @@ namespace ArenaSurvival.Meta
 
         private void GiveRefund(EquipmentRules.Refund refund, ItemData data)
         {
-            if (refund.gold > 0) _economy.Add(CurrencyIds.Gold, refund.gold);
-            if (refund.material > 0 && data != null && data.upgradeMaterial != null) _economy.Add(data.upgradeMaterial.id, refund.material);
-            if (refund.cores > 0) _economy.Add(CurrencyIds.BossCore, refund.cores);
+            if (refund.gold > 0) _economy.Add(CurrencyIds.Gold, refund.gold, EconomyReasons.Dismantle);
+            if (refund.material > 0 && data != null && data.upgradeMaterial != null) _economy.Add(data.upgradeMaterial.id, refund.material, EconomyReasons.Dismantle);
+            if (refund.cores > 0) _economy.Add(CurrencyIds.BossCore, refund.cores, EconomyReasons.Dismantle);
         }
 
         private void CommitEquipment()

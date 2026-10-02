@@ -19,6 +19,8 @@ namespace ArenaSurvival.Stages
         public int killCount;
         public float hpFraction;
         public bool usedRevive;
+        /// <summary>Đợt đang chơi khi màn kết thúc (analytics: người chơi thua ở đâu).</summary>
+        public int waveReached;
         public int gold;
         public int accountXp;
 

@@ -45,14 +45,15 @@ namespace ArenaSurvival.Meta
             var grant = new StageGrant
             {
                 stageId = result.stageId,
-                gold = StageProgressRules.ApplyMultiplier(result.gold, multiplier),
+                // Hệ số vàng Remote Config áp ở tầng meta: chỉnh kinh tế từ xa mà không đụng công thức trong màn.
+                gold = StageProgressRules.ApplyMultiplier(result.gold, multiplier * Core.Tuning.StageGoldMultiplier),
                 accountXp = StageProgressRules.ApplyMultiplier(result.accountXp, multiplier),
                 firstClear = result.victory && !alreadyCleared,
                 multiplier = multiplier,
                 starsBefore = starsBefore,
             };
 
-            if (grant.gold > 0) _economy.Add(CurrencyIds.Gold, grant.gold);
+            if (grant.gold > 0) _economy.Add(CurrencyIds.Gold, grant.gold, EconomyReasons.StageReward);
             grant.levelBefore = _account != null ? _account.Level : 0;
             if (_account != null) _account.AddXp(grant.accountXp);
             else _profile.accountXp += grant.accountXp;
@@ -80,7 +81,7 @@ namespace ArenaSurvival.Meta
                 if (drop.kind == LootKind.Material)
                 {
                     if (drop.amount <= 0 || string.IsNullOrEmpty(drop.id)) continue;
-                    _economy.Add(drop.id, drop.amount);
+                    _economy.Add(drop.id, drop.amount, EconomyReasons.StageLoot);
                     grant.materials.TryGetValue(drop.id, out int sum);
                     grant.materials[drop.id] = sum + drop.amount;
                     continue;

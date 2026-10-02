@@ -25,6 +25,8 @@ namespace ArenaSurvival.Services
         private bool _showing;
 
         public event Action OnChanged;
+        /// <summary>Được thưởng ở vị trí nào (kể cả khi đã mua Xóa quảng cáo) — nhiệm vụ ngày và analytics.</summary>
+        public event Action<string> OnRewarded;
 
         public AdsService(IAdProvider provider, PlayerProfile profile, Action save, Func<DateTime> utcNow = null)
         {
@@ -78,6 +80,7 @@ namespace ArenaSurvival.Services
             RollDay();
             _profile.adViews[placement] = (_profile.adViews.TryGetValue(placement, out int n) ? n : 0) + 1;
             _save?.Invoke();
+            OnRewarded?.Invoke(placement);
             OnChanged?.Invoke();
         }
 

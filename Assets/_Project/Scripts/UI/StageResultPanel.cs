@@ -161,7 +161,7 @@ namespace ArenaSurvival.UI
                 if (ok && !_doubled)
                 {
                     _doubled = true;
-                    GameServices.Economy.Add(Economy.CurrencyIds.Gold, grant.gold);
+                    GameServices.Economy.Add(Economy.CurrencyIds.Gold, grant.gold, Economy.EconomyReasons.AdDouble);
                     GameServices.Profile.Save();
                     _goldText.text = $"+{grant.gold * 2}";
                 }

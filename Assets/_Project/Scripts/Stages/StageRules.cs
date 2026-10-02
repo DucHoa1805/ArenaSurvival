@@ -1,3 +1,4 @@
+using ArenaSurvival.Core;
 using UnityEngine;
 
 namespace ArenaSurvival.Stages
@@ -9,10 +10,9 @@ namespace ArenaSurvival.Stages
     /// </summary>
     public static class StageRules
     {
-        // Gom hằng số một chỗ: Phase 10 (bảng cân bằng) và Phase 12 (Remote Config) chỉ cần thay ở đây.
-        // 0.12 → 0.09 (10C, bot kẹt boss 1-10) → 0.075 (10D, người dùng muốn game dễ hơn nữa).
-        public const float DifficultyGrowthPerStage = 0.075f;
-        public const float RewardGrowthPerStage = 0.15f;
+        // Tốc độ tăng độ khó/thưởng chỉnh được bằng Remote Config (Tuning); các hằng số còn lại là luật cố định.
+        public static float DifficultyGrowthPerStage => Tuning.DifficultyGrowth;
+        public static float RewardGrowthPerStage => Tuning.RewardGrowth;
         public const float StarHealthThreshold = 0.5f;
         public const float DefeatRewardShare = 0.5f;
         // Thua mà nhận như đã đi hết màn thì không còn lý do cố thắng.

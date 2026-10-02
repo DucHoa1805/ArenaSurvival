@@ -447,13 +447,13 @@ Assets/
 **Mục tiêu:** người chơi có lý do quay lại mỗi ngày, và bạn có số liệu để ra quyết định.
 
 **Việc cần làm**
-- [ ] Nhiệm vụ hằng ngày (chơi X màn, nâng cấp Y lần, xem 1 quảng cáo) + phần thưởng mốc.
-- [ ] Quà đăng nhập 7 ngày.
-- [ ] **Analytics**: sự kiện bắt đầu/kết thúc màn, thua ở màn nào, nâng cấp gì, mua gì, xem quảng cáo ở đâu, nguồn và nơi tiêu tiền tệ.
+- [x] Nhiệm vụ hằng ngày (chơi X màn, nâng cấp Y lần, xem 1 quảng cáo) + phần thưởng mốc.
+- [x] Quà đăng nhập 7 ngày.
+- [ ] **Analytics**: sự kiện bắt đầu/kết thúc màn, thua ở màn nào, nâng cấp gì, mua gì, xem quảng cáo ở đâu, nguồn và nơi tiêu tiền tệ. _(12A: đủ sự kiện, ghi log cục bộ; gửi UGS ở 12B)_
 - [ ] **Cloud save** gắn với tài khoản (đăng nhập ẩn danh, sau đó liên kết Google Play Games).
-- [ ] **Remote Config**: chỉnh độ khó, phần thưởng, giá gói mà không cần cập nhật app.
-- [ ] Thông báo đẩy: rương miễn phí đã sẵn sàng, nhiệm vụ ngày sắp làm mới.
-- [ ] Dùng thời gian máy chủ cho tính năng theo ngày để tránh chỉnh giờ điện thoại gian lận.
+- [ ] **Remote Config**: chỉnh độ khó, phần thưởng, giá gói mà không cần cập nhật app. _(12A: Tuning + file cục bộ + bản tạm; UGS ở 12B)_
+- [ ] Thông báo đẩy: rương miễn phí đã sẵn sàng, nhiệm vụ ngày sắp làm mới. _(dời sang Phase 13, cần build Android)_
+- [ ] Dùng thời gian máy chủ cho tính năng theo ngày để tránh chỉnh giờ điện thoại gian lận. _(12A: GameClock chặn chỉnh lùi; độ lệch máy chủ ở 12B)_
 
 **Tiêu chí hoàn thành:** xem được biểu đồ người chơi bỏ cuộc ở màn nào; đổi một số liệu trên Remote Config thì game nhận giá trị mới mà không cần build lại.
 

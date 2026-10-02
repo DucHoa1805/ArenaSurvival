@@ -104,6 +104,7 @@ namespace ArenaSurvival.Stages
             _difficulty = StageRules.DifficultyMultiplier(Stage.stageNumber);
             _waveIndex = -1;
             StartNextWave();
+            StageEvents.RaiseStageStarted(Stage);
         }
 
         private void Update()
@@ -341,6 +342,7 @@ namespace ArenaSurvival.Stages
                 killCount = _runStats.KillCount,
                 hpFraction = hpFraction,
                 usedRevive = _reviveUsed,
+                waveReached = CurrentWave,
                 gold = gold,
                 accountXp = xp,
             };

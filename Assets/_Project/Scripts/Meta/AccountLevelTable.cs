@@ -10,6 +10,8 @@ namespace ArenaSurvival.Meta
         public const string Talents = "talents";
         public const string Shop = "shop";
         public const string Events = "events";
+        /// <summary>Nhiệm vụ ngày + quà đăng nhập (Phase 12). Không có trong bảng → mở từ đầu: quà ngày 1 phải nhận được ngay.</summary>
+        public const string Missions = "missions";
     }
 
     [Serializable]

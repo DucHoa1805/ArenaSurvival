@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34a8fd3a2f8ae540b6458b674313524, type: 3}
+  m_Name: Mission_kill_enemies
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Missions.MissionData
+  id: kill_enemies
+  description: "H\u1EA1 {0} qu\xE1i"
+  metric: 2
+  target: 300
+  points: 20

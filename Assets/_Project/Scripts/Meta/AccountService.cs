@@ -57,7 +57,7 @@ namespace ArenaSurvival.Meta
             {
                 var info = new LevelUpInfo { level = level };
                 AccountRules.RewardFor(level, info.rewards);
-                foreach (CurrencyCost reward in info.rewards) _economy.Add(reward.id, reward.amount);
+                foreach (CurrencyCost reward in info.rewards) _economy.Add(reward.id, reward.amount, Economy.EconomyReasons.AccountLevel);
                 if (_table != null && _table.unlocks != null)
                     foreach (FeatureUnlock u in _table.unlocks)
                         if (u != null && u.level == level) info.unlockedFeatures.Add(string.IsNullOrEmpty(u.displayName) ? u.featureId : u.displayName);

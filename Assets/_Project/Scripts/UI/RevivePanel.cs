@@ -15,7 +15,8 @@ namespace ArenaSurvival.UI
     /// </summary>
     public class RevivePanel : MonoBehaviour
     {
-        public const long ReviveGemCost = 20;
+        // Giá chỉnh được bằng Remote Config.
+        private static long ReviveGemCost => Core.Tuning.ReviveGemCost;
 
         [SerializeField] private StageSession _session;
         [SerializeField] private GameObject _content;
@@ -88,7 +89,7 @@ namespace ArenaSurvival.UI
         {
             if (_busy || !GameServices.IsInitialized) return;
             // EconomyService trả false khi không đủ: không bao giờ âm tiền, không hồi sinh.
-            if (GameServices.Economy.TrySpend(CurrencyIds.Gem, ReviveGemCost))
+            if (GameServices.Economy.TrySpend(CurrencyIds.Gem, ReviveGemCost, EconomyReasons.Revive))
             {
                 GameServices.Profile.Save();
                 _session.Revive();

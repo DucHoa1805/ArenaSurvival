@@ -23,6 +23,8 @@ namespace ArenaSurvival.Shop
 
         /// <summary>Có gì đổi (số lần mua, cờ xóa quảng cáo) — cửa hàng vẽ lại.</summary>
         public event Action OnChanged;
+        /// <summary>(sản phẩm, lý do EconomyReasons) — mỗi lần trao nội dung: analytics ghi mua hàng, nhiệm vụ đếm rương đã mở.</summary>
+        public event Action<ShopProductData, string> OnProductGranted;
 
         public ShopService(PlayerProfile profile, EconomyService economy, InventoryService inventory, ShopCatalog catalog, Action save,
             Func<float> random01 = null)
@@ -49,18 +51,19 @@ namespace ArenaSurvival.Shop
         public bool TryBuyWithGems(ShopProductData product, List<LootDrop> granted)
         {
             if (product == null || product.IsIap || !CanPurchase(product)) return false;
-            if (product.gemCost > 0 && !_economy.TrySpend(CurrencyIds.Gem, product.gemCost)) return false;
-            Grant(product, granted);
+            if (product.gemCost > 0 && !_economy.TrySpend(CurrencyIds.Gem, product.gemCost, EconomyReasons.ShopPurchase)) return false;
+            Grant(product, granted, product.chestTable != null ? EconomyReasons.ShopChest : EconomyReasons.ShopGold);
             _save?.Invoke();
             return true;
         }
 
-        /// <summary>Rương miễn phí (sau quảng cáo): trao như mua nhưng không trừ kim cương, không tính lượt mua.</summary>
-        public void GrantFree(ShopProductData product, List<LootDrop> granted)
+        /// <summary>Rương miễn phí (sau quảng cáo, thưởng nhiệm vụ): trao như mua nhưng không trừ kim cương, không tính lượt mua.</summary>
+        public void GrantFree(ShopProductData product, List<LootDrop> granted, string reason = EconomyReasons.AdChest)
         {
             if (product == null) return;
-            GrantContents(product, 1f, granted);
+            GrantContents(product, 1f, granted, reason);
             _save?.Invoke();
+            OnProductGranted?.Invoke(product, reason);
             OnChanged?.Invoke();
         }
 
@@ -68,17 +71,18 @@ namespace ArenaSurvival.Shop
         /// Trao nội dung + tăng số lần mua. KHÔNG lưu (IAPService lưu cùng lúc với mã giao dịch để 2 thứ không bao giờ lệch nhau).
         /// granted nhận danh sách thứ đã trao để popup hiện lại.
         /// </summary>
-        public void Grant(ShopProductData product, List<LootDrop> granted)
+        public void Grant(ShopProductData product, List<LootDrop> granted, string reason = EconomyReasons.ShopIap)
         {
             if (product == null) return;
             int before = PurchaseCount(product.id);
-            GrantContents(product, ShopRules.ContentMultiplier(before, product.firstPurchaseMultiplier), granted);
+            GrantContents(product, ShopRules.ContentMultiplier(before, product.firstPurchaseMultiplier), granted, reason);
             if (product.kind == ShopProductKind.RemoveAds) _profile.removeAds = true;
             _profile.purchaseCounts[product.id] = before + 1;
+            OnProductGranted?.Invoke(product, reason);
             OnChanged?.Invoke();
         }
 
-        private void GrantContents(ShopProductData product, float multiplier, List<LootDrop> granted)
+        private void GrantContents(ShopProductData product, float multiplier, List<LootDrop> granted, string reason)
         {
             if (product.contents != null)
             {
@@ -89,7 +93,7 @@ namespace ArenaSurvival.Shop
                     else if (!string.IsNullOrEmpty(c.currencyId) && c.amount > 0)
                     {
                         long amount = ShopRules.ScaledAmount(c.amount, multiplier);
-                        _economy.Add(c.currencyId, amount);
+                        _economy.Add(c.currencyId, amount, reason);
                         granted?.Add(LootDrop.Material(c.currencyId, (int)Math.Min(int.MaxValue, amount)));
                     }
                 }
@@ -102,7 +106,7 @@ namespace ArenaSurvival.Shop
                 foreach (LootDrop d in drops)
                 {
                     if (d.kind == LootKind.Item) AddItem(d.id, d.rarity, granted);
-                    else { _economy.Add(d.id, d.amount); granted?.Add(d); }
+                    else { _economy.Add(d.id, d.amount, reason); granted?.Add(d); }
                 }
             }
         }

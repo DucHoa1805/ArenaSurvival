@@ -19,6 +19,7 @@ namespace ArenaSurvival.Save
             V3ToV4,
             V4ToV5,
             V5ToV6,
+            V6ToV7,
         };
 
         public static JObject Migrate(JObject data, int fromVersion)
@@ -91,6 +92,16 @@ namespace ArenaSurvival.Save
             if (v5["consent"] == null) v5["consent"] = -1;
             v5["saveVersion"] = 6;
             return v5;
+        }
+
+        /// <summary>v7 (Phase 12) thêm nhiệm vụ ngày, quà đăng nhập và mốc giờ chống chỉnh lùi. Mặc định = chưa có tiến độ.</summary>
+        private static JObject V6ToV7(JObject v6)
+        {
+            if (v6["daily"] == null) v6["daily"] = new JObject();
+            if (v6["login"] == null) v6["login"] = new JObject();
+            if (v6["lastSeenUtcTicks"] == null) v6["lastSeenUtcTicks"] = 0L;
+            v6["saveVersion"] = 7;
+            return v6;
         }
     }
 }

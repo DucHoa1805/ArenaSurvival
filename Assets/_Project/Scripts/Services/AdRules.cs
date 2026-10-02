@@ -9,14 +9,14 @@ namespace ArenaSurvival.Services
         public const string Revive = "revive";
         public const string FreeChest = "free_chest";
 
-        /// <summary>Giới hạn lượt/ngày — đủ để người chơi thấy có lợi, không đủ để quảng cáo thay hẳn cửa hàng.</summary>
+        /// <summary>Giới hạn lượt/ngày (chỉnh được bằng Remote Config) — đủ để người chơi thấy có lợi, không đủ để quảng cáo thay hẳn cửa hàng.</summary>
         public static int DailyLimit(string placement)
         {
             switch (placement)
             {
-                case DoubleReward: return 5;
-                case Revive: return 3;
-                case FreeChest: return 2;
+                case DoubleReward: return Core.Tuning.AdLimitDouble;
+                case Revive: return Core.Tuning.AdLimitRevive;
+                case FreeChest: return Core.Tuning.AdLimitFreeChest;
                 default: return 0;
             }
         }

@@ -80,6 +80,7 @@ namespace ArenaSurvival.UI.Hub
             GameServices.Inventory.OnEquipmentChanged += _onChanged;
             GameServices.Weapons.OnWeaponChanged += _onWeaponChanged;
             GameServices.Account.OnXpChanged += _onXpChanged;
+            GameServices.Missions.OnChanged += _onChanged;
         }
 
         private void OnDisable()
@@ -92,6 +93,7 @@ namespace ArenaSurvival.UI.Hub
             GameServices.Inventory.OnEquipmentChanged -= _onChanged;
             GameServices.Weapons.OnWeaponChanged -= _onWeaponChanged;
             GameServices.Account.OnXpChanged -= _onXpChanged;
+            GameServices.Missions.OnChanged -= _onChanged;
         }
 
         private void Start()
@@ -181,6 +183,7 @@ namespace ArenaSurvival.UI.Hub
                 case FeatureIds.Talents: return RedDotRules.TalentAvailable(_talents, GameServices.Talents);
                 case FeatureIds.Equipment:
                     return RedDotRules.EquipmentAvailable(GameServices.Inventory, GameServices.Weapons, GameServices.Economy);
+                case FeatureIds.Missions: return GameServices.Missions.HasClaimable;
                 default: return false;
             }
         }

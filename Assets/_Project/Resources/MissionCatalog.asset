@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66c3a5a7303ffc4a88a5b2e45d80542, type: 3}
+  m_Name: MissionCatalog
+  m_EditorClassIdentifier: ArenaSurvival::ArenaSurvival.Missions.MissionCatalog
+  daily:
+  - {fileID: 11400000, guid: 766f2b7c3a3319b4dae740c8c311907d, type: 2}
+  - {fileID: 11400000, guid: 0f2aa6d3b3159014e9dc22e1c67b644c, type: 2}
+  - {fileID: 11400000, guid: c45a7cf838be6ec4fb7a39b23a41b6a9, type: 2}
+  - {fileID: 11400000, guid: 9321f85583fd9d24a98f98e43a5a533a, type: 2}
+  - {fileID: 11400000, guid: d030ec4aeeef6d64aa27c69592e6a9b4, type: 2}
+  milestones:
+  - points: 40
+    reward:
+      currencies:
+      - currencyId: gold
+        amount: 500
+      chest: {fileID: 0}
+  - points: 70
+    reward:
+      currencies:
+      - currencyId: gem
+        amount: 15
+      - currencyId: gold
+        amount: 1000
+      chest: {fileID: 0}
+  - points: 100
+    reward:
+      currencies:
+      - currencyId: gem
+        amount: 25
+      chest: {fileID: 11400000, guid: b682c6761f6a9b342bf6449442433a2e, type: 2}
+  loginRewards:
+  - currencies:
+    - currencyId: gold
+      amount: 500
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: gem
+      amount: 10
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: gold
+      amount: 1000
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: leather
+      amount: 20
+    - currencyId: ore
+      amount: 20
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: gem
+      amount: 20
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: gold
+      amount: 2000
+    chest: {fileID: 0}
+  - currencies:
+    - currencyId: gem
+      amount: 50
+    chest: {fileID: 11400000, guid: f7b5082debbedc346b086040a64547e0, type: 2}
